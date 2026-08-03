@@ -1,0 +1,5 @@
+# SPA fallback. Routes like /vehicles/mazda-cx-5-2018 exist only in the client
+# router, so the host must serve index.html for any unmatched path or a refresh
+# (and every shared link) returns a server 404.
+# Netlify reads this file. Vercel: use vercel.json rewrites. Nginx: try_files.
+/*  /index.html  200
