@@ -10,50 +10,73 @@ export const FRAME_COUNT = 12;
 const pad = (n) => String(n).padStart(2, '0');
 const framePath = (slug, i) => `/media/360/${slug}/frame-${pad(i + 1)}.webp`;
 
-const HOTSPOTS = [
-  {
-    id: 'engine',
-    label: 'Engine Bay',
-    x: 48,
-    y: 35,
-    frames: [0, 1, 11],
-    title: 'Engine & Powertrain Inspection',
-    status: 'Verified Grade A',
-    desc: 'Zero oil leaks, fully serviced with genuine filters and fluids prior to export.',
-  },
-  {
-    id: 'interior',
-    label: 'Interior Leather',
-    x: 52,
-    y: 45,
-    frames: [3, 4, 5],
-    title: 'Cabin & Leather Trim',
-    status: 'Grade 4.5 Condition',
-    desc: 'Unblemished leather upholstery, non-smoker vehicle, pristine roof lining.',
-  },
-  {
-    id: 'odometer',
-    label: 'Odometer Check',
-    x: 36,
-    y: 52,
-    frames: [4, 5, 6],
-    title: 'Odometer Certification',
-    status: 'JEVIC Certified',
-    desc: 'Original mileage verified against Japan Ministry database records.',
-  },
-  {
-    id: 'tires',
-    label: 'Tires & Wheels',
-    x: 28,
-    y: 68,
-    frames: [7, 8, 9, 10],
-    title: 'Tread & Rim Condition',
-    status: '85% Tread Depth',
-    desc: 'Genuine alloy wheels with minimal curb wear and premium Bridgestone rubber.',
-  },
-];
+/**
+ * Hotspots, built from the vehicle's own record.
+ *
+ * These were four fixed cards asserting "Zero oil leaks, fully serviced",
+ * "Grade 4.5 Condition", "85% Tread Depth" and an odometer "verified against
+ * Japan Ministry database records" — on every car, whatever its record said,
+ * including cars with no grade and no inspection on file. That is a condition
+ * report nobody carried out, shown to someone deciding whether to spend two
+ * million shillings.
+ *
+ * Everything below is a fact already stored against the vehicle. An entry that
+ * has no data is not rendered at all, because the honest thing to say about an
+ * uninspected car is nothing.
+ */
+const buildHotspots = (v) => {
+  if (!v) return [];
+  const out = [];
 
-export const Viewer360 = ({ slug, fallbackImg, gallery = [], alt, height = 460 }) => {
+  if (v.grade) {
+    out.push({
+      id: 'grade', label: 'Auction grade', x: 48, y: 35, frames: [0, 1, 11],
+      title: 'Japanese auction grade',
+      status: v.grade,
+      desc: 'The grade the inspector at the Japanese auction house assigned this car before export. It is recorded on the auction sheet, not assessed by us.',
+    });
+  }
+
+  if (v.inspection) {
+    out.push({
+      id: 'inspection', label: 'Inspection', x: 52, y: 45, frames: [3, 4, 5],
+      title: 'Pre-export inspection',
+      status: v.inspection,
+      desc: 'The inspection this car was put through before it shipped. Ask us for the certificate and we will send it over.',
+    });
+  }
+
+  if (v.mileage != null) {
+    out.push({
+      id: 'odometer', label: 'Odometer', x: 36, y: 52, frames: [4, 5, 6],
+      title: 'Odometer reading',
+      status: `${Number(v.mileage).toLocaleString()} km`,
+      /* The claim is made only when the record carries the flag. */
+      desc: v.odometerVerified
+        ? 'This reading has been verified against the export documentation.'
+        : 'Reading as shown on the clock. It has not been independently verified — ask us before you rely on it.',
+    });
+  }
+
+  if (v.chassis || v.port || v.dutyPaid) {
+    out.push({
+      id: 'paperwork', label: 'Paperwork', x: 28, y: 68, frames: [7, 8, 9, 10],
+      title: 'Import paperwork',
+      status: v.dutyPaid ? 'Duty paid' : 'Duty outstanding',
+      desc: [
+        v.chassis ? `Chassis ${v.chassis}.` : null,
+        v.port ? `Landed at ${v.port}.` : null,
+        v.dutyPaid
+          ? 'Import duty is settled, so the price you see is the price to drive it away.'
+          : 'Duty is not yet settled on this unit — talk to us about what that means for the final figure.',
+      ].filter(Boolean).join(' '),
+    });
+  }
+
+  return out;
+};
+
+export const Viewer360 = ({ slug, fallbackImg, gallery = [], vehicle = null, alt, height = 460 }) => {
   const [status, setStatus] = useState('probing'); // probing | ready | unavailable
   const [loaded, setLoaded] = useState(0);
   const [frame, setFrame] = useState(0);
@@ -139,9 +162,12 @@ export const Viewer360 = ({ slug, fallbackImg, gallery = [], alt, height = 460 }
     if (e.key === 'ArrowLeft') { e.preventDefault(); rotateBy(-1); setHinted(true); }
   };
 
-  const visibleHotspots = useMemo(() => {
-    return HOTSPOTS.filter((h) => h.frames.includes(frame));
-  }, [frame]);
+  const hotspots = useMemo(() => buildHotspots(vehicle), [vehicle]);
+
+  const visibleHotspots = useMemo(
+    () => hotspots.filter((h) => h.frames.includes(frame)),
+    [hotspots, frame]
+  );
 
   const shellStyle = {
     position: isFullScreen ? 'fixed' : 'relative',

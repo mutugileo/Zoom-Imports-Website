@@ -6,7 +6,7 @@ import { setScrollLocked } from '../lib/useLenis';
 import { X, CheckCircle, CalendarClock } from 'lucide-react';
 
 export const TestDriveModal = () => {
-  const { isTestDriveOpen, setIsTestDriveOpen, testDriveTargetVehicle, submitEnquiry } = useApp();
+  const { isTestDriveOpen, setIsTestDriveOpen, testDriveTargetVehicle, submitEnquiry, contact } = useApp();
 
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -170,7 +170,7 @@ export const TestDriveModal = () => {
                 className="field"
               />
               <div className="mono" style={{ fontSize: 'var(--text-xs)', color: 'var(--text-dim)', marginTop: '6px' }}>
-                Viewings run Mon–Sat, 8:00–18:00
+                {contact.hours ? `Viewings run ${contact.hours}` : 'Call us to arrange a time'}
               </div>
             </div>
 

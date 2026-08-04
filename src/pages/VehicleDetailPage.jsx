@@ -185,6 +185,7 @@ export const VehicleDetailPage = () => {
               slug={vehicle.slug}
               fallbackImg={vehicle.img}
               gallery={vehicle.images}
+              vehicle={vehicle}
               alt={`${vehicle.name} ${vehicle.year}`}
               height={520}
             />

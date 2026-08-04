@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { useReveal, revealStyle } from '../lib/useReveal';
-import { PARTNER_YARDS } from '@shared/data/siteContent';
 import { MapPin, Phone, Mail, Clock, CheckCircle2, ShieldCheck, MessageSquare, Anchor, ChevronDown } from 'lucide-react';
 import { SiteIcon } from '../components/SiteIcon';
 
@@ -147,19 +146,19 @@ export const AboutPage = () => {
                 <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                   <SiteIcon icon={CheckCircle2} variant="dark" size={18} style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div style={{ fontSize: 'var(--text-sm)', lineHeight: 1.55, color: 'rgba(255,255,255,.9)' }}>
-                    <strong>Non-Accident Certified:</strong> Every vehicle is verified for non-accident history &amp; certified mileage before shipment.
+                    <strong>Documented, not asserted:</strong> Each listing carries the chassis number, the Japanese auction grade and the inspection it was given — printed from the record, so you can check them yourself.
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                   <SiteIcon icon={CheckCircle2} variant="dark" size={18} style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div style={{ fontSize: 'var(--text-sm)', lineHeight: 1.55, color: 'rgba(255,255,255,.9)' }}>
-                    <strong>Transparent Pricing:</strong> No hidden fees — our listed prices include all customs duty, VAT, and clearing charges.
+                    <strong>Duty stated per car:</strong> Each listing says whether import duty is settled, so the figure you see is the figure to drive it away — or you know it is not.
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                   <SiteIcon icon={CheckCircle2} variant="dark" size={18} style={{ flexShrink: 0, marginTop: '2px' }} />
                   <div style={{ fontSize: 'var(--text-sm)', lineHeight: 1.55, color: 'rgba(255,255,255,.9)' }}>
-                    <strong>Kenyan Spec Fitment:</strong> Genuine OEM spare parts guaranteed 100% compatible with local vehicle specifications.
+                    <strong>Fitment on record:</strong> Parts list the Mazda models they are mapped to. If a fit is not recorded, we say so rather than guess.
                   </div>
                 </div>
               </div>
@@ -203,58 +202,10 @@ export const AboutPage = () => {
           Three yards, one chain of custody
         </h2>
         <p style={{ fontSize: 'var(--text-base)', lineHeight: 1.65, color: 'var(--text-muted)', marginBottom: '28px', maxWidth: '780px' }}>
-          Every car we sell passes through the same three yards, in the same order.
-          That is what lets us put a chassis number and an auction grade on a listing
-          and stand behind both.
+          Every car is bought at a Japanese auction, inspected before export and
+          cleared through Mombasa. The chassis number and auction grade on each
+          listing come from that paperwork.
         </p>
-
-        {/* Horizontal 3-column partner cards grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '22px' }} className="partners-grid">
-          {PARTNER_YARDS.map((yard, i) => (
-            <article
-              key={yard.id}
-              className="partner-card-horizontal"
-              style={{
-                background: 'var(--bg-card)',
-                border: '1px solid var(--band-line)',
-                borderRadius: '14px',
-                padding: '24px',
-                boxShadow: 'var(--shadow-sm)',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                gap: '16px',
-                ...revealStyle(partnersShown, i + 1),
-              }}
-            >
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
-                  <span
-                    className="badge badge-available"
-                    style={{ fontSize: 'var(--text-2xs)', fontFamily: 'var(--font-mono)' }}
-                  >
-                    Stage {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <Anchor size={16} color="var(--verify)" aria-hidden="true" />
-                </div>
-
-                <h3 style={{ fontFamily: 'var(--font-serif)', fontWeight: 600, fontSize: 'var(--text-2xl)', color: 'var(--text-dark)', lineHeight: 1.2, marginBottom: '4px' }}>
-                  {yard.city}
-                </h3>
-                <div className="mono" style={{ color: 'var(--accent)', fontSize: 'var(--text-xs)', marginBottom: '14px' }}>
-                  {yard.country} &middot; since {yard.since}
-                </div>
-
-                <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-dark)', marginBottom: '6px' }}>
-                  {yard.role}
-                </div>
-                <p style={{ fontSize: 'var(--text-sm)', lineHeight: 1.6, color: 'var(--text-muted)', margin: 0 }}>
-                  {yard.detail}
-                </p>
-              </div>
-            </article>
-          ))}
-        </div>
       </section>
 
       <style>{`

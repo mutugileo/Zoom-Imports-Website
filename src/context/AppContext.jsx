@@ -86,7 +86,7 @@ export const AppProvider = ({ children }) => {
    * `waNumber` is the phone with everything but the digits taken out, because
    * wa.me will not accept spaces or a plus sign.
    */
-  const EMPTY_CONTACT = { phone: '', whatsapp: '', email: '', location: '' };
+  const EMPTY_CONTACT = { phone: '', whatsapp: '', email: '', location: '', hours: '', facebook: '', instagram: '' };
   const [contact, setContact] = useState(EMPTY_CONTACT);
   const [banners, setBanners] = useState([]);
   const [faqs, setFaqs] = useState([]);

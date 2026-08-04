@@ -236,7 +236,7 @@ export const Header = () => {
         </div>
         <div className="mono header-rail-meta" style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: 'var(--text-xs)' }}>
           <span style={{ display: 'none' }} />
-          <span>Mon–Sat 8:00–18:00</span>
+          <span>{contact.hours}</span>
           <a href={`tel:${contact.phone.replace(/\s/g, '')}`} style={{ display: 'flex', alignItems: 'center', gap: '6px' }} className="link-draw">
             <Phone size={12} /> {contact.phone}
           </a>
