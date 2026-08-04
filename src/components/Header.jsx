@@ -267,12 +267,26 @@ export const Header = () => {
           style={{ background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: 0, flexShrink: 0 }}
           aria-label="Zoom Imports — home"
         >
-          <div style={{ fontFamily: 'var(--font-serif)', fontWeight: 700, fontSize: 'var(--text-2xl)', color: overlay ? '#ffffff' : 'var(--text-dark)', lineHeight: 1.05, transition: 'color 320ms ease' }}>
-            Zoom Imports
-          </div>
-          <div className="mono" style={{ fontSize: 'var(--text-2xs)', color: overlay ? 'rgba(238,242,247,0.82)' : 'var(--text-dim)', transition: 'color 320ms ease' }}>
-            Nairobi · Est. 2014
-          </div>
+          {/* The badge carries the wordmark already, so the type beside it is
+              the wayfinding line rather than a second copy of the name. */}
+          <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <img
+              src="/logo.jpg"
+              alt=""
+              width={36}
+              height={36}
+              decoding="async"
+              style={{ width: '36px', height: '36px', borderRadius: '8px', objectFit: 'cover', flexShrink: 0 }}
+            />
+            <span>
+              <span style={{ display: 'block', fontFamily: 'var(--font-serif)', fontWeight: 700, fontSize: 'var(--text-2xl)', color: overlay ? '#ffffff' : 'var(--text-dark)', lineHeight: 1.05, transition: 'color 320ms ease' }}>
+                Zoom Imports
+              </span>
+              <span className="mono" style={{ display: 'block', fontSize: 'var(--text-2xs)', color: overlay ? 'rgba(238,242,247,0.82)' : 'var(--text-dim)', transition: 'color 320ms ease' }}>
+                Nairobi · Est. 2014
+              </span>
+            </span>
+          </span>
         </button>
 
         {/* Desktop nav */}
