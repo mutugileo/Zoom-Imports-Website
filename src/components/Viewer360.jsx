@@ -157,6 +157,16 @@ export const Viewer360 = ({ slug, fallbackImg, gallery = [], alt, height = 460 }
     userSelect: 'none',
   };
 
+  /* Warm the neighbouring shots so tapping a dot swaps instantly instead of
+     showing a gap while the next photo is fetched. */
+  useEffect(() => {
+    if (status !== 'unavailable' || gallery.length < 2) return;
+    [photo + 1, photo - 1].forEach((i) => {
+      const src = gallery[(i + gallery.length) % gallery.length];
+      if (src) { const im = new Image(); im.src = src; }
+    });
+  }, [status, gallery, photo]);
+
   if (status === 'unavailable') {
     /* No turntable capture for this car — so show the photographs the yard
        actually uploaded. Falling back to `fallbackImg` alone meant a listing
@@ -167,9 +177,15 @@ export const Viewer360 = ({ slug, fallbackImg, gallery = [], alt, height = 460 }
 
     return (
       <div style={shellStyle}>
+        {/* The hero of the page, so it loads eagerly — lazy here would leave a
+            blank frame at the top of every listing. Decoding is handed off the
+            main thread so a large photo cannot stall the first paint. */}
         <img
           src={shot}
           alt={shots.length > 1 ? `${alt} — photo ${photo + 1} of ${shots.length}` : alt}
+          loading="eager"
+          decoding="async"
+          fetchpriority="high"
           style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.95 }}
         />
 
