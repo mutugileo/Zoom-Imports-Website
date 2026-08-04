@@ -10,7 +10,6 @@ import { VehicleCard } from '../components/VehicleCard';
 import { SparePartCard } from '../components/SparePartCard';
 import { ListingBadge } from '../components/ListingBadge';
 import { SiteIcon } from '../components/SiteIcon';
-import { CATEGORIES, COMPATIBILITY_RULES } from '@shared/data/mockData';
 import {
   ArrowRight, ArrowUpRight,
   Quote, ChevronDown, PenLine, Star,
@@ -19,14 +18,31 @@ import {
 
 
 
-const FITMENT = COMPATIBILITY_RULES.reduce((acc, rule) => {
-  const key = rule.part.trim().toLowerCase();
-  if (!acc[key]) acc[key] = rule;
+/* Built from the rules the admin actually holds. This used to close over a
+   bundled copy of the sample rules, so the homepage advertised fitment for
+   parts the yard had never entered. */
+const fitmentIndex = (rules) => rules.reduce((acc, rule) => {
+  const key = String(rule.part ?? '').trim().toLowerCase();
+  if (key && !acc[key]) acc[key] = rule;
   return acc;
 }, {});
 
 export const HomePage = () => {
-  const { vehicles, parts, navigateTo, formatKES, addToCart, publishedReviews, setIsReviewOpen, banners } = useApp();
+  const { vehicles, parts, compatibility, navigateTo, formatKES, addToCart, publishedReviews, setIsReviewOpen, banners } = useApp();
+
+  const FITMENT = useMemo(() => fitmentIndex(compatibility), [compatibility]);
+
+  /* The category rail is derived from the parts actually on the shelf. The
+     bundled list carried its own invented counts and showed six categories
+     whether or not a single part sat in any of them. */
+  const categories = useMemo(() => {
+    const seen = new Map();
+    for (const p of parts) {
+      if (!p.category) continue;
+      seen.set(p.category, (seen.get(p.category) ?? 0) + 1);
+    }
+    return [...seen.entries()].map(([name, count]) => ({ id: name, name, count }));
+  }, [parts]);
 
   const [chassisQuery, setChassisQuery] = React.useState('');
   const [selectedCategory, setSelectedCategory] = React.useState(null);
@@ -490,8 +506,8 @@ export const HomePage = () => {
               >
                 All Categories ({parts.length})
               </button>
-              {CATEGORIES.map((c) => {
-                const count = parts.filter((p) => p.category === c.name).length;
+              {categories.map((c) => {
+                const count = c.count;
                 const isSel = selectedCategory === c.name;
                 return (
                   <button
