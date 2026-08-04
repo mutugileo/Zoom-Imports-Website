@@ -161,7 +161,10 @@ export const HomePage = () => {
               style={{
                 marginBottom: '18px', display: 'inline-flex',
                 alignItems: 'center', gap: '8px',
-                textShadow: '0 1px 10px rgba(22,40,58,0.75)',
+                /* Tight and dark rather than wide and soft: a 10px blur at this
+                   type size read as smudged text on a phone rather than as a
+                   scrim. This still lifts it off the photograph. */
+                textShadow: '0 1px 2px rgba(11,21,30,0.9), 0 0 1px rgba(11,21,30,0.8)',
               }}
             >
               <span
@@ -171,7 +174,7 @@ export const HomePage = () => {
                   boxShadow: '0 0 10px var(--verify)',
                 }}
               />
-              DOCKED IN NAIROBI · {availableCount} UNITS READY
+              DOCKED IN NAIROBI · {availableCount} {availableCount === 1 ? 'UNIT' : 'UNITS'} READY
             </div>
 
             <h1

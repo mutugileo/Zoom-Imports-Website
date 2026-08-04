@@ -2064,3 +2064,36 @@ input:focus-visible {
 
 
 
+
+/* The header is fixed, and on a phone it is two stacked rows — the contact
+   rail above the brand bar — so it stands roughly 110px tall. `.hero-inner`
+   carried a flat 72px of top padding, which was written when the header was
+   one row, leaving the eyebrow rendering underneath it. Clearing the real
+   header height rather than a guessed number keeps the two apart at any
+   phone width. */
+@media (max-width: 720px) {
+  /* Measured, not guessed: the two-row header stands 110px on a phone and the
+     eyebrow was starting at 85px, so it rendered under the brand bar. */
+  section > .hero-inner,
+  .hero-inner {
+    padding-top: 132px !important;
+  }
+
+  /* The two hero actions sat side by side on desktop and wrapped on a phone,
+     because 178px + 168px + a 14px gap needs 360px and the column is 339px.
+     Sharing the row equally fits them both without shrinking the tap target
+     below what a thumb needs. */
+  .hero-anim-cta {
+    flex-wrap: nowrap !important;
+    gap: 10px !important;
+    width: 100%;
+  }
+  .hero-anim-cta > * {
+    flex: 1 1 0;
+    min-width: 0;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+    white-space: nowrap;
+    justify-content: center;
+  }
+}
