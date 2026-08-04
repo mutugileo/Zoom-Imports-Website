@@ -12,84 +12,105 @@ export const AboutPage = () => {
   const [partnersRef, partnersShown] = useReveal();
 
   return (
-    <div className="animate-fade-in" style={{ padding: '36px var(--gutter) 60px', maxWidth: '1080px', margin: '0 auto' }}>
-      <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text-dim)', marginBottom: '6px' }}>Home / About Us</div>
+    <div className="animate-fade-in" style={{ padding: '36px var(--gutter) 60px', maxWidth: '1140px', margin: '0 auto' }}>
+      <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text-dim)', marginBottom: '16px' }}>Home / About Us</div>
 
-      {/* Two halves: who we are on the left, the chain that backs it on the
-          right. The partner column is the evidence for the claims beside it,
-          so the two are read together rather than one after the other. */}
-      <div className="about-parallel" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px', alignItems: 'start' }}>
+      {/* ───────────── 1. About Zoom Imports Kenya Section ───────────── */}
+      <section style={{ marginBottom: '56px' }}>
+        <h1 style={{ fontFamily: 'Source Serif 4, serif', fontWeight: 600, fontSize: 'var(--text-5xl)', color: '#16232e', marginBottom: '16px' }}>
+          About Zoom Imports Kenya
+        </h1>
+        
+        <p style={{ fontSize: 'var(--text-lg)', lineHeight: 1.75, color: '#333d49', maxWidth: '840px', marginBottom: '32px' }}>
+          Zoom Imports is Nairobi’s premier dealer in hand-picked foreign used import vehicles and genuine OEM spare parts. Located along Mombasa Road, we bridge the gap between quality international sourcing and transparent local delivery.
+        </p>
 
-      <div className="about-main">
-      <h1 style={{ fontFamily: 'Source Serif 4, serif', fontWeight: 600, fontSize: 'var(--text-5xl)', color: '#16232e', marginBottom: '16px' }}>
-        About Zoom Imports Kenya
-      </h1>
-      
-      <p style={{ fontSize: 'var(--text-lg)', lineHeight: 1.7, color: '#333d49', marginBottom: '28px' }}>
-        Zoom Imports is Nairobi’s premier dealer in hand-picked foreign used import vehicles and genuine OEM spare parts. Located along Mombasa Road, we bridge the gap between quality international sourcing and transparent local delivery.
-      </p>
-
-      {/* Laid out horizontally: the figure sits beside its label rather than on
-          top of it, so the three read as one line of evidence across the page
-          instead of three separate stacked plaques. */}
-      <div ref={statsRef} style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '26px', ...revealStyle(statsShown) }}>
-        {[
-          { figure: '500+', tone: 'var(--primary)', label: 'Vehicles handed over', sub: 'Fully verified Japan auction grades' },
-          { figure: '100%', tone: 'var(--accent)', label: 'Genuine spare parts', sub: 'Backed by 12-month warranty cover' },
-          { figure: '24 hrs', tone: '#2f6690', label: 'Nairobi delivery', sub: 'Fast dispatch to your mechanic or home' },
-        ].map((s) => (
-          <div
-            key={s.label}
-            className="about-stat"
-            style={{
-              background: 'var(--bg-card)', border: '1px solid var(--band-line)',
-              borderRadius: '10px', padding: '20px', boxShadow: 'var(--shadow-sm)',
-              display: 'flex', alignItems: 'center', gap: '16px',
-            }}
-          >
+        {/* Horizontal 3-column stats grid */}
+        <div
+          ref={statsRef}
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: '20px',
+            marginBottom: '36px',
+            ...revealStyle(statsShown),
+          }}
+          className="about-stats-grid"
+        >
+          {[
+            { figure: '500+', tone: 'var(--primary)', label: 'Vehicles handed over', sub: 'Fully verified Japan auction grades' },
+            { figure: '100%', tone: 'var(--accent)', label: 'Genuine spare parts', sub: 'Backed by 12-month warranty cover' },
+            { figure: '24 hrs', tone: '#2f6690', label: 'Nairobi delivery', sub: 'Fast dispatch to your mechanic or home' },
+          ].map((s) => (
             <div
+              key={s.label}
+              className="about-stat"
               style={{
-                fontSize: 'var(--text-4xl)', fontWeight: 700, fontFamily: 'var(--font-serif)',
-                color: s.tone, lineHeight: 1, flexShrink: 0, letterSpacing: '-0.02em',
+                background: 'var(--bg-card)', border: '1px solid var(--band-line)',
+                borderRadius: '12px', padding: '22px 20px', boxShadow: 'var(--shadow-sm)',
+                display: 'flex', flexDirection: 'column', gap: '8px',
               }}
             >
-              {s.figure}
+              <div
+                style={{
+                  fontSize: 'var(--text-4xl)', fontWeight: 700, fontFamily: 'var(--font-serif)',
+                  color: s.tone, lineHeight: 1, letterSpacing: '-0.02em',
+                }}
+              >
+                {s.figure}
+              </div>
+              <div>
+                <div style={{ fontSize: 'var(--text-base)', fontWeight: 600, color: 'var(--text-dark)' }}>{s.label}</div>
+                <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)', marginTop: '4px', lineHeight: 1.45 }}>{s.sub}</div>
+              </div>
             </div>
-            {/* The rule does the separating, so the two halves stay distinct
-                without a gap wide enough to break the line. */}
-            <div style={{ alignSelf: 'stretch', width: '1px', background: 'var(--band-line)', flexShrink: 0 }} />
-            <div style={{ minWidth: 0 }}>
-              <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-dark)' }}>{s.label}</div>
-              <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)', marginTop: '2px', lineHeight: 1.45 }}>{s.sub}</div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div ref={promiseRef} className="about-promise" style={{ background: '#1e3449', color: '#fff', borderRadius: '12px', padding: '30px 28px', display: 'flex', flexDirection: 'column', gap: '16px', ...revealStyle(promiseShown) }}>
-        <h2 style={{ fontFamily: 'Source Serif 4, serif', fontSize: 'var(--text-3xl)' }}>Our Import Promise</h2>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-base)', color: 'rgba(255,255,255,.85)' }}>
-            <SiteIcon icon={CheckCircle2} variant="dark" size={16} /> Every vehicle is verified for non-accident history and certified mileage before shipment.
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-base)', color: 'rgba(255,255,255,.85)' }}>
-            <SiteIcon icon={CheckCircle2} variant="dark" size={16} /> No hidden fees — our prices include all duty, VAT, and clearing charges.
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-base)', color: 'rgba(255,255,255,.85)' }}>
-            <SiteIcon icon={CheckCircle2} variant="dark" size={16} /> Genuine spare parts are guaranteed compatible with Kenyan vehicle specs.
-          </div>
+          ))}
         </div>
 
-        <button onClick={() => navigateTo('vehicles')} className="btn-primary" style={{ width: 'fit-content', marginTop: '12px', background: 'var(--accent)' }}>
-          Explore Vehicle Inventory
-        </button>
-      </div>
+        {/* Our Import Promise Banner Card - Horizontal layout */}
+        <div
+          ref={promiseRef}
+          className="about-promise"
+          style={{
+            background: '#1e3449', color: '#fff', borderRadius: '14px',
+            padding: '32px 36px', boxShadow: 'var(--shadow-md)',
+            ...revealStyle(promiseShown),
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '20px', marginBottom: '24px', borderBottom: '1px solid rgba(255,255,255,0.12)', paddingBottom: '20px' }}>
+            <div>
+              <div className="mono" style={{ color: 'var(--accent-light)', fontSize: 'var(--text-xs)', marginBottom: '4px' }}>Our Commitment</div>
+              <h2 style={{ fontFamily: 'Source Serif 4, serif', fontSize: 'var(--text-3xl)', margin: 0 }}>Our Import Promise</h2>
+            </div>
+            <button onClick={() => navigateTo('vehicles')} className="btn-primary" style={{ background: 'var(--accent)', padding: '12px 22px' }}>
+              Explore Vehicle Inventory
+            </button>
+          </div>
 
-      </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }} className="promise-grid">
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+              <SiteIcon icon={CheckCircle2} variant="dark" size={20} style={{ flexShrink: 0, marginTop: '2px' }} />
+              <div style={{ fontSize: 'var(--text-sm)', lineHeight: 1.6, color: 'rgba(255,255,255,.9)' }}>
+                <strong>Non-Accident Certified:</strong> Every vehicle is verified for non-accident history &amp; certified mileage before shipment.
+              </div>
+            </div>
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+              <SiteIcon icon={CheckCircle2} variant="dark" size={20} style={{ flexShrink: 0, marginTop: '2px' }} />
+              <div style={{ fontSize: 'var(--text-sm)', lineHeight: 1.6, color: 'rgba(255,255,255,.9)' }}>
+                <strong>Transparent Pricing:</strong> No hidden fees — our listed prices include all customs duty, VAT, and clearing charges.
+              </div>
+            </div>
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+              <SiteIcon icon={CheckCircle2} variant="dark" size={20} style={{ flexShrink: 0, marginTop: '2px' }} />
+              <div style={{ fontSize: 'var(--text-sm)', lineHeight: 1.6, color: 'rgba(255,255,255,.9)' }}>
+                <strong>Kenyan Spec Fitment:</strong> Genuine OEM spare parts guaranteed 100% compatible with local vehicle specifications.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      {/* Our Partners — the three yards a car passes through, in order.
-          Ordered deliberately: it reads as the journey the vehicle takes, which
-          is the same sequence the homepage rail sets out, so the two agree. */}
+      {/* ───────────── 2. Our Partners: Three yards, one chain of custody (Horizontal 3-column cards) ───────────── */}
       <section ref={partnersRef} style={{ ...revealStyle(partnersShown) }}>
         <div className="mono" style={{ color: 'var(--accent)', marginBottom: '8px' }}>
           Our partners
@@ -97,61 +118,56 @@ export const AboutPage = () => {
         <h2
           style={{
             fontFamily: 'var(--font-serif)', fontWeight: 600,
-            fontSize: 'var(--text-fluid-md)', letterSpacing: '-0.02em',
-            color: 'var(--text-dark)', lineHeight: 1.15, marginBottom: '8px',
+            fontSize: 'var(--text-fluid-xl)', letterSpacing: '-0.02em',
+            color: 'var(--text-dark)', lineHeight: 1.15, marginBottom: '10px',
           }}
         >
           Three yards, one chain of custody
         </h2>
-        <p style={{ fontSize: 'var(--text-base)', lineHeight: 1.65, color: 'var(--text-muted)', marginBottom: '18px' }}>
+        <p style={{ fontSize: 'var(--text-base)', lineHeight: 1.65, color: 'var(--text-muted)', marginBottom: '28px', maxWidth: '780px' }}>
           Every car we sell passes through the same three yards, in the same order.
           That is what lets us put a chassis number and an auction grade on a listing
           and stand behind both.
         </p>
 
-        {/* Stacked cards with a horizontal head. In a half-width column the
-            full-width row could not hold stage, yard and detail on one line
-            without crushing the detail, so the identity stays horizontal —
-            stage beside the city, the way a manifest line reads — and the
-            description drops below its own rule. */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        {/* Horizontal 3-column partner cards grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '22px' }} className="partners-grid">
           {PARTNER_YARDS.map((yard, i) => (
             <article
               key={yard.id}
-              className="partner-row"
+              className="partner-card-horizontal"
               style={{
                 background: 'var(--bg-card)',
                 border: '1px solid var(--band-line)',
-                borderRadius: '12px',
-                padding: '16px 18px',
+                borderRadius: '14px',
+                padding: '24px',
                 boxShadow: 'var(--shadow-sm)',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                gap: '16px',
                 ...revealStyle(partnersShown, i + 1),
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                <span
-                  className="mono partner-stage"
-                  style={{ color: 'var(--text-muted)', fontSize: 'var(--text-xs)', flexShrink: 0 }}
-                >
-                  Stage {String(i + 1).padStart(2, '0')}
-                </span>
-
-                <div style={{ width: '1px', alignSelf: 'stretch', minHeight: '26px', background: 'var(--band-line)', flexShrink: 0 }} />
-
-                <div style={{ flex: 1, minWidth: 0 }} className="partner-place">
-                  <h3 style={{ fontFamily: 'var(--font-serif)', fontWeight: 600, fontSize: 'var(--text-xl)', color: 'var(--text-dark)', lineHeight: 1.2 }}>
-                    {yard.city}
-                  </h3>
-                  <div className="mono" style={{ color: 'var(--accent)', fontSize: 'var(--text-2xs)', marginTop: '2px' }}>
-                    {yard.country} &middot; since {yard.since}
-                  </div>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+                  <span
+                    className="badge badge-available"
+                    style={{ fontSize: 'var(--text-2xs)', fontFamily: 'var(--font-mono)' }}
+                  >
+                    Stage {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <Anchor size={16} color="var(--verify)" aria-hidden="true" />
                 </div>
 
-                <Anchor size={15} color="var(--verify)" aria-hidden="true" style={{ flexShrink: 0 }} />
-              </div>
+                <h3 style={{ fontFamily: 'var(--font-serif)', fontWeight: 600, fontSize: 'var(--text-2xl)', color: 'var(--text-dark)', lineHeight: 1.2, marginBottom: '4px' }}>
+                  {yard.city}
+                </h3>
+                <div className="mono" style={{ color: 'var(--accent)', fontSize: 'var(--text-xs)', marginBottom: '14px' }}>
+                  {yard.country} &middot; since {yard.since}
+                </div>
 
-              <div style={{ borderTop: '1px solid var(--band-line)', marginTop: '12px', paddingTop: '11px' }}>
-                <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-body)', marginBottom: '3px' }}>
+                <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-dark)', marginBottom: '6px' }}>
                   {yard.role}
                 </div>
                 <p style={{ fontSize: 'var(--text-sm)', lineHeight: 1.6, color: 'var(--text-muted)', margin: 0 }}>
@@ -163,7 +179,13 @@ export const AboutPage = () => {
         </div>
       </section>
 
-      </div>
+      <style>{`
+        @media (max-width: 900px) {
+          .about-stats-grid { grid-template-columns: 1fr !important; }
+          .promise-grid { grid-template-columns: 1fr !important; }
+          .partners-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </div>
   );
 };
