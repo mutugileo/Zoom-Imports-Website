@@ -30,12 +30,12 @@ const fitmentIndex = (rules) => rules.reduce((acc, rule) => {
 export const HomePage = () => {
   const { vehicles, parts, compatibility, navigateTo, formatKES, addToCart, publishedReviews, setIsReviewOpen, banners } = useApp();
 
-  const FITMENT = useMemo(() => fitmentIndex(compatibility), [compatibility]);
+  const FITMENT = React.useMemo(() => fitmentIndex(compatibility), [compatibility]);
 
   /* The category rail is derived from the parts actually on the shelf. The
      bundled list carried its own invented counts and showed six categories
      whether or not a single part sat in any of them. */
-  const categories = useMemo(() => {
+  const categories = React.useMemo(() => {
     const seen = new Map();
     for (const p of parts) {
       if (!p.category) continue;
