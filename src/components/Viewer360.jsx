@@ -53,13 +53,15 @@ const HOTSPOTS = [
   },
 ];
 
-export const Viewer360 = ({ slug, fallbackImg, alt, height = 460 }) => {
+export const Viewer360 = ({ slug, fallbackImg, gallery = [], alt, height = 460 }) => {
   const [status, setStatus] = useState('probing'); // probing | ready | unavailable
   const [loaded, setLoaded] = useState(0);
   const [frame, setFrame] = useState(0);
   const [dragging, setDragging] = useState(false);
   const [hinted, setHinted] = useState(false);
   const [activeHotspot, setActiveHotspot] = useState(null);
+  // Which uploaded photo is showing when there is no turntable capture.
+  const [photo, setPhoto] = useState(0);
   const [isFullScreen, setIsFullScreen] = useState(false);
 
   const containerRef = useRef(null);
@@ -156,13 +158,47 @@ export const Viewer360 = ({ slug, fallbackImg, alt, height = 460 }) => {
   };
 
   if (status === 'unavailable') {
+    /* No turntable capture for this car — so show the photographs the yard
+       actually uploaded. Falling back to `fallbackImg` alone meant a listing
+       with six photos showed one of them, and the other five existed only in
+       the admin. */
+    const shots = gallery.length ? gallery : (fallbackImg ? [fallbackImg] : []);
+    const shot = shots[Math.min(photo, shots.length - 1)] ?? fallbackImg;
+
     return (
       <div style={shellStyle}>
         <img
-          src={fallbackImg}
-          alt={alt}
+          src={shot}
+          alt={shots.length > 1 ? `${alt} — photo ${photo + 1} of ${shots.length}` : alt}
           style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.95 }}
         />
+
+        {shots.length > 1 && (
+          <div
+            style={{
+              position: 'absolute', right: '14px', bottom: '14px',
+              display: 'flex', gap: '6px', padding: '7px 9px', borderRadius: '999px',
+              background: 'rgba(22,40,58,0.72)', backdropFilter: 'blur(10px)',
+              border: '1px solid rgba(255,255,255,0.14)',
+            }}
+          >
+            {shots.map((src, i) => (
+              <button
+                key={src}
+                type="button"
+                onClick={() => setPhoto(i)}
+                aria-label={`Show photo ${i + 1}`}
+                aria-current={i === photo}
+                style={{
+                  width: '9px', height: '9px', padding: 0, borderRadius: '999px', cursor: 'pointer',
+                  border: '1px solid rgba(255,255,255,0.5)',
+                  background: i === photo ? '#fff' : 'transparent',
+                }}
+              />
+            ))}
+          </div>
+        )}
+
         <div
           style={{
             position: 'absolute', left: '14px', bottom: '14px',
@@ -174,7 +210,8 @@ export const Viewer360 = ({ slug, fallbackImg, alt, height = 460 }) => {
             color: 'rgba(238,242,247,0.82)', textTransform: 'uppercase',
           }}
         >
-          <ImageOff size={13} /> Single photo · turntable pending
+          <ImageOff size={13} />
+          {shots.length > 1 ? `${shots.length} photos · turntable pending` : 'Single photo · turntable pending'}
         </div>
       </div>
     );

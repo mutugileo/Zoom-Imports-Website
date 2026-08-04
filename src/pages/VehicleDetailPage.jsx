@@ -184,6 +184,7 @@ export const VehicleDetailPage = () => {
             <Viewer360
               slug={vehicle.slug}
               fallbackImg={vehicle.img}
+              gallery={vehicle.images}
               alt={`${vehicle.name} ${vehicle.year}`}
               height={520}
             />
