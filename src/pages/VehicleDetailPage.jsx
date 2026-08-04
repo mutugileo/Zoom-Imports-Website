@@ -16,7 +16,7 @@ import {
 
 export const VehicleDetailPage = () => {
   const {
-    vehicles, parts, compatibility, selectedVehicleId, navigateTo, formatKES,
+    vehicles, parts, compatibility, selectedVehicleId, navigateTo, navigateBackFromDetail, formatKES,
     setIsTestDriveOpen, setTestDriveTargetVehicle, waNumber,
   } = useApp();
 
@@ -43,7 +43,7 @@ export const VehicleDetailPage = () => {
         <p style={{ fontSize: 'var(--text-base)', color: 'var(--text-muted)', marginBottom: '20px' }}>
           It may have been sold. The rest of the lot is still available.
         </p>
-        <button onClick={() => navigateTo('vehicles')} className="btn-primary">Back to all vehicles</button>
+        <button onClick={() => navigateBackFromDetail('vehicles')} className="btn-primary">Back to all vehicles</button>
       </div>
     );
   }
@@ -115,7 +115,7 @@ export const VehicleDetailPage = () => {
       {/* ───────────── Inspection bay ───────────── */}
       <section style={{ background: 'transparent', color: 'var(--text-body)', borderBottom: '1px solid var(--band-line)', padding: '26px var(--gutter) 56px' }}>
         <button
-          onClick={() => navigateTo('vehicles')}
+          onClick={() => navigateBackFromDetail()}
           className="mono link-draw"
           style={{
             background: 'none', border: 'none', cursor: 'pointer', padding: 0,

@@ -1,4 +1,5 @@
 import React from "react";
+import { useApp } from "../context/AppContext";
 import { Img } from "./Img";
 import { clickableCard } from "../lib/clickable";
 import { pathFor } from "../lib/router";
@@ -26,6 +27,8 @@ export const SparePartCard = ({
   style,
   height = 320,
 }) => {
+  const { returningPartId } = useApp();
+  const isSelectedTarget = String(returningPartId) === String(part.id);
   const out = part.stock === 0;
   const price = part.promo || part.price;
   const savings = part.promo ? part.price - part.promo : 0;
@@ -40,13 +43,21 @@ export const SparePartCard = ({
 
   return (
     <a
-      className="pcard hover-card"
+      data-part-id={part.id}
+      className={`pcard hover-card ${isSelectedTarget ? 'part-selected-target' : ''}`}
       {...clickableCard(
         onOpen,
         `${part.name} by ${part.brand}, ${formatKES(price)}`,
         pathFor('part-detail', { id: part.id, parts }),
       )}
-      style={{ minHeight: `${height}px`, ...style }}
+      style={{
+        minHeight: `${height}px`,
+        borderRadius: '16px',
+        overflow: 'hidden',
+        border: '1px solid rgba(27,36,48,0.1)',
+        boxShadow: '0 12px 30px -12px rgba(13,25,38,0.15)',
+        ...style
+      }}
     >
       <div className="zoom-frame pcard-photo">
         <Img
@@ -59,21 +70,21 @@ export const SparePartCard = ({
 
       {/* Stock & Fitment Badges at top left */}
       <div style={{ position: 'absolute', top: '12px', left: '12px', display: 'flex', flexDirection: 'column', gap: '6px', zIndex: 10 }}>
-        <span className={`badge badge-${stockClass(part.stock)} pcard-stock`}>
+        <span className={`badge badge-${stockClass(part.stock)} pcard-stock`} style={{ borderRadius: '9999px' }}>
           {stockLabel(part.stock)}
         </span>
         {fitmentType === 'exact' && (
-          <span className="badge-fitment badge-exact-fit">
+          <span className="badge-fitment badge-exact-fit" style={{ borderRadius: '9999px' }}>
             <Check size={11} /> Exact Fit
           </span>
         )}
         {fitmentType === 'universal' && (
-          <span className="badge-fitment badge-universal">
+          <span className="badge-fitment badge-universal" style={{ borderRadius: '9999px' }}>
             Universal
           </span>
         )}
         {fitmentType === 'check' && (
-          <span className="badge-fitment badge-check-fit">
+          <span className="badge-fitment badge-check-fit" style={{ borderRadius: '9999px' }}>
             Check Fitment
           </span>
         )}
@@ -81,9 +92,9 @@ export const SparePartCard = ({
 
       {part.promo && (
         <div style={{ position: 'absolute', top: '12px', right: '12px', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px', zIndex: 10 }}>
-          <span className="badge badge-sale pcard-sale">Sale</span>
+          <span className="badge badge-sale pcard-sale" style={{ borderRadius: '9999px' }}>Sale</span>
           {savings > 0 && (
-            <span className="mono" style={{ fontSize: '10px', padding: '3px 7px', borderRadius: '4px', background: 'var(--accent)', color: '#fff', fontWeight: 700 }}>
+            <span className="mono" style={{ fontSize: '10px', padding: '3px 9px', borderRadius: '9999px', background: 'var(--accent)', color: '#fff', fontWeight: 700 }}>
               Save {formatKES(savings)}
             </span>
           )}
@@ -104,7 +115,7 @@ export const SparePartCard = ({
           </div>
         </div>
 
-        <h3 className="pcard-name">{part.name}</h3>
+        <h3 className="pcard-name" style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-lg)' }}>{part.name}</h3>
 
         <div className="pcard-collapse">
           <div className="pcard-collapse-inner">
@@ -126,7 +137,7 @@ export const SparePartCard = ({
         </div>
 
         <div className="pcard-buy">
-          <span className="pcard-price">
+          <span className="pcard-price" style={{ fontFamily: 'var(--font-sans)', fontWeight: 800 }}>
             {formatKES(price)}
             {part.promo && (
               <span
@@ -141,6 +152,7 @@ export const SparePartCard = ({
           <button
             type="button"
             className={`pcard-add${added ? ' is-added' : ''}`}
+            style={{ borderRadius: '9999px', padding: '7px 16px', fontWeight: 700 }}
             disabled={out}
             aria-label={
               out ? `${part.name} is out of stock` : `Add ${part.name} to cart`

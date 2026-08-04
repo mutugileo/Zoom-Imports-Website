@@ -182,7 +182,7 @@ export const Header = () => {
     : [];
   const hasResults = matchingVehicles.length > 0 || matchingParts.length > 0;
 
-  const quickPopularQueries = ['Mazda CX-5', 'Toyota Harrier', 'Subaru Forester', 'Brake Pad', 'Radiator'];
+  const quickPopularQueries = ['Mazda CX-5', 'Mazda Demio', 'Mazda Atenza', 'Mazda CX-30', 'Brake Pad', 'Radiator'];
 
   const go = (view, id) => {
     navigateTo(view, id);

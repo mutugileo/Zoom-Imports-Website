@@ -113,22 +113,46 @@ export const pathFor = (view, { id = null, vehicles = [], parts = [] } = {}) => 
   return VIEW_TO_PATH[view] ?? '/';
 };
 
-/** Per-view document titles, so history entries and tabs are distinguishable. */
+/** Per-view document titles optimized for Mazda vehicles and Mazda spare parts SEO. */
 export const titleFor = (view, record) => {
-  const base = 'Zoom Imports';
+  const base = 'Zoom Imports — Mazda Specialist Nairobi';
   switch (view) {
-    case 'home': return `${base} — Mazda imports & genuine parts, Nairobi`;
-    case 'vehicles': return `Vehicles — ${base}`;
-    case 'parts': return `Spare parts — ${base}`;
-    case 'about': return `About — ${base}`;
-    case 'contact': return `Contact — ${base}`;
-    case 'checkout': return `Checkout — ${base}`;
-    case 'sell': return `List your car with us — ${base}`;
-    case 'sell-parts': return `List your parts with us — ${base}`;
-    case 'not-found': return `Page not found — ${base}`;
+    case 'home': return `Zoom Imports — Dedicated Mazda Import Dealership & Genuine OEM Parts Nairobi`;
+    case 'vehicles': return `Mazda Vehicles for Sale in Kenya — Demio, CX-5, Axio, Atenza, CX-30 | Zoom Imports`;
+    case 'parts': return `Genuine OEM Mazda Spare Parts Nairobi, Kenya — Engine, Suspension & Brakes | Zoom Imports`;
+    case 'about': return `About Zoom Imports — Kenya's Premier Dedicated Mazda Specialist | Nairobi`;
+    case 'contact': return `Contact Zoom Imports — Mazda Vehicle Showroom & Parts Counter Mombasa Road`;
+    case 'checkout': return `Checkout — Genuine Mazda Spare Parts Order | Zoom Imports Nairobi`;
+    case 'sell': return `List Your Mazda Vehicle With Us — Mazda Import Specialist | Zoom Imports`;
+    case 'sell-parts': return `Supply Genuine Mazda Spare Parts — Zoom Imports Nairobi`;
+    case 'not-found': return `Page Not Found — Zoom Imports Mazda Specialist`;
     case 'vehicle-detail':
+      return record ? `${record.year ? record.year + ' ' : ''}${record.name} for Sale in Nairobi — Mazda Specialist | Zoom Imports` : base;
     case 'part-detail':
-      return record ? `${record.name} — ${base}` : base;
+      return record ? `Genuine ${record.name} (${record.brand || 'Mazda OEM'}) for Mazda — Zoom Imports` : base;
     default: return base;
+  }
+};
+
+/** Per-view meta description generator for dynamic SEO optimization. */
+export const descriptionFor = (view, record) => {
+  const base = "Nairobi's dedicated Mazda import vehicle dealership and genuine OEM Mazda spare parts specialist on Mombasa Road.";
+  switch (view) {
+    case 'home':
+      return `Kenya's premier dedicated Mazda specialist on Mombasa Road, Nairobi. Certified Mazda Demio, CX-5, Axio, Atenza, CX-30, Premacy, Biante & genuine OEM Mazda spare parts.`;
+    case 'vehicles':
+      return `Explore verified Mazda vehicles imported directly from Japan. Mazda Demio, CX-5, Axio, Atenza, CX-30, Biante & Premacy available for sale in Nairobi with full documentation.`;
+    case 'parts':
+      return `Buy 100% genuine OEM Mazda spare parts in Nairobi. Fast delivery across Kenya for Mazda Demio, CX-5, Axio, Atenza, CX-30, Premacy, Biante, BT-50 engine, suspension & body parts.`;
+    case 'about':
+      return `Learn about Zoom Imports — Nairobi's dedicated Mazda vehicle importer & genuine spare parts counter. USS auction certified, JEVIC odometer verified, based on Mombasa Road.`;
+    case 'contact':
+      return `Get in touch with Zoom Imports on Mombasa Road, Nairobi. Contact our Mazda vehicle sales desk or genuine Mazda spare parts counter for inquiries and orders.`;
+    case 'vehicle-detail':
+      return record ? `Buy this inspected ${record.year || ''} ${record.name} at Zoom Imports Nairobi. ${record.mileage ? record.mileage + ' km, ' : ''}${record.engine || ''}, ${record.trans || ''}. Certified Mazda import.` : base;
+    case 'part-detail':
+      return record ? `Order genuine ${record.name} (${record.brand || 'Mazda Genuine'}) at Zoom Imports. ${record.description || ''} Fits ${record.compat || 'Mazda vehicles'}.` : base;
+    default:
+      return base;
   }
 };

@@ -5,11 +5,11 @@ import { useReveal, revealStyle } from '../lib/useReveal';
 import { useAddedFlash } from '../lib/useAddedFlash';
 import { stockLabel, stockClass } from '@shared/lib/format';
 import { rulePartId } from '@shared/lib/compatibility';
-import { ShoppingCart, MessageSquare, Check, ShieldCheck, Plus, Minus, Truck } from 'lucide-react';
+import { ShoppingCart, MessageSquare, Check, ShieldCheck, Plus, Minus, Truck, ArrowLeft } from 'lucide-react';
 import { SiteIcon } from '../components/SiteIcon';
 
 export const SparePartDetailPage = () => {
-  const { selectedPartId, parts, compatibility, navigateTo, formatKES, addToCart, waNumber } = useApp();
+  const { selectedPartId, parts, compatibility, navigateTo, navigateBackFromDetail, formatKES, addToCart, waNumber } = useApp();
 
   const part = parts.find(p => String(p.id) === String(selectedPartId)) || parts[0];
   const [qty, setQty] = useState(1);
@@ -40,14 +40,26 @@ export const SparePartDetailPage = () => {
      quietly detached every fitment row from it. */
   const matchingRules = compatibility.filter((c) => rulePartId(c, parts) === part.id);
 
-
-
   return (
-    <div className="animate-fade-in" style={{ padding: '20px var(--gutter) 48px' }}>
+    <div style={{ padding: '20px var(--gutter) 48px' }}>
       
-      {/* Breadcrumb */}
-      <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text-dim)', marginBottom: '14px' }}>
-        <span onClick={() => navigateTo('home')} style={{ cursor: 'pointer' }}>Home</span> / <span onClick={() => navigateTo('parts')} style={{ cursor: 'pointer' }}>Spare Parts</span> / <strong style={{ color: '#16232e' }}>{part.name}</strong>
+      {/* Back button & Breadcrumb */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
+        <button
+          onClick={() => navigateBackFromDetail('parts')}
+          className="mono link-draw"
+          style={{
+            background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+            color: 'var(--text-muted)', display: 'inline-flex', alignItems: 'center',
+            gap: '8px',
+          }}
+        >
+          <ArrowLeft size={14} /> All spare parts
+        </button>
+
+        <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text-dim)' }}>
+          <span onClick={() => navigateTo('home')} style={{ cursor: 'pointer' }}>Home</span> / <span onClick={() => navigateBackFromDetail('parts')} style={{ cursor: 'pointer' }}>Spare Parts</span> / <strong style={{ color: '#16232e' }}>{part.name}</strong>
+        </div>
       </div>
 
       <div className="split-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '36px', alignItems: 'flex-start' }}>

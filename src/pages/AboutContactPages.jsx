@@ -15,97 +15,175 @@ export const AboutPage = () => {
     <div className="animate-fade-in" style={{ padding: '36px var(--gutter) 60px', maxWidth: '1140px', margin: '0 auto' }}>
       <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text-dim)', marginBottom: '16px' }}>Home / About Us</div>
 
-      {/* ───────────── 1. About Zoom Imports Kenya Section ───────────── */}
+      {/* ───────────── 1. About & Commitment Side-by-Side Section ───────────── */}
       <section style={{ marginBottom: '56px' }}>
-        <h1 style={{ fontFamily: 'Source Serif 4, serif', fontWeight: 600, fontSize: 'var(--text-5xl)', color: '#16232e', marginBottom: '16px' }}>
-          About Zoom Imports Kenya
-        </h1>
-        
-        <p style={{ fontSize: 'var(--text-lg)', lineHeight: 1.75, color: '#333d49', maxWidth: '840px', marginBottom: '32px' }}>
-          Zoom Imports is Nairobi’s premier dealer in hand-picked foreign used import vehicles and genuine OEM spare parts. Located along Mombasa Road, we bridge the gap between quality international sourcing and transparent local delivery.
-        </p>
-
-        {/* Horizontal 3-column stats grid */}
         <div
-          ref={statsRef}
+          className="about-top-grid"
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '20px',
-            marginBottom: '36px',
-            ...revealStyle(statsShown),
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gap: '24px',
+            alignItems: 'stretch',
           }}
-          className="about-stats-grid"
         >
-          {[
-            { figure: '500+', tone: 'var(--primary)', label: 'Vehicles handed over', sub: 'Fully verified Japan auction grades' },
-            { figure: '100%', tone: 'var(--accent)', label: 'Genuine spare parts', sub: 'Backed by 12-month warranty cover' },
-            { figure: '24 hrs', tone: '#2f6690', label: 'Nairobi delivery', sub: 'Fast dispatch to your mechanic or home' },
-          ].map((s) => (
-            <div
-              key={s.label}
-              className="about-stat"
-              style={{
-                background: 'var(--bg-card)', border: '1px solid var(--band-line)',
-                borderRadius: '12px', padding: '22px 20px', boxShadow: 'var(--shadow-sm)',
-                display: 'flex', flexDirection: 'column', gap: '8px',
-              }}
-            >
-              <div
+          {/* Left Card: About Zoom Imports Kenya */}
+          <div
+            ref={statsRef}
+            className="about-info-card"
+            style={{
+              background: 'var(--bg-card)',
+              border: '1px solid var(--band-line)',
+              borderRadius: '16px',
+              padding: '32px',
+              boxShadow: 'var(--shadow-sm)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              gap: '24px',
+              ...revealStyle(statsShown),
+            }}
+          >
+            <div>
+              <div className="mono" style={{ color: 'var(--accent)', marginBottom: '8px' }}>
+                Who We Are
+              </div>
+              <h1
                 style={{
-                  fontSize: 'var(--text-4xl)', fontWeight: 700, fontFamily: 'var(--font-serif)',
-                  color: s.tone, lineHeight: 1, letterSpacing: '-0.02em',
+                  fontFamily: 'Source Serif 4, serif',
+                  fontWeight: 600,
+                  fontSize: 'var(--text-3xl)',
+                  color: '#16232e',
+                  marginBottom: '14px',
+                  lineHeight: 1.2,
                 }}
               >
-                {s.figure}
-              </div>
-              <div>
-                <div style={{ fontSize: 'var(--text-base)', fontWeight: 600, color: 'var(--text-dark)' }}>{s.label}</div>
-                <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)', marginTop: '4px', lineHeight: 1.45 }}>{s.sub}</div>
-              </div>
+                About Zoom Imports Kenya
+              </h1>
+              <p
+                style={{
+                  fontSize: 'var(--text-base)',
+                  lineHeight: 1.65,
+                  color: '#333d49',
+                }}
+              >
+                Zoom Imports is Nairobi’s premier dealer in hand-picked foreign used import vehicles and genuine OEM spare parts. Located along Mombasa Road, we bridge the gap between quality international sourcing and transparent local delivery.
+              </p>
             </div>
-          ))}
-        </div>
 
-        {/* Our Import Promise Banner Card - Horizontal layout */}
-        <div
-          ref={promiseRef}
-          className="about-promise"
-          style={{
-            background: '#1e3449', color: '#fff', borderRadius: '14px',
-            padding: '32px 36px', boxShadow: 'var(--shadow-md)',
-            ...revealStyle(promiseShown),
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '20px', marginBottom: '24px', borderBottom: '1px solid rgba(255,255,255,0.12)', paddingBottom: '20px' }}>
-            <div>
-              <div className="mono" style={{ color: 'var(--accent-light)', fontSize: 'var(--text-xs)', marginBottom: '4px' }}>Our Commitment</div>
-              <h2 style={{ fontFamily: 'Source Serif 4, serif', fontSize: 'var(--text-3xl)', margin: 0 }}>Our Import Promise</h2>
+            {/* Stats Sub-Grid */}
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, 1fr)',
+                gap: '12px',
+              }}
+              className="about-stats-grid"
+            >
+              {[
+                { figure: '500+', tone: 'var(--primary)', label: 'Vehicles handed over', sub: 'Verified Japan auction grades' },
+                { figure: '100%', tone: 'var(--accent)', label: 'Genuine spare parts', sub: '12-month warranty cover' },
+                { figure: '24 hrs', tone: '#2f6690', label: 'Nairobi delivery', sub: 'Fast dispatch to your location' },
+              ].map((s) => (
+                <div
+                  key={s.label}
+                  className="about-stat"
+                  style={{
+                    background: 'var(--bg-app)',
+                    border: '1px solid var(--border-light)',
+                    borderRadius: '10px',
+                    padding: '14px 12px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '4px',
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: 'var(--text-2xl)',
+                      fontWeight: 700,
+                      fontFamily: 'var(--font-serif)',
+                      color: s.tone,
+                      lineHeight: 1,
+                      letterSpacing: '-0.02em',
+                    }}
+                  >
+                    {s.figure}
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--text-dark)', lineHeight: 1.3 }}>{s.label}</div>
+                    <div style={{ fontSize: 'var(--text-2xs)', color: 'var(--text-muted)', marginTop: '2px', lineHeight: 1.3 }}>{s.sub}</div>
+                  </div>
+                </div>
+              ))}
             </div>
-            <button onClick={() => navigateTo('vehicles')} className="btn-primary" style={{ background: 'var(--accent)', padding: '12px 22px' }}>
-              Explore Vehicle Inventory
-            </button>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }} className="promise-grid">
-            <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-              <SiteIcon icon={CheckCircle2} variant="dark" size={20} style={{ flexShrink: 0, marginTop: '2px' }} />
-              <div style={{ fontSize: 'var(--text-sm)', lineHeight: 1.6, color: 'rgba(255,255,255,.9)' }}>
-                <strong>Non-Accident Certified:</strong> Every vehicle is verified for non-accident history &amp; certified mileage before shipment.
+          {/* Right Card: Our Commitment / Promise */}
+          <div
+            ref={promiseRef}
+            className="about-promise-card"
+            style={{
+              background: '#1e3449',
+              color: '#fff',
+              borderRadius: '16px',
+              padding: '32px',
+              boxShadow: 'var(--shadow-md)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              gap: '24px',
+              ...revealStyle(promiseShown),
+            }}
+          >
+            <div>
+              <div className="mono" style={{ color: 'var(--accent-light)', fontSize: 'var(--text-xs)', marginBottom: '8px' }}>
+                Our Commitment
+              </div>
+              <h2 style={{ fontFamily: 'Source Serif 4, serif', fontSize: 'var(--text-3xl)', margin: '0 0 20px 0', color: '#fff', lineHeight: 1.2 }}>
+                Our Import Promise
+              </h2>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                  <SiteIcon icon={CheckCircle2} variant="dark" size={18} style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <div style={{ fontSize: 'var(--text-sm)', lineHeight: 1.55, color: 'rgba(255,255,255,.9)' }}>
+                    <strong>Non-Accident Certified:</strong> Every vehicle is verified for non-accident history &amp; certified mileage before shipment.
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                  <SiteIcon icon={CheckCircle2} variant="dark" size={18} style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <div style={{ fontSize: 'var(--text-sm)', lineHeight: 1.55, color: 'rgba(255,255,255,.9)' }}>
+                    <strong>Transparent Pricing:</strong> No hidden fees — our listed prices include all customs duty, VAT, and clearing charges.
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                  <SiteIcon icon={CheckCircle2} variant="dark" size={18} style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <div style={{ fontSize: 'var(--text-sm)', lineHeight: 1.55, color: 'rgba(255,255,255,.9)' }}>
+                    <strong>Kenyan Spec Fitment:</strong> Genuine OEM spare parts guaranteed 100% compatible with local vehicle specifications.
+                  </div>
+                </div>
               </div>
             </div>
-            <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-              <SiteIcon icon={CheckCircle2} variant="dark" size={20} style={{ flexShrink: 0, marginTop: '2px' }} />
-              <div style={{ fontSize: 'var(--text-sm)', lineHeight: 1.6, color: 'rgba(255,255,255,.9)' }}>
-                <strong>Transparent Pricing:</strong> No hidden fees — our listed prices include all customs duty, VAT, and clearing charges.
-              </div>
-            </div>
-            <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-              <SiteIcon icon={CheckCircle2} variant="dark" size={20} style={{ flexShrink: 0, marginTop: '2px' }} />
-              <div style={{ fontSize: 'var(--text-sm)', lineHeight: 1.6, color: 'rgba(255,255,255,.9)' }}>
-                <strong>Kenyan Spec Fitment:</strong> Genuine OEM spare parts guaranteed 100% compatible with local vehicle specifications.
-              </div>
-            </div>
+
+            <button
+              onClick={() => navigateTo('vehicles')}
+              className="btn-primary"
+              style={{
+                background: 'var(--accent)',
+                width: '100%',
+                padding: '12px 20px',
+                textAlign: 'center',
+                justifyContent: 'center',
+                borderRadius: '8px',
+                fontSize: 'var(--text-sm)',
+                fontWeight: 600,
+                cursor: 'pointer',
+                border: 'none',
+                color: '#fff',
+              }}
+            >
+              Explore Vehicle Inventory
+            </button>
           </div>
         </div>
       </section>
@@ -181,9 +259,12 @@ export const AboutPage = () => {
 
       <style>{`
         @media (max-width: 900px) {
+          .about-top-grid { grid-template-columns: 1fr !important; }
           .about-stats-grid { grid-template-columns: 1fr !important; }
-          .promise-grid { grid-template-columns: 1fr !important; }
           .partners-grid { grid-template-columns: 1fr !important; }
+        }
+        @media (max-width: 500px) {
+          .about-stats-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </div>

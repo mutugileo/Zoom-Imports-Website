@@ -10,7 +10,7 @@ import {
 import { DEFAULT_CONTACT, DEFAULT_BANNERS, DEFAULT_FAQS } from '@shared/data/siteContent';
 import { formatKES, formatDate } from '@shared/lib/format';
 import { KEYS, read, readSafe, write, makeOrderRef } from '@shared/lib/store';
-import { routeFromPath, pathFor, titleFor } from '../lib/router';
+import { routeFromPath, pathFor, titleFor, descriptionFor } from '../lib/router';
 
 /**
  * Customer-facing state only. Catalogue data is READ here — the shop never
@@ -41,6 +41,11 @@ export const AppProvider = ({ children }) => {
   const [currentView, setCurrentView] = useState(initialRoute.view);
   const [selectedVehicleId, setSelectedVehicleId] = useState(initialRoute.vehicleId ?? 1);
   const [selectedPartId, setSelectedPartId] = useState(initialRoute.partId ?? 1);
+
+  const [pageTransition, setPageTransition] = useState('none'); // 'none' | 'reveal-detail' | 'zoom-back' | 'zoom-back-grid'
+  const [returningVehicleId, setReturningVehicleId] = useState(null);
+  const [returningPartId, setReturningPartId] = useState(null);
+  const [previousView, setPreviousView] = useState('vehicles');
 
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartNotice, setCartNotice] = useState(null);
@@ -128,10 +133,28 @@ export const AppProvider = ({ children }) => {
   }, []);
 
   const navigateTo = useCallback((view, payloadId = null) => {
-    if (payloadId != null) {
-      if (view === 'vehicle-detail') setSelectedVehicleId(payloadId);
-      if (view === 'part-detail') setSelectedPartId(payloadId);
+    if ((view === 'vehicle-detail' || view === 'part-detail') && payloadId != null) {
+      const isPart = view === 'part-detail';
+      setPreviousView(
+        currentView === 'vehicle-detail' || currentView === 'part-detail'
+          ? (isPart ? 'parts' : 'vehicles')
+          : currentView
+      );
+      if (isPart) {
+        setSelectedPartId(payloadId);
+        setReturningPartId(null);
+      } else {
+        setSelectedVehicleId(payloadId);
+        setReturningVehicleId(null);
+      }
+      setPageTransition('reveal-detail');
+      setTimeout(() => setPageTransition('none'), 550);
+    } else if (payloadId != null && view === 'vehicle-detail') {
+      setSelectedVehicleId(payloadId);
+    } else if (payloadId != null && view === 'part-detail') {
+      setSelectedPartId(payloadId);
     }
+
     setCurrentView(view);
 
     const path = pathFor(view, { id: payloadId, vehicles, parts });
@@ -140,7 +163,53 @@ export const AppProvider = ({ children }) => {
       window.history.pushState({ view, id: payloadId }, '', path);
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [vehicles, parts]);
+  }, [currentView, vehicles, parts]);
+
+  const navigateBackFromDetail = useCallback((targetView = null) => {
+    const isPart = currentView === 'part-detail';
+    const nextView = targetView || previousView || (isPart ? 'parts' : 'vehicles');
+    const activeVehicleId = selectedVehicleId;
+    const activePartId = selectedPartId;
+
+    // 1. Trigger exit zoom animation on detail page
+    setPageTransition('zoom-back');
+    if (isPart) {
+      setReturningPartId(activePartId);
+    } else {
+      setReturningVehicleId(activeVehicleId);
+    }
+
+    // 2. Wait for exit zoom animation to complete
+    setTimeout(() => {
+      setCurrentView(nextView);
+      setPageTransition('zoom-back-grid');
+
+      const path = pathFor(nextView, { vehicles, parts });
+      if (path !== window.location.pathname) {
+        window.history.pushState({ view: nextView }, '', path);
+      }
+
+      // 3. Scroll to selected item card & trigger pulse zoom
+      setTimeout(() => {
+        const selector = isPart
+          ? `[data-part-id="${activePartId}"]`
+          : `[data-vehicle-id="${activeVehicleId}"]`;
+        const targetEl = document.querySelector(selector);
+        if (targetEl) {
+          targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }, 50);
+
+      // 4. Reset transition after returning animation
+      setTimeout(() => {
+        setPageTransition('none');
+        setReturningVehicleId(null);
+        setReturningPartId(null);
+      }, 1000);
+    }, 380);
+  }, [currentView, previousView, selectedVehicleId, selectedPartId, vehicles, parts]);
 
   /**
    * Back and forward. Without this the browser would change the URL while the
@@ -148,22 +217,33 @@ export const AppProvider = ({ children }) => {
    */
   useEffect(() => {
     const onPop = () => {
-      applyRoute(routeFromPath(window.location.pathname, { vehicles, parts }));
-      // No smooth scroll here: returning to a listing should feel like a
-      // restoration, not a fresh navigation.
-      window.scrollTo({ top: 0 });
+      const route = routeFromPath(window.location.pathname, { vehicles, parts });
+      if ((currentView === 'vehicle-detail' || currentView === 'part-detail') && route.view !== currentView) {
+        navigateBackFromDetail(route.view);
+      } else {
+        applyRoute(route);
+        window.scrollTo({ top: 0 });
+      }
     };
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
-  }, [applyRoute, vehicles, parts]);
+  }, [applyRoute, currentView, navigateBackFromDetail, vehicles, parts]);
 
-  /** Distinguishable tab and history-entry titles. */
+  /** Distinguishable tab, history-entry titles and meta descriptions for SEO. */
   useEffect(() => {
     const record =
       currentView === 'vehicle-detail' ? vehicles.find((v) => v.id === selectedVehicleId)
       : currentView === 'part-detail' ? parts.find((p) => p.id === selectedPartId)
       : null;
     document.title = titleFor(currentView, record);
+
+    let metaDesc = document.querySelector('meta[name="description"]');
+    if (!metaDesc) {
+      metaDesc = document.createElement('meta');
+      metaDesc.setAttribute('name', 'description');
+      document.head.appendChild(metaDesc);
+    }
+    metaDesc.setAttribute('content', descriptionFor(currentView, record));
   }, [currentView, selectedVehicleId, selectedPartId, vehicles, parts]);
 
   /**
@@ -315,6 +395,10 @@ export const AppProvider = ({ children }) => {
     () => ({
       currentView,
       navigateTo,
+      navigateBackFromDetail,
+      pageTransition,
+      returningVehicleId,
+      returningPartId,
       catalogueError,
       retryCatalogue,
       selectedVehicleId,
@@ -359,13 +443,14 @@ export const AppProvider = ({ children }) => {
       faqs,
     }),
     [
-      currentView, navigateTo, selectedVehicleId, selectedPartId, searchQuery,
+      currentView, navigateTo, navigateBackFromDetail, pageTransition, returningVehicleId, returningPartId,
+      selectedVehicleId, selectedPartId, searchQuery,
       vehicles, parts, compatibility, orders, enquiries,
       cart, addToCart, updateCartQty, removeFromCart, clearCart,
       cartSubtotal, cartItemCount, isCartOpen, cartNotice,
       isTestDriveOpen, testDriveTargetVehicle,
       reviews, publishedReviews, submitReview, isReviewOpen,
-      submitOrder, submitEnquiry, contact, waNumber, banners, faqs,
+      submitOrder, submitEnquiry, contact, waNumber, banners, faqs, catalogueError, retryCatalogue
     ]
   );
 

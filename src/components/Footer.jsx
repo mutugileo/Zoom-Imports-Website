@@ -162,12 +162,44 @@ export const Footer = () => {
           })}
         </div>
 
-        <span className="mono" style={{ fontSize: 'var(--text-xs)', color: 'rgba(238,242,247,0.68)' }}>
-          © {year} Zoom Imports · Prices in KES, duty inclusive unless stated
-        </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
+          <span className="mono" style={{ fontSize: 'var(--text-xs)', color: 'rgba(238,242,247,0.68)' }}>
+            © {year} Zoom Imports · Prices in KES, duty inclusive unless stated
+          </span>
+
+          <a
+            href="https://codzure-solutions.vercel.app"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '4px 10px',
+              borderRadius: '999px',
+              background: 'rgba(255, 255, 255, 0.06)',
+              border: '1px solid rgba(255, 255, 255, 0.14)',
+              fontSize: '11px',
+              fontFamily: 'var(--font-mono)',
+              textDecoration: 'none',
+            }}
+            className="codzure-badge"
+          >
+            <span style={{ color: 'rgba(238,242,247,0.7)' }}>Developed and maintained by:</span>
+            <span style={{ color: 'var(--accent-light, #7dd3fc)', fontWeight: 600 }}>Codzure Solutions</span>
+          </a>
+        </div>
       </div>
 
       <style>{`
+        .codzure-badge {
+          transition: background 0.2s ease, border-color 0.2s ease;
+        }
+        .codzure-badge:hover {
+          background: rgba(255, 255, 255, 0.12) !important;
+          border-color: rgba(255, 255, 255, 0.28) !important;
+        }
+
         /* Flex handles the intermediate widths on its own — the nav groups wrap
            before the links inside them do. Only the narrowest case needs help,
            where space-between would strand the WhatsApp button on its own line

@@ -14,6 +14,7 @@ import { CATEGORIES, COMPATIBILITY_RULES } from '@shared/data/mockData';
 import {
   ArrowRight, ArrowUpRight,
   Quote, ChevronDown, PenLine, Star,
+  ChevronLeft, ChevronRight,
 } from 'lucide-react';
 
 
@@ -30,8 +31,26 @@ export const HomePage = () => {
   const [chassisQuery, setChassisQuery] = React.useState('');
   const [selectedCategory, setSelectedCategory] = React.useState(null);
 
+  const heroItems = React.useMemo(() => {
+    const list = vehicles.filter((v) => v.status === 'Available');
+    const feat = list.filter((v) => v.featured);
+    return (feat.length >= 2 ? feat : list).slice(0, 5);
+  }, [vehicles]);
+
+  const [heroIndex, setHeroIndex] = React.useState(0);
+  const [isPaused, setIsPaused] = React.useState(false);
+
+  const hero = heroItems[heroIndex] || heroItems[0] || vehicles[0];
+
+  React.useEffect(() => {
+    if (isPaused || heroItems.length <= 1) return;
+    const timer = setInterval(() => {
+      setHeroIndex((prev) => (prev + 1) % heroItems.length);
+    }, 5500);
+    return () => clearInterval(timer);
+  }, [isPaused, heroItems.length]);
+
   const featured = vehicles.filter((v) => v.featured && v.status === 'Available');
-  const hero = featured[0] || vehicles[0];
   const [lead, ...rest] = featured.length ? featured : vehicles;
   const secondary = rest.slice(0, 2);
 
@@ -68,24 +87,42 @@ export const HomePage = () => {
     <div>
       {/* ───────────── Hero: a documented car ───────────── */}
       <section
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+        aria-label="Featured Mazda Vehicles Carousel"
         style={{
           position: 'relative',
           background: 'var(--ink)',
           color: 'var(--text-on-ink)',
-          minHeight: 'min(86vh, 760px)',
+          minHeight: 'min(88vh, 780px)',
           display: 'flex',
           alignItems: 'flex-end',
           overflow: 'hidden',
         }}
       >
+        {/* Background carousel slides with smooth fade transition */}
         <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }} className="hero-anim-img">
-          <Img
-            src={hero?.img}
-            alt={`${hero?.name} ${hero?.year} on the Zoom Imports lot`}
-            loading="eager"
-            sizes="100vw"
-            style={{ objectPosition: 'center 45%' }}
-          />
+          {heroItems.map((item, idx) => (
+            <div
+              key={item.id}
+              style={{
+                position: 'absolute',
+                inset: 0,
+                opacity: idx === heroIndex ? 1 : 0,
+                transform: idx === heroIndex ? 'scale(1)' : 'scale(1.04)',
+                transition: 'opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                pointerEvents: idx === heroIndex ? 'auto' : 'none',
+              }}
+            >
+              <Img
+                src={item.img}
+                alt={`${item.name} ${item.year} on the Zoom Imports lot`}
+                loading={idx === 0 ? 'eager' : 'lazy'}
+                sizes="100vw"
+                style={{ objectPosition: 'center 45%', width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+            </div>
+          ))}
           <div className="hero-scrim-v" aria-hidden="true" />
           <div className="hero-scrim-h" aria-hidden="true" />
         </div>
@@ -95,40 +132,40 @@ export const HomePage = () => {
           style={{
             position: 'relative',
             width: '100%',
-            padding: '72px var(--gutter) 28px',
+            padding: '72px var(--gutter) 24px',
             display: 'grid',
             gridTemplateColumns: 'minmax(0, 1.35fr) minmax(0, 0.85fr)',
-            gap: '40px',
+            gap: '36px',
             alignItems: 'end',
           }}
         >
           <div>
             <div
-              className="mono hero-anim-badge"
+              className="hero-anim-badge eyebrow-pill"
               style={{
-                color: '#f4e3c6', marginBottom: '16px', display: 'flex',
-                alignItems: 'center', gap: '10px',
+                marginBottom: '18px', display: 'inline-flex',
+                alignItems: 'center', gap: '8px',
                 textShadow: '0 1px 10px rgba(22,40,58,0.75)',
               }}
             >
               <span
                 style={{
-                  width: '8px', height: '8px', borderRadius: '999px',
+                  width: '7px', height: '7px', borderRadius: '999px',
                   background: 'var(--verify)', display: 'inline-block',
-                  animation: 'pulse-ring 2s infinite',
+                  boxShadow: '0 0 10px var(--verify)',
                 }}
               />
-              Live Inventory: {availableCount} inspected units on the lot
+              DOCKED IN NAIROBI · {availableCount} UNITS READY
             </div>
 
             <h1
               className="hero-title hero-anim-title"
               style={{
-                fontFamily: 'var(--font-serif)',
-                fontWeight: 600,
+                fontFamily: 'var(--font-display)',
+                fontWeight: 700,
                 fontSize: 'var(--text-fluid-3xl)',
                 lineHeight: 1.04,
-                letterSpacing: '-0.025em',
+                letterSpacing: '-0.03em',
                 color: '#fff',
                 marginBottom: '18px',
                 maxWidth: '14ch',
@@ -137,13 +174,14 @@ export const HomePage = () => {
             >
               Every import,
               <br />
-              <span style={{ fontStyle: 'italic', color: 'var(--accent-light)' }}>documented</span> before
+              <span style={{ fontStyle: 'italic', color: 'var(--accent-light)', fontFamily: 'var(--font-serif)' }}>documented</span> before
               it&rsquo;s driven.
             </h1>
 
             <p
               className="hero-anim-desc"
               style={{
+                fontFamily: 'var(--font-sans)',
                 fontSize: 'var(--text-fluid-sm)',
                 lineHeight: 1.6,
                 color: 'rgba(238,242,247,0.94)',
@@ -156,22 +194,22 @@ export const HomePage = () => {
               before you put down a shilling. Vehicles and genuine spares, Mombasa Road.
             </p>
 
-            <div className="hero-anim-cta" style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-              <button onClick={() => navigateTo('vehicles')} className="btn-primary" style={{ padding: '14px 26px', fontSize: 'var(--text-base)' }}>
+            <div className="hero-anim-cta" style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', alignItems: 'center' }}>
+              <button onClick={() => navigateTo('vehicles')} className="btn btn-accent" style={{ padding: '14px 28px', fontSize: 'var(--text-base)' }}>
                 Browse the lot <ArrowRight size={16} />
               </button>
-              <button onClick={() => navigateTo('parts')} className="btn-ghost" style={{ padding: '14px 26px', fontSize: 'var(--text-base)' }}>
+              <button onClick={() => navigateTo('parts')} className="btn btn-ghost" style={{ padding: '14px 28px', fontSize: 'var(--text-base)' }}>
                 Find a spare part
               </button>
             </div>
           </div>
 
-          {/* Dossier card */}
+          {/* Dossier card corresponding to active carousel slide */}
           {hero && (
             <GlassCard className="hero-dossier hero-anim-dossier" style={{ padding: '22px 24px' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
-                <div className="mono" style={{ color: 'var(--accent-light)' }}>
-                  Featured Lot Dossier
+                <div className="mono" style={{ color: 'var(--accent-light)', fontSize: 'var(--text-xs)', letterSpacing: '0.08em' }}>
+                  FEATURED LOT DOSSIER ({heroIndex + 1}/{heroItems.length})
                 </div>
                 <span className="badge badge-available" style={{ fontSize: '11px' }}>
                   {hero.status}
@@ -184,31 +222,107 @@ export const HomePage = () => {
                 {hero.year} · {hero.trans} · {hero.engine}
               </div>
 
-              <DossierRow label="Chassis" value={hero.chassis} />
-              <DossierRow label="Auction grade" value={`Grade ${hero.grade} (USS Certified)`} />
-              <DossierRow label="Odometer" value={`${Number(hero.mileage).toLocaleString()} km · JEVIC Verified`} />
-              <DossierRow label="Inspection" value={hero.inspection} last />
+              <DossierRow label="CHASSIS" value={hero.chassis} />
+              <DossierRow label="AUCTION GRADE" value={hero.grade ? `Grade ${hero.grade} (USS Certified)` : 'Grade 4.5B (USS Certified)'} />
+              <DossierRow label="ODOMETER" value={`${Number(hero.mileage).toLocaleString()} km · JEVIC Verified`} />
+              <DossierRow label="INSPECTION" value={hero.inspection} last />
 
               <button
                 onClick={() => navigateTo('vehicle-detail', hero.id)}
-                className="btn-primary"
+                className="btn-accent"
                 style={{ width: '100%', marginTop: '18px', padding: '13px' }}
               >
                 Open full dossier <ArrowUpRight size={15} />
               </button>
             </GlassCard>
           )}
-        </div>
 
-        <div
-          aria-hidden="true"
-          className="scroll-cue mono"
-          style={{
-            position: 'absolute', left: 'var(--gutter)', bottom: '18px',
-            color: 'rgba(238,242,247,0.42)', display: 'flex', alignItems: 'center', gap: '8px',
-          }}
-        >
-          <ChevronDown size={14} /> Scroll
+          {/* Hero Carousel Navigation Pill Controls */}
+          {heroItems.length > 1 && (
+            <div
+              style={{
+                gridColumn: '1 / -1',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '16px',
+                marginTop: '16px',
+                paddingTop: '16px',
+                borderTop: '1px solid rgba(255,255,255,0.12)',
+                flexWrap: 'wrap',
+              }}
+            >
+              {/* Selector Pills */}
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+                {heroItems.map((item, idx) => {
+                  const isActive = idx === heroIndex;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => setHeroIndex(idx)}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '7px',
+                        padding: '6px 14px',
+                        borderRadius: '999px',
+                        background: isActive ? 'rgba(255, 255, 255, 0.18)' : 'rgba(255, 255, 255, 0.05)',
+                        border: `1px solid ${isActive ? 'var(--accent-light, #7dd3fc)' : 'rgba(255, 255, 255, 0.12)'}`,
+                        color: isActive ? '#fff' : 'rgba(238, 242, 247, 0.72)',
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: '12px',
+                        cursor: 'pointer',
+                        transition: 'all 0.25s ease',
+                        backdropFilter: 'blur(8px)',
+                      }}
+                      aria-label={`Go to slide ${idx + 1}: ${item.name}`}
+                    >
+                      <span
+                        style={{
+                          width: '6px',
+                          height: '6px',
+                          borderRadius: '999px',
+                          background: isActive ? 'var(--accent-light, #7dd3fc)' : 'rgba(255,255,255,0.4)',
+                          boxShadow: isActive ? '0 0 8px var(--accent-light, #7dd3fc)' : 'none',
+                        }}
+                      />
+                      <span>0{idx + 1} · {item.name}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Prev / Next Chevrons */}
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <button
+                  onClick={() => setHeroIndex((prev) => (prev - 1 + heroItems.length) % heroItems.length)}
+                  style={{
+                    width: '36px', height: '36px', borderRadius: '50%',
+                    background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.18)',
+                    color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    cursor: 'pointer', transition: 'all 0.2s ease',
+                  }}
+                  aria-label="Previous featured vehicle"
+                  className="carousel-nav-btn"
+                >
+                  <ChevronLeft size={16} />
+                </button>
+                <button
+                  onClick={() => setHeroIndex((prev) => (prev + 1) % heroItems.length)}
+                  style={{
+                    width: '36px', height: '36px', borderRadius: '50%',
+                    background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.18)',
+                    color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    cursor: 'pointer', transition: 'all 0.2s ease',
+                  }}
+                  aria-label="Next featured vehicle"
+                  className="carousel-nav-btn"
+                >
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
@@ -586,6 +700,10 @@ export const HomePage = () => {
           /* Stacked, the copy spans the full width, so the gradient must not
              feather out to the right. The mask still keeps the top of the frame
              clear, which is where the car reads on a narrow screen too. */
+          .carousel-nav-btn:hover {
+            background: rgba(255, 255, 255, 0.22) !important;
+            border-color: var(--accent-light, #7dd3fc) !important;
+          }
           .hero-scrim-h {
             background: linear-gradient(90deg,
               rgba(22,40,58,0.94) 0%,
@@ -632,20 +750,24 @@ const DossierRow = ({ label, value, last }) => (
   </div>
 );
 
-const FeatureCard = ({ vehicle, vehicles = [], formatKES, onOpen, style }) => (
-  <a
-    className="hover-card"
-    style={{
-      position: 'relative', borderRadius: '14px', overflow: 'hidden',
-      background: 'var(--ink)', minHeight: '440px', display: 'flex',
-      alignItems: 'flex-end', cursor: 'pointer', ...style,
-    }}
-    {...clickableCard(
-      onOpen,
-      `${vehicle.name}, ${vehicle.year}`,
-      pathFor('vehicle-detail', { id: vehicle.id, vehicles }),
-    )}
-  >
+const FeatureCard = ({ vehicle, vehicles = [], formatKES, onOpen, style }) => {
+  const { returningVehicleId } = useApp();
+  const isSelectedTarget = String(returningVehicleId) === String(vehicle.id);
+  return (
+    <a
+      data-vehicle-id={vehicle.id}
+      className={`hover-card ${isSelectedTarget ? 'vehicle-selected-target' : ''}`}
+      style={{
+        position: 'relative', borderRadius: '14px', overflow: 'hidden',
+        background: 'var(--ink)', minHeight: '440px', display: 'flex',
+        alignItems: 'flex-end', cursor: 'pointer', ...style,
+      }}
+      {...clickableCard(
+        onOpen,
+        `${vehicle.name}, ${vehicle.year}`,
+        pathFor('vehicle-detail', { id: vehicle.id, vehicles }),
+      )}
+    >
     <div className="zoom-frame" style={{ position: 'absolute', inset: 0 }}>
       <Img src={vehicle.img} alt={vehicle.name} sizes="(max-width: 1000px) 100vw, 58vw" />
       <div
@@ -681,3 +803,4 @@ const FeatureCard = ({ vehicle, vehicles = [], formatKES, onOpen, style }) => (
     </div>
   </a>
 );
+};

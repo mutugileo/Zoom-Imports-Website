@@ -47,10 +47,19 @@ const CartAnnouncer = () => {
 };
 
 const MainContent = () => {
-  const { currentView } = useApp();
+  const { currentView, pageTransition } = useApp();
   useLenis();
 
   const View = VIEWS[currentView] ?? NotFoundPage;
+
+  let animClass = '';
+  if ((currentView === 'vehicle-detail' || currentView === 'part-detail') && pageTransition === 'reveal-detail') {
+    animClass = 'animate-vehicle-reveal';
+  } else if (pageTransition === 'zoom-back') {
+    animClass = 'animate-vehicle-back-exit';
+  } else if (pageTransition === 'zoom-back-grid') {
+    animClass = 'animate-vehicle-return-grid';
+  }
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
@@ -59,7 +68,7 @@ const MainContent = () => {
       <a href="#main" className="skip-link">Skip to main content</a>
 
       <Header />
-      <main id="main" style={{ flex: 1 }} key={currentView} tabIndex={-1}>
+      <main id="main" className={animClass} style={{ flex: 1 }} key={currentView} tabIndex={-1}>
         <View />
       </main>
       <Footer />
