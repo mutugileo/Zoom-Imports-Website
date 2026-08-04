@@ -23,7 +23,6 @@ export const vehicleFromRow = (r) => ({
   groupId: r.group_id || '',
   regNumber: r.reg_number || '',
   location: r.location || '',
-  tags: r.tags || [],
   listing: r.listing,
   make: r.make,
   year: r.year,
@@ -66,12 +65,16 @@ export const partFromRow = (r) => ({
   partNumber: r.part_number || '',
 });
 
+/* `partId` and `modelIds` are what compatibility.js resolves a rule through;
+   the `_legacy` text fields are the fallback for older rules and the readable
+   label on a part card. */
 export const compatFromRow = (r) => ({
   id: r.id,
   partId: r.part_id,
   part: r.part_name_legacy,
   brand: r.brand,
   make: r.make,
+  modelIds: r.model_ids || [],
   model: r.model_legacy,
   years: r.years,
 });

@@ -129,7 +129,7 @@ export const titleFor = (view, record) => {
     case 'vehicles': return `Mazda Vehicles for Sale in Kenya — Demio, CX-5, Axio, Atenza, CX-30 | Zoom Imports`;
     case 'parts': return `Genuine OEM Mazda Spare Parts Nairobi, Kenya — Engine, Suspension & Brakes | Zoom Imports`;
     case 'about': return `About Zoom Imports — Kenya's Premier Dedicated Mazda Specialist | Nairobi`;
-    case 'contact': return `Contact Zoom Imports — Mazda Vehicle Showroom & Parts Counter Mombasa Road`;
+    case 'contact': return `Contact Zoom Imports — Mazda Vehicle Showroom & Parts Counter K-Mall, Kiambu Rd, Thindigua`;
     case 'checkout': return `Checkout — Genuine Mazda Spare Parts Order | Zoom Imports Nairobi`;
     case 'sell': return `List Your Mazda Vehicle With Us — Mazda Import Specialist | Zoom Imports`;
     case 'sell-parts': return `Supply Genuine Mazda Spare Parts — Zoom Imports Nairobi`;
@@ -144,18 +144,18 @@ export const titleFor = (view, record) => {
 
 /** Per-view meta description generator for dynamic SEO optimization. */
 export const descriptionFor = (view, record) => {
-  const base = "Nairobi's dedicated Mazda import vehicle dealership and genuine OEM Mazda spare parts specialist on Mombasa Road.";
+  const base = "Nairobi's dedicated Mazda import vehicle dealership and genuine OEM Mazda spare parts specialist on K-Mall, Kiambu Rd, Thindigua.";
   switch (view) {
     case 'home':
-      return `Kenya's premier dedicated Mazda specialist on Mombasa Road, Nairobi. Certified Mazda Demio, CX-5, Axio, Atenza, CX-30, Premacy, Biante & genuine OEM Mazda spare parts.`;
+      return `Kenya's premier dedicated Mazda specialist on K-Mall, Kiambu Rd, Thindigua, Kiambu. Certified Mazda Demio, CX-5, Axio, Atenza, CX-30, Premacy, Biante & genuine OEM Mazda spare parts.`;
     case 'vehicles':
       return `Explore verified Mazda vehicles imported directly from Japan. Mazda Demio, CX-5, Axio, Atenza, CX-30, Biante & Premacy available for sale in Nairobi with full documentation.`;
     case 'parts':
       return `Buy 100% genuine OEM Mazda spare parts in Nairobi. Fast delivery across Kenya for Mazda Demio, CX-5, Axio, Atenza, CX-30, Premacy, Biante, BT-50 engine, suspension & body parts.`;
     case 'about':
-      return `Learn about Zoom Imports — Nairobi's dedicated Mazda vehicle importer & genuine spare parts counter. USS auction certified, JEVIC odometer verified, based on Mombasa Road.`;
+      return `Learn about Zoom Imports — Nairobi's dedicated Mazda vehicle importer & genuine spare parts counter. USS auction certified, JEVIC odometer verified, based on K-Mall, Kiambu Rd, Thindigua.`;
     case 'contact':
-      return `Get in touch with Zoom Imports on Mombasa Road, Nairobi. Contact our Mazda vehicle sales desk or genuine Mazda spare parts counter for inquiries and orders.`;
+      return `Get in touch with Zoom Imports on K-Mall, Kiambu Rd, Thindigua, Kiambu. Contact our Mazda vehicle sales desk or genuine Mazda spare parts counter for inquiries and orders.`;
     case 'vehicle-detail':
       return record ? `Buy this inspected ${record.year || ''} ${record.name} at Zoom Imports Nairobi. ${record.mileage ? record.mileage + ' km, ' : ''}${record.engine || ''}, ${record.trans || ''}. Certified Mazda import.` : base;
     case 'part-detail':

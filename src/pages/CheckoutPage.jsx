@@ -232,7 +232,7 @@ export const CheckoutPage = () => {
               </div>
             ) : (
               <div style={{ fontSize: 'var(--text-sm)', color: '#5f6b7a', background: '#eef2f7', padding: '12px 14px', borderRadius: '6px' }}>
-                Collection point: <strong>Zoom Imports Depot, Mombasa Road, Nairobi</strong>. Available Mon-Sat 8:00 AM - 6:00 PM.
+                Collection point: <strong>Zoom Imports Depot, K-Mall, Kiambu Rd, Thindigua, Kiambu</strong>. Available Mon-Sat 8:00 AM - 6:00 PM.
               </div>
             )}
           </div>

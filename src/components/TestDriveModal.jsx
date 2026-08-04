@@ -87,7 +87,7 @@ export const TestDriveModal = () => {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '18px', gap: '16px' }}>
           <div>
             <div className="mono" style={{ color: 'var(--accent)', marginBottom: '6px' }}>
-              Mombasa Road showroom
+              K-Mall, Kiambu Rd, Thindigua showroom
             </div>
             <h2 style={{ fontFamily: 'var(--font-serif)', fontWeight: 600, fontSize: 'var(--text-3xl)', color: 'var(--text-dark)', lineHeight: 1.15 }}>
               Book a viewing

@@ -191,7 +191,7 @@ export const HomePage = () => {
               }}
             >
               Inspection report, chassis number, verified odometer and duty receipt — on the table
-              before you put down a shilling. Vehicles and genuine spares, Mombasa Road.
+              before you put down a shilling. Vehicles and genuine spares, K-Mall, Kiambu Rd, Thindigua.
             </p>
 
             <div className="hero-anim-cta" style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', alignItems: 'center' }}>

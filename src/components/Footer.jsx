@@ -1,6 +1,6 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
-import { MessageSquare, Phone, Mail, MapPin, Clock } from 'lucide-react';
+import { MessageSquare, Phone, Mail, MapPin, Clock, Instagram, Facebook } from 'lucide-react';
 import { pathFor } from '../lib/router';
 import { SiteIcon } from './SiteIcon';
 
@@ -36,9 +36,11 @@ const COLUMNS = [
    the contact page. */
 const contactRows = (contact) => [
   { icon: MapPin, label: contact.location },
-  { icon: Phone, label: contact.phone, href: `tel:${contact.phone.replace(/\s/g, '')}` },
-  { icon: Mail, label: contact.email, href: `mailto:${contact.email}` },
+  { icon: Phone, label: contact.phone, href: `tel:${String(contact.phone || '').replace(/\s/g, '')}` },
+  ...(contact.email ? [{ icon: Mail, label: contact.email, href: `mailto:${contact.email}` }] : []),
   { icon: Clock, label: 'Mon–Sat · 8:00–18:00' },
+  ...(contact.instagram ? [{ icon: Instagram, label: contact.instagram, href: `https://instagram.com/${String(contact.instagram).replace(/^@/, '')}` }] : []),
+  ...(contact.facebook ? [{ icon: Facebook, label: contact.facebook, href: `https://facebook.com/${String(contact.facebook).replace(/^@/, '')}` }] : []),
 ];
 
 /**

@@ -230,7 +230,7 @@ export const Header = () => {
       >
         <div className="mono header-rail-location" style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-xs)' }}>
           <MapPin size={12} color={overlay ? 'var(--accent-light)' : 'var(--accent)'} />
-          <span style={{ color: overlay ? 'var(--accent-light)' : 'var(--accent)' }}>Mombasa Road</span>
+          <span style={{ color: overlay ? 'var(--accent-light)' : 'var(--accent)' }}>K-Mall, Kiambu Rd, Thindigua</span>
           <span style={{ opacity: 0.4 }}>/</span>
           <span>Showroom &amp; Spares Depot</span>
         </div>

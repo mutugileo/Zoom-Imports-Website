@@ -66,7 +66,7 @@ export const AboutPage = () => {
                   color: '#333d49',
                 }}
               >
-                Zoom Imports is Nairobi’s premier dealer in hand-picked foreign used import vehicles and genuine OEM spare parts. Located along Mombasa Road, we bridge the gap between quality international sourcing and transparent local delivery.
+                Zoom Imports is Nairobi’s premier dealer in hand-picked foreign used import vehicles and genuine OEM spare parts. Located along K-Mall, Kiambu Rd, Thindigua, we bridge the gap between quality international sourcing and transparent local delivery.
               </p>
             </div>
 
