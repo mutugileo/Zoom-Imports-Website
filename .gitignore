@@ -3,3 +3,6 @@ dist/
 .DS_Store
 .asset-cache/
 audits/
+
+# Local Netlify folder
+.netlify

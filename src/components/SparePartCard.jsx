@@ -28,7 +28,15 @@ export const SparePartCard = ({
 }) => {
   const out = part.stock === 0;
   const price = part.promo || part.price;
+  const savings = part.promo ? part.price - part.promo : 0;
   const [added, confirm] = useAddedFlash();
+
+  // Compatibility badge system determination
+  const fitmentType = fitment
+    ? 'exact'
+    : part.compat?.toLowerCase().includes('universal')
+    ? 'universal'
+    : 'check';
 
   return (
     <a
@@ -49,14 +57,40 @@ export const SparePartCard = ({
       </div>
       <div className="pcard-scrim" aria-hidden="true" />
 
-      <span className={`badge badge-${stockClass(part.stock)} pcard-stock`}>
-        {stockLabel(part.stock)}
-      </span>
-      {part.promo && <span className="badge badge-sale pcard-sale">Sale</span>}
+      {/* Stock & Fitment Badges at top left */}
+      <div style={{ position: 'absolute', top: '12px', left: '12px', display: 'flex', flexDirection: 'column', gap: '6px', zIndex: 10 }}>
+        <span className={`badge badge-${stockClass(part.stock)} pcard-stock`}>
+          {stockLabel(part.stock)}
+        </span>
+        {fitmentType === 'exact' && (
+          <span className="badge-fitment badge-exact-fit">
+            <Check size={11} /> Exact Fit
+          </span>
+        )}
+        {fitmentType === 'universal' && (
+          <span className="badge-fitment badge-universal">
+            Universal
+          </span>
+        )}
+        {fitmentType === 'check' && (
+          <span className="badge-fitment badge-check-fit">
+            Check Fitment
+          </span>
+        )}
+      </div>
 
-      {/* Spec plate. The data rows collapse on hover so the photo can be seen;
-          the name and buy row stay, because a collapsed card you cannot
-          identify or add from is worse than one you cannot fully see. */}
+      {part.promo && (
+        <div style={{ position: 'absolute', top: '12px', right: '12px', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px', zIndex: 10 }}>
+          <span className="badge badge-sale pcard-sale">Sale</span>
+          {savings > 0 && (
+            <span className="mono" style={{ fontSize: '10px', padding: '3px 7px', borderRadius: '4px', background: 'var(--accent)', color: '#fff', fontWeight: 700 }}>
+              Save {formatKES(savings)}
+            </span>
+          )}
+        </div>
+      )}
+
+      {/* Spec plate */}
       <div className="pcard-plate">
         <div className="pcard-collapse">
           <div className="pcard-collapse-inner">
@@ -64,10 +98,6 @@ export const SparePartCard = ({
               {part.brand}
               <span className="pcard-sep">·</span>
               {part.sku}
-              {/* Says "on request" rather than hiding the row. A buyer matching
-                  a part looks for this line; silence reads as "not genuine",
-                  and inventing a number would fail at the counter instead of
-                  on the website. */}
               <span className="pcard-sep">·</span>
               {part.partNumber ? `OEM ${part.partNumber}` : 'OEM no. on request'}
             </div>
@@ -99,7 +129,6 @@ export const SparePartCard = ({
           <span className="pcard-price">
             {formatKES(price)}
             {part.promo && (
-              // Strikethrough reads as "was" visually but means nothing aloud.
               <span
                 className="mono pcard-was"
                 aria-label={`was ${formatKES(part.price)}`}
@@ -117,12 +146,6 @@ export const SparePartCard = ({
               out ? `${part.name} is out of stock` : `Add ${part.name} to cart`
             }
             onClick={(e) => {
-              /* The card is a real <a href>. stopPropagation alone only stops
-                 React's handler — the native click still reaches the anchor and
-                 the browser follows the link, which is why adding used to throw
-                 you onto the part page. preventDefault is the half that stops
-                 the navigation; clickableCard checks defaultPrevented and bows
-                 out on its own. */
               e.preventDefault();
               e.stopPropagation();
               onAdd();
@@ -134,7 +157,7 @@ export const SparePartCard = ({
               "Out of stock"
             ) : added ? (
               <>
-                Added <Check size={14} strokeWidth={3} />
+                Added! <Check size={14} strokeWidth={3} />
               </>
             ) : (
               <>
@@ -147,3 +170,5 @@ export const SparePartCard = ({
     </a>
   );
 };
+
+

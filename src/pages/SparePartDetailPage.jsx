@@ -11,7 +11,7 @@ import { SiteIcon } from '../components/SiteIcon';
 export const SparePartDetailPage = () => {
   const { selectedPartId, parts, compatibility, navigateTo, formatKES, addToCart, waNumber } = useApp();
 
-  const part = parts.find(p => p.id === selectedPartId) || parts[0];
+  const part = parts.find(p => String(p.id) === String(selectedPartId)) || parts[0];
   const [qty, setQty] = useState(1);
   const [fitRef, fitShown] = useReveal();
   const [added, confirm] = useAddedFlash();

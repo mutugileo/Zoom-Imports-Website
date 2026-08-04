@@ -46,7 +46,7 @@ const MOBILE_NAV = [
 
 export const Header = () => {
   const {
-    currentView, navigateTo, cartItemCount, setIsCartOpen,
+    currentView, navigateTo, cartItemCount, cartSubtotal, setIsCartOpen,
     vehicles, parts, formatKES, contact, waNumber,
   } = useApp();
 
@@ -65,9 +65,23 @@ export const Header = () => {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // The mobile menu is a real modal surface: background content cannot scroll
-  // or receive focus, focus stays inside the panel, and closing returns the
-  // visitor to the control that opened it.
+  // ⌘K / Ctrl+K keyboard shortcut listener
+  useEffect(() => {
+    const handleCmdK = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        const inputEl = searchRef.current?.querySelector('input');
+        if (inputEl) {
+          inputEl.focus();
+          setSearchOpen(true);
+        }
+      }
+    };
+    window.addEventListener('keydown', handleCmdK);
+    return () => window.removeEventListener('keydown', handleCmdK);
+  }, []);
+
+  // The mobile menu is a real modal surface
   useEffect(() => {
     if (!menuOpen) return undefined;
 
@@ -156,8 +170,6 @@ export const Header = () => {
     };
   }, []);
 
-  // Float over the artwork at rest; become solid the moment the page moves,
-  // because what scrolls up behind the header is not guaranteed to be dark.
   const floating = OVERLAY_VIEWS.has(currentView);
   const overlay = floating && !condensed && !menuOpen;
 
@@ -169,6 +181,8 @@ export const Header = () => {
     ? parts.filter((p) => `${p.name} ${p.brand} ${p.category}`.toLowerCase().includes(q)).slice(0, 3)
     : [];
   const hasResults = matchingVehicles.length > 0 || matchingParts.length > 0;
+
+  const quickPopularQueries = ['Mazda CX-5', 'Toyota Harrier', 'Subaru Forester', 'Brake Pad', 'Radiator'];
 
   const go = (view, id) => {
     navigateTo(view, id);
@@ -184,8 +198,7 @@ export const Header = () => {
         top: 0, left: 0, right: 0, zIndex: 500,
       }}
     >
-      {/* Scrim for the overlay state. The hero's own gradient is only 0.34 at
-          the very top — not enough on its own for text this small. */}
+      {/* Scrim for the overlay state. */}
       {floating && (
         <div
           aria-hidden="true"
@@ -198,14 +211,10 @@ export const Header = () => {
           }}
         />
       )}
-      {/* Dealership rail — the facts a buyer checks first */}
+      {/* Dealership rail */}
       <div
         style={{
           position: 'relative',
-          /* Two grounds: transparent over the hero photo, silver everywhere else.
-             The accent has to swap with it — --accent-light is built for ink and
-             measures 1.9:1 on silver, --accent is 2.7:1 on ink. Neither survives
-             both, so each state gets the one that was measured for it. */
           background: overlay ? 'transparent' : 'var(--bg-cream)',
           color: overlay ? 'rgba(238,242,247,0.86)' : 'var(--text-muted)',
           borderBottom: overlay ? '1px solid transparent' : '1px solid var(--band-line)',
@@ -215,7 +224,6 @@ export const Header = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          // Single declaration — see the note on the main bar below.
           transition:
             'height 320ms cubic-bezier(0.22, 1, 0.36, 1), background 320ms ease, color 320ms ease',
         }}
@@ -240,9 +248,6 @@ export const Header = () => {
         style={{
           position: 'relative',
           background: overlay ? 'transparent' : 'rgba(255,255,255,0.92)',
-          /* The bar is already 92% opaque, so a heavy blur only smeared the few
-             pixels of content visible through it as you scrolled past — motion
-             blur on a stationary page. 4px keeps the frosted edge. */
           backdropFilter: overlay ? 'none' : 'blur(4px)',
           WebkitBackdropFilter: overlay ? 'none' : 'blur(4px)',
           borderBottom: `1px solid ${overlay ? 'transparent' : 'var(--border-light)'}`,
@@ -252,8 +257,6 @@ export const Header = () => {
           gap: '20px',
           padding: '0 var(--gutter)',
           height: condensed ? '62px' : '76px',
-          // One declaration: a second `transition` key would silently drop the first,
-          // leaving the overlay→solid swap to snap while only the height eased.
           transition:
             'height 320ms cubic-bezier(0.22, 1, 0.36, 1), background 320ms ease, border-color 320ms ease',
         }}
@@ -288,6 +291,7 @@ export const Header = () => {
                 className="link-draw"
                 aria-current={active ? 'page' : undefined}
                 style={{
+                  position: 'relative',
                   background: 'none',
                   border: 'none',
                   cursor: 'pointer',
@@ -296,21 +300,34 @@ export const Header = () => {
                   color: overlay
                     ? (active ? '#f4e3c6' : 'rgba(255,255,255,0.92)')
                     : (active ? 'var(--primary)' : 'var(--text-body)'),
-                  padding: 0,
+                  padding: '4px 0',
                   transition: 'color 320ms ease',
                 }}
               >
                 {item.label}
+                {active && (
+                  <span
+                    style={{
+                      position: 'absolute',
+                      bottom: '-4px',
+                      left: 0, right: 0,
+                      height: '2px',
+                      borderRadius: '2px',
+                      background: overlay ? '#f4e3c6' : 'var(--primary)',
+                      transition: 'all 240ms ease',
+                    }}
+                  />
+                )}
               </a>
             );
           })}
         </nav>
 
         {/* Search + cart */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: '0 1 auto' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: '0 1 auto' }}>
           <div
             ref={searchRef}
-            style={{ position: 'relative', width: 'clamp(190px, 19vw, 284px)' }}
+            style={{ position: 'relative', width: 'clamp(210px, 22vw, 310px)' }}
             className="search-wrap"
           >
             <div
@@ -321,7 +338,7 @@ export const Header = () => {
                 background: overlay ? 'rgba(255,255,255,0.14)' : 'var(--bg-cream)',
                 border: `1px solid ${overlay ? 'rgba(255,255,255,0.28)' : 'var(--border-light)'}`,
                 borderRadius: '999px',
-                padding: '8px 14px',
+                padding: '7px 14px',
                 minWidth: 0,
                 transition: 'background 320ms ease, border-color 320ms ease',
               }}
@@ -332,7 +349,7 @@ export const Header = () => {
                 value={query}
                 onChange={(e) => { setQuery(e.target.value); setSearchOpen(true); }}
                 onFocus={() => setSearchOpen(true)}
-                placeholder="Search vehicles or parts"
+                placeholder="Search models, parts..."
                 aria-label="Search vehicles or parts"
                 className={overlay ? 'search-on-ink' : undefined}
                 style={{
@@ -341,20 +358,66 @@ export const Header = () => {
                   width: '100%', minWidth: 0,
                 }}
               />
+              {query ? (
+                <button
+                  type="button"
+                  onClick={() => { setQuery(''); setSearchOpen(false); }}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex' }}
+                  aria-label="Clear search"
+                >
+                  <X size={14} color={overlay ? '#fff' : 'var(--text-dim)'} />
+                </button>
+              ) : (
+                <kbd
+                  style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '10px',
+                    padding: '2px 5px',
+                    borderRadius: '4px',
+                    background: overlay ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.06)',
+                    color: overlay ? 'rgba(255,255,255,0.8)' : 'var(--text-dim)',
+                    border: '1px solid rgba(0,0,0,0.05)',
+                    lineHeight: 1,
+                  }}
+                >
+                  ⌘K
+                </kbd>
+              )}
             </div>
 
-            {searchOpen && q && (
+            {searchOpen && (
               <div
                 style={{
                   position: 'absolute', top: 'calc(100% + 8px)', right: 0,
-                  width: 'min(380px, 78vw)', background: '#fff',
+                  width: 'min(380px, 85vw)', background: '#fff',
                   border: '1px solid var(--border-light)', borderRadius: '12px',
                   boxShadow: 'var(--shadow-lg)', overflow: 'hidden', zIndex: 20,
                 }}
               >
-                {!hasResults ? (
+                {!q ? (
+                  <div style={{ padding: '14px' }}>
+                    <div className="mono" style={{ fontSize: 'var(--text-xs)', color: 'var(--text-dim)', marginBottom: '8px' }}>
+                      Popular Searches
+                    </div>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                      {quickPopularQueries.map((term) => (
+                        <button
+                          key={term}
+                          onClick={() => { setQuery(term); setSearchOpen(true); }}
+                          style={{
+                            padding: '4px 10px', borderRadius: '999px',
+                            background: 'var(--bg-app)', border: '1px solid var(--border-light)',
+                            fontSize: '12px', color: 'var(--text-body)', cursor: 'pointer',
+                          }}
+                        >
+                          {term}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : !hasResults ? (
                   <div style={{ padding: '18px', fontSize: 'var(--text-sm)', color: 'var(--text-muted)' }}>
-                    Nothing matches “{query}”. Try a make, a model or a part name.
+                    Nothing matches “{query}”. Try a make, model or part name.
                   </div>
                 ) : (
                   <>
@@ -410,25 +473,42 @@ export const Header = () => {
             onClick={() => setIsCartOpen(true)}
             aria-label={`Open cart, ${cartItemCount} item${cartItemCount === 1 ? '' : 's'}`}
             style={{
-              position: 'relative', background: 'var(--primary)', border: 'none',
-              width: '40px', height: '40px', borderRadius: '999px', cursor: 'pointer',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-              transition: 'background 0.25s ease, transform 0.15s ease',
+              position: 'relative',
+              background: 'var(--primary)',
+              border: 'none',
+              height: '40px',
+              padding: cartItemCount > 0 ? '0 14px 0 10px' : '0 11px',
+              borderRadius: '999px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              flexShrink: 0,
+              boxShadow: 'var(--shadow-sm)',
+              transition: 'all 0.25s ease',
             }}
           >
-            <ShoppingCart size={17} color="#fff" />
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+              <ShoppingCart size={17} color="#fff" />
+              {cartItemCount > 0 && (
+                <span
+                  className="mono"
+                  style={{
+                    position: 'absolute', top: '-6px', right: '-8px',
+                    background: 'var(--accent)', color: '#fff', fontSize: '10px', fontWeight: 700,
+                    minWidth: '16px', height: '16px', borderRadius: '999px',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    padding: '0 4px', border: '1.5px solid #fff',
+                    animation: 'pulse-ring 2s infinite',
+                  }}
+                >
+                  {cartItemCount}
+                </span>
+              )}
+            </div>
             {cartItemCount > 0 && (
-              <span
-                className="mono"
-                style={{
-                  position: 'absolute', top: '-3px', right: '-3px',
-                  background: 'var(--accent)', color: '#fff', fontSize: 'var(--text-xs)',
-                  minWidth: '19px', height: '19px', borderRadius: '999px',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  letterSpacing: 0, padding: '0 5px', border: '2px solid #fff',
-                }}
-              >
-                {cartItemCount}
+              <span className="mono" style={{ fontSize: '12px', fontWeight: 600, color: '#fff', letterSpacing: '0.02em' }}>
+                {formatKES(cartSubtotal)}
               </span>
             )}
           </button>

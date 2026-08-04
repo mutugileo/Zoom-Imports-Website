@@ -12,17 +12,11 @@ import { ListingBadge } from '../components/ListingBadge';
 import { SiteIcon } from '../components/SiteIcon';
 import { CATEGORIES, COMPATIBILITY_RULES } from '@shared/data/mockData';
 import {
-  ArrowRight, ArrowUpRight, ShieldCheck, Gauge, FileCheck2,
-  Ship, Quote, ChevronDown, PenLine, Star, CarFront,
+  ArrowRight, ArrowUpRight,
+  Quote, ChevronDown, PenLine, Star,
 } from 'lucide-react';
 
-/* The import journey is a genuine sequence, so it earns its numbering. */
-const JOURNEY = [
-  { n: '01', label: 'Sourced in Japan', detail: 'Graded unit, report translated', icon: FileCheck2 },
-  { n: '02', label: 'Pre-ship inspection', detail: 'JEVIC odometer + structure', icon: ShieldCheck },
-  { n: '03', label: 'Mombasa port', detail: 'Duty settled before release', icon: Ship },
-  { n: '04', label: 'Mombasa Road yard', detail: 'Yours to drive, same week', icon: CarFront },
-];
+
 
 const FITMENT = COMPATIBILITY_RULES.reduce((acc, rule) => {
   const key = rule.part.trim().toLowerCase();
@@ -33,31 +27,36 @@ const FITMENT = COMPATIBILITY_RULES.reduce((acc, rule) => {
 export const HomePage = () => {
   const { vehicles, parts, navigateTo, formatKES, addToCart, publishedReviews, setIsReviewOpen, banners } = useApp();
 
+  const [chassisQuery, setChassisQuery] = React.useState('');
+  const [selectedCategory, setSelectedCategory] = React.useState(null);
+
   const featured = vehicles.filter((v) => v.featured && v.status === 'Available');
   const hero = featured[0] || vehicles[0];
   const [lead, ...rest] = featured.length ? featured : vehicles;
   const secondary = rest.slice(0, 2);
-  /**
-   * Promoted parts lead, then the rest of the counter fills in behind them.
-   *
-   * The old rule was `promo.length ? promo : parts.slice(0, 4)` — an either/or,
-   * so with two promoted parts in stock the section showed exactly two and hid
-   * the other seven. Concatenating means the promos still come first but the row
-   * always fills, and it degrades on its own if the catalogue is short.
-   */
-  const showcaseParts = [
-    ...parts.filter((p) => p.promo),
-    ...parts.filter((p) => !p.promo),
-  ].slice(0, 8);
 
-  const [journeyRef, journeyShown] = useReveal();
+  const filteredParts = React.useMemo(() => {
+    let list = parts;
+    if (selectedCategory) {
+      list = list.filter((p) => p.category === selectedCategory);
+    }
+    if (chassisQuery.trim()) {
+      const q = chassisQuery.trim().toLowerCase();
+      list = list.filter((p) =>
+        p.compat?.toLowerCase().includes(q) ||
+        p.name?.toLowerCase().includes(q) ||
+        p.brand?.toLowerCase().includes(q)
+      );
+    }
+    return list;
+  }, [parts, selectedCategory, chassisQuery]);
+
+  const showcaseParts = filteredParts.slice(0, 8);
+
   const [fleetRef, fleetShown] = useReveal();
   const [partsRef, partsShown] = useReveal();
   const [quoteRef, quoteShown] = useReveal();
 
-  // Depth wrappers. The hero is left flat — it is the first paint and already
-  // carries the measured scrim treatment.
-  const journeyDepth = useDepthLayer();
   const fleetDepth = useDepthLayer();
   const partsDepth = useDepthLayer();
   const quoteDepth = useDepthLayer();
@@ -67,7 +66,7 @@ export const HomePage = () => {
 
   return (
     <div>
-      {/* ───────────── Hero: a documented car, not a stock photo ───────────── */}
+      {/* ───────────── Hero: a documented car ───────────── */}
       <section
         style={{
           position: 'relative',
@@ -79,7 +78,7 @@ export const HomePage = () => {
           overflow: 'hidden',
         }}
       >
-        <div style={{ position: 'absolute', inset: 0 }}>
+        <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }} className="hero-anim-img">
           <Img
             src={hero?.img}
             alt={`${hero?.name} ${hero?.year} on the Zoom Imports lot`}
@@ -87,11 +86,6 @@ export const HomePage = () => {
             sizes="100vw"
             style={{ objectPosition: 'center 45%' }}
           />
-          {/* Two scrims rather than one. The vertical grade sets the mood; the
-              left-anchored one gives the copy a guaranteed dark ground so the
-              text stays legible whichever vehicle is featured, while the right
-              of the frame stays open for the car. Measured to WCAG AA against
-              every image that can appear here. */}
           <div className="hero-scrim-v" aria-hidden="true" />
           <div className="hero-scrim-h" aria-hidden="true" />
         </div>
@@ -101,7 +95,7 @@ export const HomePage = () => {
           style={{
             position: 'relative',
             width: '100%',
-            padding: '120px var(--gutter) 56px',
+            padding: '72px var(--gutter) 28px',
             display: 'grid',
             gridTemplateColumns: 'minmax(0, 1.35fr) minmax(0, 0.85fr)',
             gap: '40px',
@@ -109,10 +103,8 @@ export const HomePage = () => {
           }}
         >
           <div>
-            {/* Cream, not accent orange: at 11px the accent measured 1.15:1
-                over a bright photo. The brand colour stays on the dot. */}
             <div
-              className="mono"
+              className="mono hero-anim-badge"
               style={{
                 color: '#f4e3c6', marginBottom: '16px', display: 'flex',
                 alignItems: 'center', gap: '10px',
@@ -121,15 +113,16 @@ export const HomePage = () => {
             >
               <span
                 style={{
-                  width: '6px', height: '6px', borderRadius: '999px',
+                  width: '8px', height: '8px', borderRadius: '999px',
                   background: 'var(--verify)', display: 'inline-block',
+                  animation: 'pulse-ring 2s infinite',
                 }}
               />
-              {availableCount} inspected units on the lot
+              Live Inventory: {availableCount} inspected units on the lot
             </div>
 
             <h1
-              className="hero-title"
+              className="hero-title hero-anim-title"
               style={{
                 fontFamily: 'var(--font-serif)',
                 fontWeight: 600,
@@ -149,6 +142,7 @@ export const HomePage = () => {
             </h1>
 
             <p
+              className="hero-anim-desc"
               style={{
                 fontSize: 'var(--text-fluid-sm)',
                 lineHeight: 1.6,
@@ -162,7 +156,7 @@ export const HomePage = () => {
               before you put down a shilling. Vehicles and genuine spares, Mombasa Road.
             </p>
 
-            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+            <div className="hero-anim-cta" style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
               <button onClick={() => navigateTo('vehicles')} className="btn-primary" style={{ padding: '14px 26px', fontSize: 'var(--text-base)' }}>
                 Browse the lot <ArrowRight size={16} />
               </button>
@@ -172,11 +166,16 @@ export const HomePage = () => {
             </div>
           </div>
 
-          {/* Dossier card — the signature device, introduced on the hero */}
+          {/* Dossier card */}
           {hero && (
-            <GlassCard className="hero-dossier" style={{ padding: '22px 24px' }}>
-              <div className="mono" style={{ color: 'var(--accent-light)', marginBottom: '14px' }}>
-                On the lot now
+            <GlassCard className="hero-dossier hero-anim-dossier" style={{ padding: '22px 24px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+                <div className="mono" style={{ color: 'var(--accent-light)' }}>
+                  Featured Lot Dossier
+                </div>
+                <span className="badge badge-available" style={{ fontSize: '11px' }}>
+                  {hero.status}
+                </span>
               </div>
               <div style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-3xl)', fontWeight: 600, color: '#fff', lineHeight: 1.15 }}>
                 {hero.name}
@@ -186,8 +185,8 @@ export const HomePage = () => {
               </div>
 
               <DossierRow label="Chassis" value={hero.chassis} />
-              <DossierRow label="Auction grade" value={hero.grade} />
-              <DossierRow label="Odometer" value={`${Number(hero.mileage).toLocaleString()} km · verified`} />
+              <DossierRow label="Auction grade" value={`Grade ${hero.grade} (USS Certified)`} />
+              <DossierRow label="Odometer" value={`${Number(hero.mileage).toLocaleString()} km · JEVIC Verified`} />
               <DossierRow label="Inspection" value={hero.inspection} last />
 
               <button
@@ -213,16 +212,9 @@ export const HomePage = () => {
         </div>
       </section>
 
-      {/* ───────────── Yard promotions ─────────────
-          Banners the counter publishes on the admin portal's Site Content
-          screen. That screen has always saved them into a store the website
-          never read, so a banner added at the yard appeared nowhere.
-
-          Renders nothing at all when there are none, which is the default —
-          the homepage should not carry an empty promotional shelf waiting to
-          be filled. */}
+      {/* Yard promotions */}
       {banners.length > 0 && (
-        <section style={{ background: 'transparent', padding: '10px var(--gutter) 60px' }}>
+        <section style={{ background: 'transparent', padding: '10px var(--gutter) 24px' }}>
           <div className="mono" style={{ color: 'var(--accent)', marginBottom: '16px' }}>On now</div>
           <div className="banner-grid" style={{ display: 'grid', gridTemplateColumns: `repeat(${Math.min(banners.length, 3)}, 1fr)`, gap: '18px' }}>
             {banners.map((b) => {
@@ -231,9 +223,6 @@ export const HomePage = () => {
                   <div className="zoom-frame" style={{ position: 'absolute', inset: 0 }}>
                     <Img src={b.img} alt={b.title} sizes="(max-width: 900px) 100vw, 32vw" />
                   </div>
-                  {/* Same measured scrim the vehicle card uses: a banner image
-                      is uploaded by staff, so the title cannot rely on it
-                      being dark where the words sit. */}
                   <div className="vcard-scrim" aria-hidden="true" />
                   <div style={{ position: 'relative', marginTop: 'auto', padding: '18px 20px' }}>
                     <span style={{ fontFamily: 'var(--font-serif)', fontWeight: 600, fontSize: 'var(--text-xl)', color: '#fff', letterSpacing: '-0.01em', textShadow: '0 1px 14px rgba(22,40,58,0.6)' }}>
@@ -246,8 +235,6 @@ export const HomePage = () => {
                 position: 'relative', minHeight: '200px', borderRadius: '12px',
                 overflow: 'hidden', background: 'var(--ink)', display: 'flex',
               };
-              /* A banner without a link is a picture, not a control — it must
-                 not be focusable or announced as a link. */
               return b.link
                 ? <a key={b.id} className="hover-card" href={b.link} style={style}>{inner}</a>
                 : <div key={b.id} style={style}>{inner}</div>;
@@ -256,46 +243,10 @@ export const HomePage = () => {
         </section>
       )}
 
-      {/* ───────────── Import journey: a real sequence ───────────── */}
-      <section
-        ref={journeyRef}
-        style={{ background: 'transparent', color: 'var(--text-body)', padding: '0 var(--gutter)', borderBottom: '1px solid var(--band-line)' }}
-      >
-        <div className="depth-layer" ref={journeyDepth}>
-        <div
-          className="journey-grid"
-          style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', borderLeft: '1px solid var(--band-line)' }}
-        >
-          {JOURNEY.map((step, i) => {
-            const Icon = step.icon;
-            return (
-              <div
-                key={step.n}
-                style={{
-                  padding: '34px 26px 38px',
-                  borderRight: '1px solid var(--band-line)',
-                  ...revealStyle(journeyShown, i),
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', marginBottom: '16px' }}>
-                  <SiteIcon icon={Icon} variant="journey" size={19} />
-                  <span className="mono" style={{ color: 'var(--accent)', fontSize: 'var(--text-xs)' }}>{step.n}</span>
-                </div>
-                <div style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text-dark)', marginBottom: '5px' }}>
-                  {step.label}
-                </div>
-                <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)', lineHeight: 1.5 }}>
-                  {step.detail}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-        </div>
-      </section>
+
 
       {/* ───────────── Fleet: asymmetric, not a uniform grid ───────────── */}
-      <section ref={fleetRef} style={{ background: 'transparent', padding: '84px var(--gutter)' }}>
+      <section ref={fleetRef} style={{ background: 'transparent', padding: '36px var(--gutter)' }}>
         <div className="depth-layer" ref={fleetDepth}>
         <div
           style={{
@@ -355,7 +306,7 @@ export const HomePage = () => {
       </section>
 
       {/* ───────────── Parts: a denser rhythm on purpose ───────────── */}
-      <section ref={partsRef} style={{ background: 'transparent', padding: '78px var(--gutter)' }}>
+      <section ref={partsRef} style={{ background: 'transparent', padding: '36px var(--gutter)' }}>
         <div className="depth-layer" ref={partsDepth}>
         <div
           style={{
@@ -382,39 +333,95 @@ export const HomePage = () => {
           </button>
         </div>
 
-        {/* Category chips — a different structural device from the cards above */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '26px', ...revealStyle(partsShown, 1) }}>
-          {CATEGORIES.map((c) => (
-            <button
-              key={c.id}
-              onClick={() => navigateTo('parts')}
-              className="mono"
-              style={{
-                background: '#fff', border: '1px solid var(--border-light)',
-                borderRadius: '999px', padding: '8px 14px', cursor: 'pointer',
-                color: 'var(--text-body)', display: 'flex', alignItems: 'center', gap: '8px',
-                transition: 'border-color 0.2s ease, transform 0.2s ease',
-              }}
-            >
-              <span style={{ width: '7px', height: '7px', borderRadius: '999px', background: c.color }} />
-              {c.name}
-            </button>
-          ))}
+        {/* Category chips + Chassis search bar */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '26px', ...revealStyle(partsShown, 1) }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+            <div style={{ position: 'relative', flex: '1 1 260px', maxWidth: '380px' }}>
+              <input
+                type="text"
+                value={chassisQuery}
+                onChange={(e) => setChassisQuery(e.target.value)}
+                placeholder="Enter Chassis / Model (e.g. KE2FW, CX-5, Forester)..."
+                style={{
+                  width: '100%', padding: '10px 14px 10px 38px', borderRadius: '999px',
+                  border: '1px solid var(--border-medium)', background: '#fff',
+                  fontSize: 'var(--text-sm)', outline: 'none',
+                }}
+              />
+              <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', opacity: 0.5 }}>
+                🔍
+              </span>
+              {chassisQuery && (
+                <button
+                  onClick={() => setChassisQuery('')}
+                  style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', opacity: 0.6 }}
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+              <button
+                onClick={() => setSelectedCategory(null)}
+                className="mono"
+                style={{
+                  background: selectedCategory === null ? 'var(--primary)' : '#fff',
+                  color: selectedCategory === null ? '#fff' : 'var(--text-body)',
+                  border: '1px solid var(--border-light)',
+                  borderRadius: '999px', padding: '8px 14px', cursor: 'pointer',
+                  fontSize: '12px', fontWeight: 600,
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                All Categories ({parts.length})
+              </button>
+              {CATEGORIES.map((c) => {
+                const count = parts.filter((p) => p.category === c.name).length;
+                const isSel = selectedCategory === c.name;
+                return (
+                  <button
+                    key={c.id}
+                    onClick={() => setSelectedCategory(isSel ? null : c.name)}
+                    className="mono"
+                    style={{
+                      background: isSel ? 'var(--primary)' : '#fff',
+                      color: isSel ? '#fff' : 'var(--text-body)',
+                      border: `1px solid ${isSel ? 'var(--primary)' : 'var(--border-light)'}`,
+                      borderRadius: '999px', padding: '8px 14px', cursor: 'pointer',
+                      display: 'flex', alignItems: 'center', gap: '8px',
+                      fontSize: '12px', fontWeight: isSel ? 600 : 500,
+                      transition: 'all 0.2s ease',
+                    }}
+                  >
+                    <span style={{ width: '7px', height: '7px', borderRadius: '999px', background: isSel ? '#fff' : c.color }} />
+                    {c.name} ({count})
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
 
         <div className="parts-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '18px' }}>
-          {showcaseParts.map((p, i) => (
-            <SparePartCard
-              key={p.id}
-              part={p}
-              parts={parts}
-              fitment={FITMENT[p.name.trim().toLowerCase()] ?? null}
-              formatKES={formatKES}
-              onOpen={() => navigateTo('part-detail', p.id)}
-              onAdd={() => addToCart(p)}
-              style={revealStyle(partsShown, 2 + i)}
-            />
-          ))}
+          {showcaseParts.length === 0 ? (
+            <div style={{ gridColumn: '1 / -1', padding: '36px', textAlign: 'center', background: '#fff', borderRadius: '12px', color: 'var(--text-muted)' }}>
+              No spare parts found matching chassis query &ldquo;{chassisQuery}&rdquo;.
+            </div>
+          ) : (
+            showcaseParts.map((p, i) => (
+              <SparePartCard
+                key={p.id}
+                part={p}
+                parts={parts}
+                fitment={FITMENT[p.name.trim().toLowerCase()] ?? null}
+                formatKES={formatKES}
+                onOpen={() => navigateTo('part-detail', p.id)}
+                onAdd={() => addToCart(p)}
+                style={revealStyle(partsShown, 2 + i)}
+              />
+            ))
+          )}
         </div>
         </div>
       </section>
@@ -424,7 +431,7 @@ export const HomePage = () => {
         ref={quoteRef}
         style={{
           background: 'transparent', color: 'var(--text-body)',
-          padding: '40px var(--gutter)',
+          padding: '24px var(--gutter) 32px',
           borderTop: '1px solid var(--band-line)',
         }}
       >
@@ -590,7 +597,6 @@ export const HomePage = () => {
           .hero-inner { grid-template-columns: 1fr !important; }
           .hero-dossier { max-width: 460px; }
           .fleet-grid { grid-template-columns: 1fr !important; }
-          .journey-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .parts-row { grid-template-columns: repeat(2, 1fr) !important; }
           .quote-pair { grid-template-columns: 1fr !important; }
         }
@@ -598,7 +604,6 @@ export const HomePage = () => {
           .banner-grid { grid-template-columns: repeat(2, 1fr) !important; }
         }
         @media (max-width: 560px) {
-          .journey-grid { grid-template-columns: 1fr !important; }
           .parts-row { grid-template-columns: 1fr !important; }
           .banner-grid { grid-template-columns: 1fr !important; }
           .scroll-cue { display: none; }

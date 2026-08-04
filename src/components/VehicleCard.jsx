@@ -3,15 +3,10 @@ import { Img } from './Img';
 import { clickableCard } from '../lib/clickable';
 import { ListingBadge } from './ListingBadge';
 import { pathFor } from '../lib/router';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, Calendar, Gauge, ShieldCheck, Fuel, Eye } from 'lucide-react';
 
 /**
- * Vehicle card — the photo is the card.
- *
- * Details sit in a ringed panel at top right. The panel fill (0.72) and the
- * foot scrim are measured against every catalogue photo at card size, worst
- * pixel, to clear WCAG AA — a card can show any vehicle, so it cannot rely on
- * one obliging image.
+ * Vehicle card — photo plate with spec icons, status badge, and hover overlay action.
  */
 export const VehicleCard = ({ vehicle, vehicles = [], formatKES, onOpen, style, height = 300 }) => {
   const statusTone =
@@ -37,16 +32,17 @@ export const VehicleCard = ({ vehicle, vehicles = [], formatKES, onOpen, style, 
         ...style,
       }}
     >
-      <div className="zoom-frame" style={{ position: 'absolute', inset: 0 }}>
+      <div className="zoom-frame" style={{ position: 'absolute', inset: 0, transition: 'transform 350ms ease' }}>
         <Img src={vehicle.img} alt={vehicle.name} sizes="(max-width: 900px) 100vw, 32vw" />
       </div>
 
       <div className="vcard-scrim" aria-hidden="true" />
 
-      {/* Details panel — faint ring, right-aligned so it reads inward */}
+      {/* Details panel */}
       <div className="vcard-panel">
-        <div className="mono vcard-panel-eyebrow">
-          {vehicle.year} · grade {vehicle.grade}
+        <div className="mono vcard-panel-eyebrow" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <Calendar size={12} color="var(--accent-light)" />
+          {vehicle.year} · <ShieldCheck size={12} color="var(--verify)" /> grade {vehicle.grade}
         </div>
 
         <h3 className="vcard-name">{vehicle.name}</h3>
@@ -55,30 +51,30 @@ export const VehicleCard = ({ vehicle, vehicles = [], formatKES, onOpen, style, 
 
         <div className="vcard-rule" />
 
-        <div className="mono vcard-specs">
+        <div className="mono vcard-specs" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <Gauge size={12} color="rgba(255,255,255,0.7)" />
           {Number(vehicle.mileage).toLocaleString()} km
           <span className="vcard-sep">/</span>
-          {vehicle.trans}
+          {vehicle.fuel || 'Petrol'}
         </div>
       </div>
 
-      {/* Status stays top left so it never collides with the panel */}
+      {/* Status */}
       <span className={`badge badge-${statusTone} vcard-status`}>{vehicle.status}</span>
 
-      {/* Price and provenance stack together: who is selling is only useful at
-          the moment the price is read, not as a separate glance. */}
+      {/* Price and foot */}
       <div className="vcard-foot">
         <span className="vcard-foot-stack">
           <span className="vcard-price">{formatKES(vehicle.price)}</span>
           <ListingBadge vehicle={vehicle} />
         </span>
-        <ArrowUpRight size={18} color="rgba(238,242,247,0.85)" />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(255,255,255,0.15)', padding: '5px 10px', borderRadius: '999px', backdropFilter: 'blur(6px)' }}>
+          <Eye size={13} color="#fff" />
+          <span className="mono" style={{ fontSize: '11px', color: '#fff', fontWeight: 600 }}>Dossier</span>
+        </div>
       </div>
 
-      {/* A purpose-built phone summary. At two cards across there is no room
-          for the desktop photo plate, chassis row, seller badge and price to
-          compete. Mobile keeps the four facts needed to compare, then lets the
-          dossier carry the rest after the tap. */}
+      {/* Mobile body */}
       <div className="vcard-mobile-body">
         <div className="mono vcard-mobile-eyebrow">
           {vehicle.year} <span>/</span> grade {vehicle.grade}
@@ -96,3 +92,4 @@ export const VehicleCard = ({ vehicle, vehicles = [], formatKES, onOpen, style, 
     </a>
   );
 };
+

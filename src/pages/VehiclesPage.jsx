@@ -153,7 +153,7 @@ export const VehiclesPage = () => {
 
   return (
     <div>
-      <section style={{ background: 'transparent', color: 'var(--text-body)', borderBottom: '1px solid var(--band-line)', padding: '46px var(--gutter) 40px' }}>
+      <section style={{ background: 'transparent', color: 'var(--text-body)', borderBottom: '1px solid var(--band-line)', padding: '32px var(--gutter) 24px' }}>
         <div className="hero-head" style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '28px' }}>
           <div style={{ minWidth: 0 }}>
             <div className="mono" style={{ color: 'var(--accent)', marginBottom: '12px' }}>
@@ -204,7 +204,7 @@ export const VehiclesPage = () => {
         </div>
       </section>
 
-      <section style={{ background: 'var(--bg-app)', padding: '30px var(--gutter) 80px' }}>
+      <section style={{ background: 'var(--bg-app)', padding: '20px var(--gutter) 36px' }}>
         <div className="lot-layout" style={{ display: 'flex', gap: '34px', alignItems: 'flex-start' }}>
           {/* Filter rail — stays with the visitor the whole way down the lot.
               Sticky behaviour and the self-scroll live in .filter-rail. */}

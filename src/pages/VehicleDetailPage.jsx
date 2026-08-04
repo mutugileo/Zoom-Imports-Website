@@ -20,7 +20,8 @@ export const VehicleDetailPage = () => {
     setIsTestDriveOpen, setTestDriveTargetVehicle, waNumber,
   } = useApp();
 
-  const vehicle = vehicles.find((v) => v.id === selectedVehicleId) || vehicles[0];
+  const vehicle = vehicles.find((v) => String(v.id) === String(selectedVehicleId)) || vehicles[0];
+  const soldOrReserved = vehicle?.status !== 'Available';
   const [specRef, specShown] = useReveal();
   const [alsoRef, alsoShown] = useReveal();
   const [fitRef, fitShown] = useReveal();
@@ -107,7 +108,7 @@ export const VehicleDetailPage = () => {
     .filter((v) => v.id !== vehicle.id && v.status === 'Available')
     .slice(0, 3);
 
-  const soldOrReserved = vehicle.status !== 'Available';
+  const [activeTab, setActiveTab] = React.useState('overview'); // overview | inspection | costing | features
 
   return (
     <div>
@@ -125,19 +126,10 @@ export const VehicleDetailPage = () => {
           <ArrowLeft size={14} /> All vehicles
         </button>
 
-        {/* Identity band.
-            Badges, name, headline spec and price now run full width above the
-            photograph rather than in the narrow rail beside it. What a buyer
-            checks first — what it is, whose it is and what it costs — should
-            not be the column that has to wrap; and lifting it out lets the
-            details card start at the top of the rail instead of a third of the
-            way down. */}
+        {/* Identity band */}
         <div style={{ marginBottom: '26px' }}>
           <div style={{ display: 'flex', gap: '7px', marginBottom: '14px', flexWrap: 'wrap' }}>
             <ListingBadge vehicle={vehicle} />
-            {/* The shield is the dealership vouching for the inspection. On a
-                third-party listing we have not done that inspection, so the
-                mark is shown as the seller's claim rather than our finding. */}
             {isDealerOwned(vehicle) ? (
               <span className="badge badge-available">
                 <ShieldCheck size={12} color="var(--primary)" /> {vehicle.inspection}
@@ -160,10 +152,6 @@ export const VehicleDetailPage = () => {
             }}
           >
             <div style={{ minWidth: 0 }}>
-              {/* No spec line under the name: year, engine, transmission and
-                  condition are all rows in the Specification block a few
-                  centimetres to the right, and printing them twice made the
-                  header restate what the card was about to say properly. */}
               <h1
                 style={{
                   fontFamily: 'var(--font-serif)', fontWeight: 600,
@@ -175,8 +163,6 @@ export const VehicleDetailPage = () => {
               </h1>
             </div>
 
-            {/* Price sits on the same baseline as the name, right-aligned, so
-                the two facts that decide the click read as one line. */}
             <div className="bay-price" style={{ textAlign: 'right', flexShrink: 0 }}>
               <div style={{ fontSize: 'var(--text-fluid-xl)', fontWeight: 700, color: 'var(--text-dark)', letterSpacing: '-0.02em', lineHeight: 1.05 }}>
                 {formatKES(vehicle.price)}
@@ -202,13 +188,9 @@ export const VehicleDetailPage = () => {
               height={520}
             />
             <p className="mono" style={{ color: 'var(--text-muted)', marginTop: '12px', fontSize: 'var(--text-xs)', lineHeight: 1.6 }}>
-              Turntable capture · shot on the Mombasa Road inspection bay
+              Turntable capture · 360° inspection viewer with hotspots
             </p>
 
-            {/* The inspector's read, under the photograph it describes.
-                It used to be a band of its own below the fold, which left this
-                column half empty next to a tall details card and put the words
-                a scroll away from the picture they are about. */}
             <div ref={specRef} style={{ ...revealStyle(specShown), marginTop: '30px' }}>
               <div className="mono" style={{ color: 'var(--accent)', marginBottom: '10px' }}>Condition notes</div>
               <h2 style={{ fontFamily: 'var(--font-serif)', fontWeight: 600, fontSize: 'var(--text-fluid-md)', color: 'var(--text-dark)', lineHeight: 1.2, marginBottom: '12px', letterSpacing: '-0.015em' }}>
@@ -234,14 +216,8 @@ export const VehicleDetailPage = () => {
             </div>
           </div>
 
-          {/* Details + purchase rail */}
+          {/* Details + purchase rail with structured tabs */}
           <div>
-            {/* One card, two groups.
-                The specification and the import dossier were in separate bands
-                a scroll apart, which made a buyer cross-checking "2.2L diesel"
-                against "grade 4.5, duty paid" hold one half in their head.
-                They are the same question — what is this car — so they are now
-                the same card. */}
             <div
               style={{
                 border: '1px solid var(--band-line)', borderRadius: '12px',
@@ -249,41 +225,105 @@ export const VehicleDetailPage = () => {
                 overflow: 'hidden',
               }}
             >
-              <SpecBlock title="Specification">
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '14px 18px' }}>
-                  {specs.map((s) => {
-                    const Icon = s.icon;
-                    return (
-                      <div key={s.label} className="site-spec-item">
-                        <SiteIcon icon={Icon} variant="spec" size={15} />
-                        <div style={{ minWidth: 0 }}>
-                          <div className="mono" style={{ color: 'var(--text-dim)', fontSize: 'var(--text-2xs)', marginBottom: '3px' }}>{s.label}</div>
-                          <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-dark)' }}>{s.value}</div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </SpecBlock>
+              {/* Specification Tabs Navigation */}
+              <div style={{ display: 'flex', borderBottom: '1px solid var(--band-line)', background: 'var(--bg-cream)' }}>
+                {[
+                  { id: 'overview', label: 'Overview' },
+                  { id: 'inspection', label: 'Inspection & Grade' },
+                  { id: 'costing', label: 'Duty & Costing' },
+                  { id: 'features', label: 'Features' },
+                ].map((tab) => {
+                  const isSel = activeTab === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      style={{
+                        flex: 1, padding: '12px 8px', border: 'none', background: isSel ? '#fff' : 'transparent',
+                        fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: isSel ? 700 : 500,
+                        color: isSel ? 'var(--primary)' : 'var(--text-muted)', cursor: 'pointer',
+                        borderBottom: isSel ? '2px solid var(--primary)' : '2px solid transparent',
+                        transition: 'all 200ms ease',
+                      }}
+                    >
+                      {tab.label}
+                    </button>
+                  );
+                })}
+              </div>
 
-              <SpecBlock title="Import dossier" divided>
-                {dossier.map(([label, value], i) => (
-                  <div
-                    key={label}
-                    style={{
-                      display: 'flex', alignItems: 'baseline', justifyContent: 'space-between',
-                      gap: '16px', padding: '9px 0',
-                      borderBottom: i === dossier.length - 1 ? 'none' : '1px solid var(--band-line)',
-                    }}
-                  >
-                    <span className="mono" style={{ color: 'var(--text-muted)', fontSize: 'var(--text-xs)' }}>{label}</span>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-sm)', color: 'var(--text-dark)', textAlign: 'right' }}>
-                      {value}
-                    </span>
+              {activeTab === 'overview' && (
+                <SpecBlock title="Specification Overview">
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '14px 18px' }}>
+                    {specs.map((s) => {
+                      const Icon = s.icon;
+                      return (
+                        <div key={s.label} className="site-spec-item">
+                          <SiteIcon icon={Icon} variant="spec" size={15} />
+                          <div style={{ minWidth: 0 }}>
+                            <div className="mono" style={{ color: 'var(--text-dim)', fontSize: 'var(--text-2xs)', marginBottom: '3px' }}>{s.label}</div>
+                            <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-dark)' }}>{s.value}</div>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
-                ))}
-              </SpecBlock>
+                </SpecBlock>
+              )}
+
+              {activeTab === 'inspection' && (
+                <SpecBlock title="Inspection & Auction Grade">
+                  {dossier.slice(3, 8).map(([label, value], i) => (
+                    <div
+                      key={label}
+                      style={{
+                        display: 'flex', alignItems: 'baseline', justifyContent: 'space-between',
+                        gap: '16px', padding: '9px 0',
+                        borderBottom: i === 4 ? 'none' : '1px solid var(--band-line)',
+                      }}
+                    >
+                      <span className="mono" style={{ color: 'var(--text-muted)', fontSize: 'var(--text-xs)' }}>{label}</span>
+                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-sm)', color: 'var(--primary)', fontWeight: 600, textAlign: 'right' }}>
+                        {value}
+                      </span>
+                    </div>
+                  ))}
+                </SpecBlock>
+              )}
+
+              {activeTab === 'costing' && (
+                <SpecBlock title="Import Duty & Logistics">
+                  {dossier.slice(6).map(([label, value], i) => (
+                    <div
+                      key={label}
+                      style={{
+                        display: 'flex', alignItems: 'baseline', justifyContent: 'space-between',
+                        gap: '16px', padding: '9px 0',
+                        borderBottom: i === dossier.slice(6).length - 1 ? 'none' : '1px solid var(--band-line)',
+                      }}
+                    >
+                      <span className="mono" style={{ color: 'var(--text-muted)', fontSize: 'var(--text-xs)' }}>{label}</span>
+                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-sm)', color: 'var(--text-dark)', textAlign: 'right' }}>
+                        {value}
+                      </span>
+                    </div>
+                  ))}
+                </SpecBlock>
+              )}
+
+              {activeTab === 'features' && (
+                <SpecBlock title="Key Vehicle Features">
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
+                    {['Alloy Wheels', 'Leather Seats', 'Keyless Entry', 'Backup Camera', 'Bluetooth Audio', 'Multifunction Steering', 'Air Conditioning', 'ABS & Airbags'].map((feat) => (
+                      <div key={feat} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: 'var(--text-body)' }}>
+                        <ShieldCheck size={14} color="var(--verify)" /> {feat}
+                      </div>
+                    ))}
+                  </div>
+                </SpecBlock>
+              )}
             </div>
+
 
             <section className="dossier-preview" aria-labelledby="dossier-preview-title">
               <div className="dossier-preview-head">
@@ -530,17 +570,37 @@ export const VehicleDetailPage = () => {
           .also-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .fit-grid { grid-template-columns: repeat(2, 1fr) !important; }
         }
-        @media (max-width: 700px) {
-          /* Price under the name rather than beside it — at this width the two
-             would each be squeezed to a couple of words per line. */
-          .bay-head { display: block !important; }
-          .bay-price { text-align: left !important; margin-top: 16px; }
-        }
         @media (max-width: 620px) {
           .also-grid { grid-template-columns: 1fr !important; }
           .dossier-preview-grid { grid-template-columns: 1fr; }
         }
       `}</style>
+
+      {/* Floating CTA Rail on Mobile Viewports */}
+      <div className="mobile-cta-rail">
+        <a
+          href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Hi Zoom Imports, I am interested in the ${vehicle.name} (${vehicle.year}, ${vehicle.chassis}). Please send details.`)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+            padding: '12px', borderRadius: '8px', background: '#25D366', color: '#fff',
+            fontWeight: 700, fontSize: '13px', textDecoration: 'none',
+          }}
+        >
+          <MessageSquare size={16} /> WhatsApp Inquiry
+        </a>
+        <button
+          onClick={openTestDrive}
+          style={{
+            flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+            padding: '12px', borderRadius: '8px', background: 'var(--accent)', color: '#fff',
+            fontWeight: 700, fontSize: '13px', border: 'none', cursor: 'pointer',
+          }}
+        >
+          <CalendarClock size={16} /> Test Drive
+        </button>
+      </div>
     </div>
   );
 };
@@ -563,3 +623,4 @@ const SpecBlock = ({ title, divided = false, children }) => (
     {children}
   </div>
 );
+
