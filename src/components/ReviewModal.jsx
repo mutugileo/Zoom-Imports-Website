@@ -16,6 +16,8 @@ export const ReviewModal = () => {
   const [rating, setRating] = useState(5);
   const [hoverRating, setHoverRating] = useState(0);
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState('');
   const closeRef = useRef(null);
 
   // Focus goes in on open and back to the trigger on close. Hooks must stay at
@@ -51,10 +53,16 @@ export const ReviewModal = () => {
   const tooShort = quote.trim().length > 0 && quote.trim().length < MIN_QUOTE;
   const canSubmit = name.trim() && quote.trim().length >= MIN_QUOTE;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!canSubmit) return;
-    submitReview({ name, role, quote, rating });
+    setSendError('');
+    setSending(true);
+    const result = await submitReview({ name, role, quote, rating });
+    setSending(false);
+    // "Thank you" only once it is actually recorded — otherwise someone is
+    // thanked for a review that never arrived.
+    if (!result.ok) { setSendError(result.reason); return; }
     setSubmitted(true);
   };
 
@@ -140,7 +148,7 @@ export const ReviewModal = () => {
               <input
                 id="rv-name" type="text" required value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. James Mburu"
+                placeholder="James Mburu"
                 className="field"
               />
             </div>
@@ -150,7 +158,7 @@ export const ReviewModal = () => {
               <input
                 id="rv-role" type="text" value={role}
                 onChange={(e) => setRole(e.target.value)}
-                placeholder="e.g. Mazda Axela buyer"
+                placeholder="Mazda Axela buyer"
                 className="field"
               />
             </div>
@@ -178,6 +186,10 @@ export const ReviewModal = () => {
               </div>
             </div>
 
+
+            {sendError && (
+              <div role="alert" style={{ fontSize: 'var(--text-sm)', color: '#a13f3f' }}>{sendError}</div>
+            )}
             <button
               type="submit"
               className="btn-primary"

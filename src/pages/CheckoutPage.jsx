@@ -14,21 +14,28 @@ export const CheckoutPage = () => {
   const [address, setAddress] = useState('');
 
   const [submittedOrder, setSubmittedOrder] = useState(null);
+  const [placing, setPlacing] = useState(false);
+  const [orderError, setOrderError] = useState('');
 
-  const handleSubmit = (e) => {
+  /**
+   * The order now goes to the server, so the confirmation waits for it.
+   *
+   * Showing a reference number before the write lands would hand someone a
+   * receipt for an order the yard never received — the one failure a checkout
+   * must never have.
+   */
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name.trim() || !phone.trim()) return;
     if (delivery === 'Delivery' && !address.trim()) return;
 
-    const newOrder = submitOrder({
-      name,
-      phone,
-      email,
-      delivery,
-      address
-    });
+    setOrderError('');
+    setPlacing(true);
+    const result = await submitOrder({ name, phone, email, delivery, address });
+    setPlacing(false);
 
-    setSubmittedOrder(newOrder);
+    if (!result.ok) { setOrderError(result.reason); return; }
+    setSubmittedOrder(result.order);
   };
 
   // Order Confirmation View
@@ -257,9 +264,20 @@ export const CheckoutPage = () => {
             <span style={{ color: '#1b5566' }}>{formatKES(cartSubtotal)}</span>
           </div>
 
-          <button type="submit" className="btn-primary" style={{ padding: '14px', fontSize: 'var(--text-base)', marginTop: '8px' }}>
-            Submit Order
+          <button
+            type="submit"
+            className="btn-primary"
+            disabled={placing}
+            style={{ padding: '14px', fontSize: 'var(--text-base)', marginTop: '8px', opacity: placing ? 0.6 : 1 }}
+          >
+            {placing ? 'Submitting…' : 'Submit Order'}
           </button>
+
+          {orderError && (
+            <div role="alert" style={{ fontSize: 'var(--text-sm)', color: '#a13f3f', textAlign: 'center' }}>
+              {orderError}
+            </div>
+          )}
 
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-dim)', textAlign: 'center', lineHeight: 1.5 }}>
             Payment is arranged directly with the dealership (M-Pesa / Bank Transfer) upon order confirmation.

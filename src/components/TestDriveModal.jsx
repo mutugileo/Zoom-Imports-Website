@@ -12,14 +12,20 @@ export const TestDriveModal = () => {
   const [phone, setPhone] = useState('');
   const [preferredDate, setPreferredDate] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState('');
   const closeRef = useRef(null);
 
-  const close = useCallback(() => {
-
-  // Focus goes in on open and back to the trigger on close.
+  // Focus goes in on open and back to the trigger on close. This must sit at
+  // component scope: it had been left inside `close`, which made it a hook
+  // called from a callback and left `trapRef` undefined at the point the
+  // dialog actually uses it — opening the booking form threw.
   const trapRef = useFocusTrap(isTestDriveOpen);
+
+  const close = useCallback(() => {
     setIsTestDriveOpen(false);
     setSubmitted(false);
+    setSendError('');
     setName('');
     setPhone('');
     setPreferredDate('');
@@ -41,11 +47,13 @@ export const TestDriveModal = () => {
 
   if (!isTestDriveOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name.trim() || !phone.trim()) return;
 
-    submitEnquiry({
+    setSendError('');
+    setSending(true);
+    const result = await submitEnquiry({
       name: name.trim(),
       phone: phone.trim(),
       // The date the visitor picked has to reach the sales team, not vanish.
@@ -56,6 +64,10 @@ export const TestDriveModal = () => {
       type: 'Test Drive Request',
     });
 
+    setSending(false);
+    // Confirmation waits for the write — a booking screen that says "we'll be
+    // in touch" for a request that never arrived is worse than an error.
+    if (!result.ok) { setSendError(result.reason); return; }
     setSubmitted(true);
   };
 
@@ -135,7 +147,7 @@ export const TestDriveModal = () => {
               <input
                 id="td-name" type="text" required value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. Jane Wanjiru"
+                placeholder="Jane Wanjiru"
                 className="field"
               />
             </div>
@@ -145,7 +157,7 @@ export const TestDriveModal = () => {
               <input
                 id="td-phone" type="tel" required value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="e.g. +254 722 000 000"
+                placeholder="+254 722 000 000"
                 className="field"
               />
             </div>
@@ -162,8 +174,12 @@ export const TestDriveModal = () => {
               </div>
             </div>
 
-            <button type="submit" className="btn-primary" style={{ padding: '13px', marginTop: '4px' }}>
-              <CalendarClock size={16} /> Request this viewing
+
+            {sendError && (
+              <div role="alert" style={{ fontSize: 'var(--text-sm)', color: '#a13f3f' }}>{sendError}</div>
+            )}
+            <button type="submit" className="btn-primary" disabled={sending} style={{ padding: '13px', marginTop: '4px', opacity: sending ? 0.6 : 1 }}>
+              <CalendarClock size={16} /> {sending ? 'Sending…' : 'Request this viewing'}
             </button>
           </form>
         )}

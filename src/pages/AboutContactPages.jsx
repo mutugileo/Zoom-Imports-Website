@@ -277,15 +277,21 @@ export const ContactPage = () => {
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    submitEnquiry({
+    setSendError('');
+    setSending(true);
+    const result = await submitEnquiry({
       name,
       phone,
       vehicleName: message || 'General Contact Message',
       type: 'General Enquiry'
     });
+    setSending(false);
+    if (!result.ok) { setSendError(result.reason); return; }
     setSent(true);
   };
 

@@ -34,6 +34,7 @@ export const SellPage = ({ mode = 'car' }) => {
     partName: '', partBrand: '', partQty: '',
   });
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
   const [error, setError] = useState(null);
 
   const set = (key) => (e) => {
@@ -96,7 +97,7 @@ export const SellPage = ({ mode = 'car' }) => {
         form.price && `asking KES ${Number(form.price).toLocaleString()}`,
       ].filter(Boolean).join(' · ');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const gap = missing();
     if (gap) {
@@ -106,14 +107,18 @@ export const SellPage = ({ mode = 'car' }) => {
       return;
     }
     setError(null);
+    setSending(true);
     /* Lands in the admin Enquiries list with a type the yard can sort on —
        a listing offer is a different job from a question about stock. */
-    submitEnquiry({
+    const result = await submitEnquiry({
       name: form.name.trim(),
       phone: form.phone.trim(),
       vehicleName: `${summary}${form.notes.trim() ? ` — ${form.notes.trim()}` : ''}`,
       type: isCar ? 'Vehicle Listing Offer' : 'Parts Listing Offer',
     });
+    setSending(false);
+    // The thank-you page is only honest once the offer is on file.
+    if (!result.ok) { setError({ key: 'name', text: result.reason }); return; }
     setSent(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };

@@ -72,29 +72,37 @@ const normalise = (pathname) => {
  * matches no record, so a dead link renders a 404 rather than silently showing
  * the homepage or the first vehicle in the list.
  */
-export const routeFromPath = (pathname, { vehicles = [], parts = [] } = {}) => {
+export const routeFromPath = (pathname, { vehicles = [], parts = [], ready = true } = {}) => {
   const path = normalise(pathname);
+  const blank = { view: 'not-found', vehicleId: null, partId: null, vehicleSlug: null, partSlug: null };
 
-  if (STATIC[path]) return { view: STATIC[path], vehicleId: null, partId: null };
+  if (STATIC[path]) return { ...blank, view: STATIC[path] };
 
   const vehicleMatch = path.match(/^\/vehicles\/(.+)$/);
   if (vehicleMatch) {
     const vehicle = findBySlug(vehicles, vehicleMatch[1]);
-    return vehicle
-      ? { view: 'vehicle-detail', vehicleId: vehicle.id, partId: null }
-      : { view: 'not-found', vehicleId: null, partId: null };
+    if (vehicle) return { ...blank, view: 'vehicle-detail', vehicleId: vehicle.id };
+    /* The catalogue now arrives over the network, so "no match" at first paint
+       means "not here yet", not "no such car". Declaring 404 on an unresolved
+       slug would flash a dead end on every shared link before the fetch lands.
+       The slug is carried instead, and resolved once the data is in. */
+    if (!ready) return { ...blank, view: 'vehicle-detail', vehicleSlug: vehicleMatch[1] };
+    return blank;
   }
 
   const partMatch = path.match(/^\/parts\/(.+)$/);
   if (partMatch) {
     const part = findBySlug(parts, partMatch[1]);
-    return part
-      ? { view: 'part-detail', vehicleId: null, partId: part.id }
-      : { view: 'not-found', vehicleId: null, partId: null };
+    if (part) return { ...blank, view: 'part-detail', partId: part.id };
+    if (!ready) return { ...blank, view: 'part-detail', partSlug: partMatch[1] };
+    return blank;
   }
 
-  return { view: 'not-found', vehicleId: null, partId: null };
+  return blank;
 };
+
+/** Slug → id, for a deep link whose catalogue arrived after the first paint. */
+export const idForSlug = (list, slug) => findBySlug(list, slug)?.id ?? null;
 
 /**
  * App state → URL. Falls back to the listing page when a detail view is asked

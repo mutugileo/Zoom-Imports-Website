@@ -455,7 +455,7 @@ export const HomePage = () => {
                 type="text"
                 value={chassisQuery}
                 onChange={(e) => setChassisQuery(e.target.value)}
-                placeholder="Enter Chassis / Model (e.g. KE2FW, CX-5, Forester)..."
+                placeholder="Enter Chassis / Model (KE2FW, CX-5, Forester)..."
                 style={{
                   width: '100%', padding: '10px 14px 10px 38px', borderRadius: '999px',
                   border: '1px solid var(--border-medium)', background: '#fff',

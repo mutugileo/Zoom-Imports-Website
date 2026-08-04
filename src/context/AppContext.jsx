@@ -1,46 +1,55 @@
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
-import {
-  INITIAL_VEHICLES,
-  INITIAL_PARTS,
-  COMPATIBILITY_RULES,
-  INITIAL_ORDERS,
-  INITIAL_ENQUIRIES,
-  TESTIMONIALS,
-} from '@shared/data/mockData';
-import { DEFAULT_CONTACT, DEFAULT_BANNERS, DEFAULT_FAQS } from '@shared/data/siteContent';
 import { formatKES, formatDate } from '@shared/lib/format';
-import { KEYS, read, readSafe, write, makeOrderRef } from '@shared/lib/store';
-import { routeFromPath, pathFor, titleFor, descriptionFor } from '../lib/router';
+import { KEYS, read, write, makeOrderRef } from '@shared/lib/store';
+import { supabase } from '@shared/lib/supabaseClient';
+import { friendlyError } from '@shared/lib/friendlyError';
+import {
+  vehicleFromRow, partFromRow, compatFromRow, reviewFromRow,
+  orderToRow, enquiryToRow, reviewToRow,
+} from '@shared/lib/dbMap';
+import { routeFromPath, pathFor, titleFor, descriptionFor, idForSlug } from '../lib/router';
 
 /**
- * Customer-facing state only. Catalogue data is READ here — the shop never
- * edits vehicles, parts or compatibility rules; that lives in the admin app.
+ * Customer-facing state only.
+ *
+ * The catalogue, the contact details, the banners, the FAQs and the published
+ * reviews are all read from Supabase — the same rows the admin portal writes.
+ * Nothing on this surface falls back to bundled sample data: an empty database
+ * renders an empty showroom, which is the truth, rather than demo cars nobody
+ * can buy.
+ *
+ * The shop READS the catalogue and never edits it. What it does write is what a
+ * customer creates: an order, an enquiry, a review. Those go in under an
+ * insert-only policy, so a shopper can submit but can never read back the order
+ * book. Only the cart stays in browser storage, because a half-filled basket is
+ * this browser's business and nobody else's.
  */
 
 const AppContext = createContext(null);
-
-/** Flip to true to demo a pre-filled cart. Real visitors must start empty. */
-const DEMO_SEED_CART = false;
 
 export const AppProvider = ({ children }) => {
   /**
    * The URL is the source of truth for which view is showing.
    *
-   * Catalogue data is read below, but the first route has to be resolved before
-   * paint or a deep link would flash the homepage first. The lists are read
-   * synchronously from the same store, so they are safe to read twice here —
-   * this is the one place that ordering matters.
+   * The view is resolved before paint so a deep link never flashes the
+   * homepage. The record behind a detail slug cannot be — it is a fetch away —
+   * so the slug is carried and resolved when the catalogue lands.
    */
   // Optional chaining, not a `typeof window` guard: a non-browser host can
   // supply a partial window, and reading .pathname off it throws during render.
+  // `ready: false` — the catalogue is a fetch away, so a detail slug is held
+  // rather than resolved here (see routeFromPath).
   const initialRoute = routeFromPath(
     (typeof window === 'undefined' ? null : window.location?.pathname) ?? '/',
-    { vehicles: read(KEYS.vehicles, INITIAL_VEHICLES), parts: read(KEYS.parts, INITIAL_PARTS) }
+    { ready: false }
   );
 
   const [currentView, setCurrentView] = useState(initialRoute.view);
-  const [selectedVehicleId, setSelectedVehicleId] = useState(initialRoute.vehicleId ?? 1);
-  const [selectedPartId, setSelectedPartId] = useState(initialRoute.partId ?? 1);
+  const [selectedVehicleId, setSelectedVehicleId] = useState(initialRoute.vehicleId ?? null);
+  const [selectedPartId, setSelectedPartId] = useState(initialRoute.partId ?? null);
+  // Slugs from a deep link, waiting for the catalogue to land.
+  const [pendingVehicleSlug, setPendingVehicleSlug] = useState(initialRoute.vehicleSlug ?? null);
+  const [pendingPartSlug, setPendingPartSlug] = useState(initialRoute.partSlug ?? null);
 
   const [pageTransition, setPageTransition] = useState('none'); // 'none' | 'reveal-detail' | 'zoom-back' | 'zoom-back-grid'
   const [returningVehicleId, setReturningVehicleId] = useState(null);
@@ -56,17 +65,14 @@ export const AppProvider = ({ children }) => {
   /**
    * Catalogue — read-only on this surface.
    *
-   * The read reports whether it succeeded. Without that a blocked or corrupted
-   * store is indistinguishable from an empty catalogue, and the listing pages
-   * would tell a customer there are no cars. `catalogueError` lets them say what
-   * actually happened instead.
+   * `catalogueError` is kept separate from "no rows" on purpose: a failed fetch
+   * and a yard with nothing in it must not read the same to a customer.
    */
-  const vehiclesRead = useState(() => readSafe(KEYS.vehicles, INITIAL_VEHICLES))[0];
-  const partsRead = useState(() => readSafe(KEYS.parts, INITIAL_PARTS))[0];
-
-  const [vehicles] = useState(vehiclesRead.value);
-  const [parts] = useState(partsRead.value);
-  const [compatibility] = useState(() => read(KEYS.compatibility, COMPATIBILITY_RULES));
+  const [vehicles, setVehicles] = useState([]);
+  const [parts, setParts] = useState([]);
+  const [compatibility, setCompatibility] = useState([]);
+  const [catalogueLoading, setCatalogueLoading] = useState(true);
+  const [catalogueError, setCatalogueError] = useState(null);
 
   /**
    * Contact details, from the same record the admin portal's Site Content
@@ -74,57 +80,94 @@ export const AppProvider = ({ children }) => {
    *
    * They were hardcoded in eight places across the header, footer, contact
    * page and every WhatsApp link — so the screen that exists to edit them
-   * changed nothing, and the site disagreed with itself: the footer advertised
-   * sales@ while the contact page advertised hello@. One read, one source.
+   * changed nothing, and the site disagreed with itself. Now there is one row
+   * in Postgres and one read of it.
    *
    * `waNumber` is the phone with everything but the digits taken out, because
    * wa.me will not accept spaces or a plus sign.
    */
-  const [siteContent] = useState(() => {
-    const stored = read(KEYS.siteContent, null);
-    return {
-      contact: { ...DEFAULT_CONTACT, ...(stored?.contact ?? {}) },
-      banners: stored?.banners ?? DEFAULT_BANNERS,
-      faqs: stored?.faqs ?? DEFAULT_FAQS,
-    };
-  });
-  const { contact, banners, faqs } = siteContent;
+  const EMPTY_CONTACT = { phone: '', whatsapp: '', email: '', location: '' };
+  const [contact, setContact] = useState(EMPTY_CONTACT);
+  const [banners, setBanners] = useState([]);
+  const [faqs, setFaqs] = useState([]);
   const waNumber = String(contact.whatsapp || contact.phone || '').replace(/\D/g, '');
 
-  // Retry means reload: the data is read once at mount, so there is nothing
-  // finer-grained to re-run.
-  const [catalogueError, setCatalogueError] = useState(
-    vehiclesRead.ok && partsRead.ok ? null : (vehiclesRead.reason ?? partsRead.reason)
-  );
-  const retryCatalogue = useCallback(() => {
+  /**
+   * One fetch for everything the storefront paints with.
+   *
+   * Run together rather than in sequence: they are independent tables and a
+   * waterfall would add a round trip per section for no benefit. The catalogue
+   * decides the loading and error state because it is what the listing pages
+   * are actually waiting on — a missing FAQ should not stop a car being shown.
+   */
+  const loadSiteData = useCallback(async () => {
+    setCatalogueLoading(true);
     setCatalogueError(null);
-    if (typeof window !== 'undefined') window.location.reload();
+
+    const [vehRes, partRes, compatRes, contactRes, bannerRes, faqRes, reviewRes] = await Promise.all([
+      supabase.from('vehicles').select('*').order('id'),
+      supabase.from('parts').select('*').order('id'),
+      supabase.from('compatibility_rules').select('*').order('id'),
+      supabase.from('site_contact').select('*').eq('id', 1).maybeSingle(),
+      supabase.from('site_banners').select('*').order('created_at'),
+      supabase.from('site_faqs').select('*').order('created_at'),
+      supabase.from('site_reviews').select('*').order('created_at', { ascending: false }),
+    ]);
+
+    setCatalogueLoading(false);
+
+    if (vehRes.error || partRes.error) {
+      // Says what happened instead of rendering an empty showroom — a network
+      // failure and a yard with no cars must not look the same to a customer.
+      setCatalogueError(friendlyError(vehRes.error ?? partRes.error, 'Could not load the catalogue. Check your connection and try again.'));
+      return;
+    }
+
+    setVehicles((vehRes.data ?? []).map(vehicleFromRow));
+    setParts((partRes.data ?? []).map(partFromRow));
+    if (!compatRes.error) setCompatibility((compatRes.data ?? []).map(compatFromRow));
+    if (!contactRes.error && contactRes.data) setContact({ ...EMPTY_CONTACT, ...contactRes.data });
+    if (!bannerRes.error) setBanners(bannerRes.data ?? []);
+    if (!faqRes.error) setFaqs(faqRes.data ?? []);
+    // RLS already filters to Published; the guard is here too so a policy
+    // change can never quietly put an unapproved review on the homepage.
+    if (!reviewRes.error) setReviews((reviewRes.data ?? []).map(reviewFromRow).filter((r) => r.status === 'Published'));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const [cart, setCart] = useState(() =>
-    read(
-      KEYS.cart,
-      DEMO_SEED_CART
-        ? [
-            { id: 1, name: 'Brake Pad Set (Front)', price: 3800, qty: 2, img: INITIAL_PARTS[0].img, brand: 'Mazda Genuine' },
-            { id: 5, name: 'Aluminum Radiator', price: 8200, qty: 1, img: INITIAL_PARTS[4].img, brand: 'Mazda Genuine' },
-          ]
-        : []
-    )
-  );
-  const [orders, setOrders] = useState(() => read(KEYS.orders, INITIAL_ORDERS));
-  const [enquiries, setEnquiries] = useState(() => read(KEYS.enquiries, INITIAL_ENQUIRIES));
+  useEffect(() => { loadSiteData(); }, [loadSiteData]);
+
+  const retryCatalogue = useCallback(() => { loadSiteData(); }, [loadSiteData]);
+
+  /* The one thing that genuinely belongs to this browser. A basket someone is
+     still filling is not the dealership's record of anything, and putting it in
+     Postgres would mean writing a row on every click. */
+  const [cart, setCart] = useState(() => read(KEYS.cart, []));
+  useEffect(() => { write(KEYS.cart, cart); }, [cart]);
 
   const [isReviewOpen, setIsReviewOpen] = useState(false);
-  const [reviews, setReviews] = useState(() =>
-    read(KEYS.reviews, TESTIMONIALS.map((t) => ({ ...t, rating: 5, status: 'Published' })))
-  );
+  const [reviews, setReviews] = useState([]);
 
-  // The cart survives a refresh mid-checkout.
-  useEffect(() => { write(KEYS.cart, cart); }, [cart]);
-  useEffect(() => { write(KEYS.orders, orders); }, [orders]);
-  useEffect(() => { write(KEYS.enquiries, enquiries); }, [enquiries]);
-  useEffect(() => { write(KEYS.reviews, reviews); }, [reviews]);
+  /**
+   * A shared link, resolved once the catalogue arrives.
+   *
+   * The slug was held rather than 404'd at first paint. Now the data is in,
+   * either it names a real record or it genuinely does not exist — and only
+   * now is `not-found` the honest answer.
+   */
+  useEffect(() => {
+    if (catalogueLoading) return;
+    if (pendingVehicleSlug) {
+      const id = idForSlug(vehicles, pendingVehicleSlug);
+      setPendingVehicleSlug(null);
+      if (id != null) setSelectedVehicleId(id); else setCurrentView('not-found');
+    }
+    if (pendingPartSlug) {
+      const id = idForSlug(parts, pendingPartSlug);
+      setPendingPartSlug(null);
+      if (id != null) setSelectedPartId(id); else setCurrentView('not-found');
+    }
+  }, [catalogueLoading, pendingVehicleSlug, pendingPartSlug, vehicles, parts]);
 
   const applyRoute = useCallback((route) => {
     if (route.vehicleId != null) setSelectedVehicleId(route.vehicleId);
@@ -314,9 +357,13 @@ export const AppProvider = ({ children }) => {
   );
 
   const submitOrder = useCallback(
-    (customerDetails) => {
+    async (customerDetails) => {
+      /* The reference is minted from the clock, not from a count of existing
+         orders — this app can no longer see the order book (insert-only), and
+         a counter over a list it cannot read would collide the moment two
+         customers checked out at once. */
       const newOrder = {
-        ref: makeOrderRef(orders.map((o) => o.ref)),
+        ref: makeOrderRef([]),
         customer: customerDetails.name,
         phone: customerDetails.phone,
         email: customerDetails.email || 'N/A',
@@ -344,11 +391,26 @@ export const AppProvider = ({ children }) => {
         date: formatDate(),
         delivery: customerDetails.delivery,
       };
-      setOrders((prev) => [newOrder, ...prev]);
-      clearCart();
-      return newOrder;
+
+      /* `ref` is the primary key and is randomly generated, so two checkouts in
+         the same instant can collide. A collision is retried with a fresh
+         reference rather than shown to the customer as "that already exists",
+         which would be both baffling and untrue of their order. */
+      let attempt = { ...newOrder };
+      for (let tries = 0; tries < 3; tries += 1) {
+        const { error } = await supabase.from('orders').insert(orderToRow(attempt));
+        if (!error) {
+          clearCart();
+          return { ok: true, order: attempt };
+        }
+        if (error.code !== '23505') {
+          return { ok: false, reason: friendlyError(error, 'Could not place your order. Try again.') };
+        }
+        attempt = { ...attempt, ref: makeOrderRef([attempt.ref]) };
+      }
+      return { ok: false, reason: 'Could not place your order. Try again.' };
     },
-    [cart, cartSubtotal, orders, clearCart]
+    [cart, cartSubtotal, clearCart]
   );
 
   /**
@@ -358,37 +420,34 @@ export const AppProvider = ({ children }) => {
    * of a real dealership. Reviews wait for someone to approve them; the
    * homepage only renders status === 'Published'.
    */
-  const submitReview = useCallback((reviewData) => {
-    const newReview = {
-      id: Date.now(),
+  const submitReview = useCallback(async (reviewData) => {
+    const { error } = await supabase.from('site_reviews').insert(reviewToRow({
       name: reviewData.name.trim(),
       role: reviewData.role.trim() || 'Verified customer',
       quote: reviewData.quote.trim(),
       rating: reviewData.rating,
-      status: 'Pending',
-      date: formatDate(),
-    };
-    setReviews((prev) => [newReview, ...prev]);
-    return newReview;
+    }));
+    if (error) return { ok: false, reason: friendlyError(error, 'Could not send your review. Try again.') };
+    /* Deliberately not added to `reviews`: it is held for approval, and showing
+       it back immediately would imply it is live on the site. */
+    return { ok: true };
   }, []);
 
-  const publishedReviews = useMemo(
-    () => reviews.filter((r) => r.status === 'Published'),
-    [reviews]
-  );
+  // Already filtered on the way in — kept as a named value because every
+  // caller reads it, and the name is the promise.
+  const publishedReviews = reviews;
 
-  const submitEnquiry = useCallback((enquiryData) => {
-    const newEnquiry = {
-      id: Date.now(),
+  const submitEnquiry = useCallback(async (enquiryData) => {
+    const { error } = await supabase.from('enquiries').insert(enquiryToRow({
       customer: enquiryData.name,
       phone: enquiryData.phone,
       vehicle: enquiryData.vehicleName || 'General Enquiry',
       type: enquiryData.type || 'Test Drive Request',
-      preferredDate: enquiryData.preferredDate || '',
       status: 'New',
       date: formatDate(),
-    };
-    setEnquiries((prev) => [newEnquiry, ...prev]);
+    }));
+    if (error) return { ok: false, reason: friendlyError(error, 'Could not send your enquiry. Try again.') };
+    return { ok: true };
   }, []);
 
   const value = useMemo(
@@ -409,8 +468,7 @@ export const AppProvider = ({ children }) => {
       vehicles,
       parts,
       compatibility,
-      orders,
-      enquiries,
+      catalogueLoading,
 
       cart,
       addToCart,
@@ -445,7 +503,7 @@ export const AppProvider = ({ children }) => {
     [
       currentView, navigateTo, navigateBackFromDetail, pageTransition, returningVehicleId, returningPartId,
       selectedVehicleId, selectedPartId, searchQuery,
-      vehicles, parts, compatibility, orders, enquiries,
+      vehicles, parts, compatibility, catalogueLoading,
       cart, addToCart, updateCartQty, removeFromCart, clearCart,
       cartSubtotal, cartItemCount, isCartOpen, cartNotice,
       isTestDriveOpen, testDriveTargetVehicle,
