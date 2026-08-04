@@ -87,7 +87,17 @@ export const AppProvider = ({ children }) => {
    * wa.me will not accept spaces or a plus sign.
    */
   const EMPTY_CONTACT = { phone: '', whatsapp: '', email: '', location: '', hours: '', facebook: '', instagram: '' };
-  const [contact, setContact] = useState(EMPTY_CONTACT);
+
+  /* Painted from the last known copy, then revalidated.
+   *
+   * These sit in the header rail and the footer, which render before any fetch
+   * can land. Starting them blank made the bar paint empty and then pop the
+   * phone number and opening hours in a few hundred milliseconds later — a
+   * visible flicker on every page load, and one this app caused by moving the
+   * details into Postgres. They change perhaps twice a year, so the honest
+   * trade is to show the last copy immediately and correct it silently when
+   * the real row arrives. */
+  const [contact, setContact] = useState(() => ({ ...EMPTY_CONTACT, ...read(KEYS.siteContact, {}) }));
   const [banners, setBanners] = useState([]);
   const [faqs, setFaqs] = useState([]);
   const waNumber = String(contact.whatsapp || contact.phone || '').replace(/\D/g, '');
@@ -126,7 +136,11 @@ export const AppProvider = ({ children }) => {
     setVehicles((vehRes.data ?? []).map(vehicleFromRow));
     setParts((partRes.data ?? []).map(partFromRow));
     if (!compatRes.error) setCompatibility((compatRes.data ?? []).map(compatFromRow));
-    if (!contactRes.error && contactRes.data) setContact({ ...EMPTY_CONTACT, ...contactRes.data });
+    if (!contactRes.error && contactRes.data) {
+      const next = { ...EMPTY_CONTACT, ...contactRes.data };
+      setContact(next);
+      write(KEYS.siteContact, next);   // seeds the next visit's first paint
+    }
     if (!bannerRes.error) setBanners(bannerRes.data ?? []);
     if (!faqRes.error) setFaqs(faqRes.data ?? []);
     // RLS already filters to Published; the guard is here too so a policy

@@ -19,6 +19,9 @@ export const KEYS = {
   orders: NS + 'orders',
   enquiries: NS + 'enquiries',
   cart: NS + 'cart',
+  /* Last known contact details, so the header rail paints instantly instead of
+     blank-then-pop while the real row is fetched. A cache, never the source. */
+  siteContact: NS + 'site_contact',
   reviews: NS + 'reviews',
   siteContent: NS + 'site_content',
   adminUsers: NS + 'admin_users',
