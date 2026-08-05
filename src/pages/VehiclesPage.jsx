@@ -28,7 +28,7 @@ const BUDGETS = [
 ];
 
 export const VehiclesPage = () => {
-  const { vehicles, navigateTo, formatKES, catalogueError, retryCatalogue } = useApp();
+  const { vehicles, navigateTo, formatKES, catalogueError, retryCatalogue , settings } = useApp();
 
   /* The whole lot, not the filtered slice below — this is what backs the
      hero's claim that every listing carries real paperwork, so it has to
@@ -179,17 +179,22 @@ export const VehiclesPage = () => {
             {/* Sellers are already a first-class listing type in the catalogue —
                 this is the way in for one. A real href so the link can be opened
                 in a new tab, copied, or advertised on its own. */}
-            <a
-              href="/sell"
-              onClick={(e) => {
-                if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
-                e.preventDefault();
-                navigateTo('sell');
-              }}
-              className="btn-secondary btn-sm hero-cta"
-            >
-              <PlusCircle size={15} /> List your car with us
-            </a>
+            {/* Hidden when the yard turns seller listings off from the admin.
+                The route itself is closed too — hiding a link is not the same
+                as closing a door someone already has the address of. */}
+            {settings.seller_listings && (
+              <a
+                href="/sell"
+                onClick={(e) => {
+                  if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+                  e.preventDefault();
+                  navigateTo('sell');
+                }}
+                className="btn-secondary btn-sm hero-cta"
+              >
+                <PlusCircle size={15} /> List your car with us
+              </a>
+            )}
 
             {/* What the paragraph above just claimed, counted rather than
                 asserted — the same trap TODO.md flags for the homepage's
@@ -239,6 +244,7 @@ export const VehiclesPage = () => {
                 >
                   <SlidersHorizontal size={15} /> Filters{activeFilters ? ` (${activeFilters})` : ''}
                 </button>
+          )}
 
                 <label className="mono" style={{ color: 'var(--text-dim)' }} htmlFor="sort">Sort</label>
                 <select

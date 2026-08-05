@@ -100,6 +100,8 @@ export const AppProvider = ({ children }) => {
   const [contact, setContact] = useState(() => ({ ...EMPTY_CONTACT, ...read(KEYS.siteContact, {}) }));
   const [banners, setBanners] = useState([]);
   const [faqs, setFaqs] = useState([]);
+  // Defaults on: a flag that fails to load must not silently close the door.
+  const [settings, setSettings] = useState({ seller_listings: true });
   const waNumber = String(contact.whatsapp || contact.phone || '').replace(/\D/g, '');
 
   /**
@@ -114,7 +116,7 @@ export const AppProvider = ({ children }) => {
     setCatalogueLoading(true);
     setCatalogueError(null);
 
-    const [vehRes, partRes, compatRes, contactRes, bannerRes, faqRes, reviewRes] = await Promise.all([
+    const [vehRes, partRes, compatRes, contactRes, bannerRes, faqRes, reviewRes, settingRes] = await Promise.all([
       supabase.from('vehicles').select('*').order('id'),
       supabase.from('parts').select('*').order('id'),
       supabase.from('compatibility_rules').select('*').order('id'),
@@ -122,6 +124,7 @@ export const AppProvider = ({ children }) => {
       supabase.from('site_banners').select('*').order('created_at'),
       supabase.from('site_faqs').select('*').order('created_at'),
       supabase.from('site_reviews').select('*').order('created_at', { ascending: false }),
+      supabase.from('site_settings').select('key, enabled'),
     ]);
 
     setCatalogueLoading(false);
@@ -145,6 +148,9 @@ export const AppProvider = ({ children }) => {
     if (!faqRes.error) setFaqs(faqRes.data ?? []);
     // RLS already filters to Published; the guard is here too so a policy
     // change can never quietly put an unapproved review on the homepage.
+    if (!settingRes.error && settingRes.data) {
+      setSettings(Object.fromEntries(settingRes.data.map((r) => [r.key, r.enabled])));
+    }
     if (!reviewRes.error) setReviews((reviewRes.data ?? []).map(reviewFromRow).filter((r) => r.status === 'Published'));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -576,7 +582,7 @@ export const AppProvider = ({ children }) => {
       cartSubtotal, cartItemCount, isCartOpen, cartNotice,
       isTestDriveOpen, testDriveTargetVehicle,
       reviews, publishedReviews, submitReview, isReviewOpen,
-      submitOrder, submitEnquiry, submitVehicleListing, submitPartListing, contact, waNumber, banners, faqs, catalogueError, retryCatalogue
+      submitOrder, submitEnquiry, submitVehicleListing, submitPartListing, settings, contact, waNumber, banners, faqs, catalogueError, retryCatalogue
     ]
   );
 

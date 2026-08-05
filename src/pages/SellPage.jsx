@@ -25,8 +25,12 @@ const FUELS = ['Petrol', 'Diesel', 'Hybrid', 'Electric'];
  * button on the lot and the button on the parts shelf.
  */
 export const SellPage = ({ mode = 'car' }) => {
-  const { navigateTo, submitVehicleListing, submitPartListing, waNumber } = useApp();
+  const { navigateTo, submitVehicleListing, submitPartListing, settings, waNumber } = useApp();
   const isCar = mode === 'car';
+
+  /* Closed from the admin. Hiding the link is not enough — the address is
+     shareable, so the page has to turn people away itself. */
+  const sellerListingsOpen = settings?.seller_listings !== false;
 
   const [form, setForm] = useState({
     name: '', phone: '', email: '',
@@ -161,6 +165,26 @@ export const SellPage = ({ mode = 'car' }) => {
   )}`;
 
   /* ── Thank-you state ─────────────────────────────────────────────── */
+  if (!sellerListingsOpen) {
+    return (
+      <div className="animate-fade-in" style={{ padding: '80px var(--gutter)', textAlign: 'center', maxWidth: '560px', margin: '0 auto' }}>
+        <h1 style={{ fontFamily: 'var(--font-serif)', fontWeight: 600, fontSize: 'var(--text-fluid-lg)', color: 'var(--text-dark)', marginBottom: '12px' }}>
+          We are not taking listings right now
+        </h1>
+        <p style={{ fontSize: 'var(--text-md)', lineHeight: 1.7, color: 'var(--text-muted)', marginBottom: '24px' }}>
+          The yard has paused seller submissions. Talk to us directly and we will tell you
+          when it reopens.
+        </p>
+        <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <a href={waHref} target="_blank" rel="noopener noreferrer" className="btn-primary">
+            <MessageSquare size={16} /> Message us
+          </a>
+          <button onClick={() => navigateTo('vehicles')} className="btn-secondary">Back to the lot</button>
+        </div>
+      </div>
+    );
+  }
+
   if (sent) {
     return (
       <div style={{ padding: '48px var(--gutter) 80px', maxWidth: '640px', margin: '0 auto', textAlign: 'center' }}>
