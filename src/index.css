@@ -2097,3 +2097,33 @@ input:focus-visible {
     justify-content: center;
   }
 }
+
+/* Hero dossier: the paperwork folds away on a phone.
+   It is the tallest block in the hero, and at 375px it pushed "Open full
+   dossier" below the fold — the card described the car beautifully and hid
+   the way to act on it. Open by default on anything wider. */
+.dossier-toggle { display: none; }
+
+@media (max-width: 900px) {
+  .dossier-toggle {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; margin: 4px 0 2px; padding: 9px 0;
+    background: none; border: none; cursor: pointer;
+    font-family: var(--font-mono); font-size: var(--text-xs);
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--accent-light);
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+  }
+  /* Collapsed by default; `grid-template-rows` animates to a height the
+     content decides, which `height: auto` cannot do. */
+  .dossier-rows {
+    display: grid; grid-template-rows: 0fr;
+    transition: grid-template-rows 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .dossier-rows > .dossier-rows-inner { overflow: hidden; }
+  .dossier-rows[data-open] { grid-template-rows: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dossier-rows { transition: none; }
+}

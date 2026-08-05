@@ -35,12 +35,29 @@ const COLUMNS = [
    frozen at module scope — the footer used to advertise a different email from
    the contact page. */
 const contactRows = (contact) => [
-  { icon: MapPin, label: contact.location },
-  { icon: Phone, label: contact.phone, href: `tel:${String(contact.phone || '').replace(/\s/g, '')}` },
-  ...(contact.email ? [{ icon: Mail, label: contact.email, href: `mailto:${contact.email}` }] : []),
-  ...(contact.hours ? [{ icon: Clock, label: contact.hours }] : []),
-  ...(contact.instagram ? [{ icon: Instagram, label: contact.instagram, href: `https://instagram.com/${String(contact.instagram).replace(/^@/, '')}` }] : []),
-  ...(contact.facebook ? [{ icon: Facebook, label: contact.facebook, href: `https://facebook.com/${String(contact.facebook).replace(/^@/, '')}` }] : []),
+  { id: 'location', icon: MapPin, label: contact.location },
+  { id: 'phone', icon: Phone, label: contact.phone, href: `tel:${String(contact.phone || '').replace(/\s/g, '')}` },
+  ...(contact.email ? [{ id: 'email', icon: Mail, label: contact.email, href: `mailto:${contact.email}` }] : []),
+  ...(contact.hours ? [{ id: 'hours', icon: Clock, label: contact.hours }] : []),
+].filter((r) => r.label);
+
+/**
+ * Socials are icons, not another line of text.
+ *
+ * Both handles are `_zoomimports`, so listing them as labels printed the same
+ * string twice with nothing to say which was which — and, because the rows
+ * were keyed by label, handed React two identical keys. The icon carries the
+ * network; the accessible name says it in full.
+ */
+const socialLinks = (contact) => [
+  ...(contact.instagram ? [{
+    id: 'instagram', icon: Instagram, name: 'Instagram', handle: contact.instagram,
+    href: `https://instagram.com/${String(contact.instagram).replace(/^@/, '')}`,
+  }] : []),
+  ...(contact.facebook ? [{
+    id: 'facebook', icon: Facebook, name: 'Facebook', handle: contact.facebook,
+    href: `https://facebook.com/${String(contact.facebook).replace(/^@/, '')}`,
+  }] : []),
 ];
 
 /**
@@ -151,7 +168,7 @@ export const Footer = () => {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px 22px', flexWrap: 'wrap' }}>
-          {contactRows(contact).map(({ icon: Icon, label, href }) => {
+          {contactRows(contact).map(({ id, icon: Icon, label, href }) => {
             const inner = (
               <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <SiteIcon icon={Icon} variant="footer" size={13} />
@@ -159,9 +176,28 @@ export const Footer = () => {
               </span>
             );
             return href
-              ? <a key={label} href={href} className="link-draw">{inner}</a>
-              : <React.Fragment key={label}>{inner}</React.Fragment>;
+              ? <a key={id} href={href} className="link-draw">{inner}</a>
+              : <React.Fragment key={id}>{inner}</React.Fragment>;
           })}
+
+          {socialLinks(contact).length > 0 && (
+            <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span aria-hidden="true" style={{ width: '1px', height: '14px', background: 'rgba(255,255,255,0.18)' }} />
+              {socialLinks(contact).map(({ id, icon: Icon, name, handle, href }) => (
+                <a
+                  key={id}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${name} — ${handle}`}
+                  title={`${name} · ${handle}`}
+                  style={{ display: 'flex', alignItems: 'center' }}
+                >
+                  <SiteIcon icon={Icon} variant="footer" size={15} />
+                </a>
+              ))}
+            </span>
+          )}
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>

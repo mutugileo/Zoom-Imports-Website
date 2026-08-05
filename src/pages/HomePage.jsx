@@ -46,6 +46,7 @@ export const HomePage = () => {
 
   const [chassisQuery, setChassisQuery] = React.useState('');
   const [selectedCategory, setSelectedCategory] = React.useState(null);
+  const [dossierOpen, setDossierOpen] = React.useState(false);
 
   const heroItems = React.useMemo(() => {
     const list = vehicles.filter((v) => v.status === 'Available');
@@ -241,10 +242,37 @@ export const HomePage = () => {
                 {hero.year} · {hero.trans} · {hero.engine}
               </div>
 
-              <DossierRow label="CHASSIS" value={hero.chassis} />
-              <DossierRow label="AUCTION GRADE" value={hero.grade ? `Grade ${hero.grade} (USS Certified)` : 'Grade 4.5B (USS Certified)'} />
-              <DossierRow label="ODOMETER" value={`${Number(hero.mileage).toLocaleString()} km · JEVIC Verified`} />
-              <DossierRow label="INSPECTION" value={hero.inspection} last />
+              {/* Collapsed on a phone: the dossier is the tallest thing in the
+                  hero and pushed the call to action off the first screen. The
+                  car, its price and the way in stay visible; the paperwork is
+                  one tap away. Always open on wider screens. */}
+              <button
+                type="button"
+                className="dossier-toggle"
+                onClick={() => setDossierOpen((o) => !o)}
+                aria-expanded={dossierOpen}
+                aria-controls="hero-dossier-rows"
+              >
+                <span>{dossierOpen ? 'Hide the paperwork' : 'See the paperwork'}</span>
+                <ChevronDown size={15} aria-hidden="true" style={{ transform: dossierOpen ? 'rotate(180deg)' : 'none', transition: 'transform 200ms ease' }} />
+              </button>
+
+              <div id="hero-dossier-rows" className="dossier-rows" data-open={dossierOpen ? 'true' : undefined}>
+                {/* One child, so the 0fr→1fr collapse has a single row to
+                    animate — several direct children would each create their
+                    own implicit row and only the first would fold. */}
+                <div className="dossier-rows-inner">
+                <DossierRow label="CHASSIS" value={hero.chassis} />
+                {hero.grade && <DossierRow label="AUCTION GRADE" value={`Grade ${hero.grade}`} />}
+                {/* The verification note is only true when the record says so —
+                    it used to print "JEVIC Verified" against every odometer. */}
+                <DossierRow
+                  label="ODOMETER"
+                  value={`${Number(hero.mileage).toLocaleString()} km${hero.odometerVerified ? ' · verified' : ''}`}
+                />
+                {hero.inspection && <DossierRow label="INSPECTION" value={hero.inspection} last />}
+                </div>
+              </div>
 
               <button
                 onClick={() => navigateTo('vehicle-detail', hero.id)}
