@@ -244,7 +244,7 @@ export const VehiclesPage = () => {
                 >
                   <SlidersHorizontal size={15} /> Filters{activeFilters ? ` (${activeFilters})` : ''}
                 </button>
-          )}
+
 
                 <label className="mono" style={{ color: 'var(--text-dim)' }} htmlFor="sort">Sort</label>
                 <select
