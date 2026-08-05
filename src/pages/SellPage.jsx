@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
+import { ImagePicker } from '../components/ImagePicker';
 import { MAZDA_MODEL_GROUPS, labelForModel } from '@shared/data/mazdaModels';
 import {
   ArrowLeft, CheckCircle2, MessageSquare, ShieldCheck, Camera, Banknote, Clock,
@@ -24,7 +25,7 @@ const FUELS = ['Petrol', 'Diesel', 'Hybrid', 'Electric'];
  * button on the lot and the button on the parts shelf.
  */
 export const SellPage = ({ mode = 'car' }) => {
-  const { navigateTo, submitEnquiry, waNumber } = useApp();
+  const { navigateTo, submitVehicleListing, submitPartListing, waNumber } = useApp();
   const isCar = mode === 'car';
 
   const [form, setForm] = useState({
@@ -33,6 +34,7 @@ export const SellPage = ({ mode = 'car' }) => {
     regNumber: '', price: '', notes: '',
     partName: '', partBrand: '', partQty: '',
   });
+  const [photos, setPhotos] = useState([]);
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState(null);
@@ -106,16 +108,45 @@ export const SellPage = ({ mode = 'car' }) => {
       document.getElementById(`sell-${key}`)?.focus();
       return;
     }
+    if (photos.length === 0) {
+      setError({ key: 'photos', text: 'Add at least one photo — nobody buys a car they cannot see.' });
+      return;
+    }
     setError(null);
     setSending(true);
     /* Lands in the admin Enquiries list with a type the yard can sort on —
        a listing offer is a different job from a question about stock. */
-    const result = await submitEnquiry({
-      name: form.name.trim(),
-      phone: form.phone.trim(),
-      vehicleName: `${summary}${form.notes.trim() ? ` — ${form.notes.trim()}` : ''}`,
-      type: isCar ? 'Vehicle Listing Offer' : 'Parts Listing Offer',
-    });
+    /* A real listing, held for approval.
+       `Pending` and `source: 'public'` are also enforced by the insert policy,
+       so a tampered payload is refused by Postgres rather than merely by this
+       object — a submission can never publish itself. */
+    const result = isCar
+      ? await submitVehicleListing({
+          name: `Mazda ${labelForModel(form.model)}`,
+          year: Number(form.year) || null,
+          price: Number(form.price) || 0,
+          mileage: Number(form.mileage) || null,
+          trans: form.trans || null,
+          fuel: form.fuel || null,
+          color: form.colour || null,
+          regNumber: form.regNumber || '',
+          description: form.notes.trim(),
+          images: photos,
+          sellerName: form.name.trim(),
+          sellerPhone: form.phone.trim(),
+        })
+      : await submitPartListing({
+          name: form.partName.trim(),
+          brand: form.partBrand.trim(),
+          price: Number(form.price) || 0,
+          stock: Number(form.partQty) || 1,
+          compat: form.model || null,
+          description: form.notes.trim(),
+          images: photos,
+          sellerName: form.name.trim(),
+          sellerPhone: form.phone.trim(),
+        });
+
     setSending(false);
     // The thank-you page is only honest once the offer is on file.
     if (!result.ok) { setError({ key: 'name', text: result.reason }); return; }
@@ -304,6 +335,22 @@ export const SellPage = ({ mode = 'car' }) => {
               <Field label={isCar ? 'Asking price (KES)' : 'Asking price per unit (KES)'} required>
                 <input className="field" id="sell-price" aria-invalid={error?.key === 'price' || undefined} value={form.price} onChange={set('price')} placeholder="1450000" inputMode="numeric" />
               </Field>
+              <Field label="Photos" required>
+                {/* Compressed in the browser before upload, so a seller on a
+                    phone is not sending 12MB per shot over mobile data. */}
+                <ImagePicker
+                  bucket="listing-submissions"
+                  value={photos}
+                  onChange={setPhotos}
+                  max={8}
+                />
+                {error?.key === 'photos' && (
+                  <div role="alert" style={{ fontSize: 'var(--text-sm)', color: '#a13f3f', marginTop: '6px' }}>
+                    {error.text}
+                  </div>
+                )}
+              </Field>
+
               <Field label={isCar ? 'Condition and history' : 'Condition and notes'} required>
                 <textarea
                   className="field"

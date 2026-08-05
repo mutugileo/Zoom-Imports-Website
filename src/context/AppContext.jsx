@@ -451,6 +451,60 @@ export const AppProvider = ({ children }) => {
   // caller reads it, and the name is the promise.
   const publishedReviews = reviews;
 
+  /**
+   * A seller's own listing, held for approval.
+   *
+   * Written as a real vehicle rather than an enquiry, so once the yard
+   * approves it the car is already in the catalogue with its photographs —
+   * nobody has to retype it. `Pending` and `source: 'public'` are enforced by
+   * the insert policy as well as set here; the seller's name and number ride
+   * in the description because there is nowhere else on a vehicle to put them
+   * and the yard needs to be able to call them back.
+   */
+  const submitVehicleListing = useCallback(async (v) => {
+    const slugBase = `${v.name} ${v.year ?? ''}`.toLowerCase().trim()
+      .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    const { error } = await supabase.from('vehicles').insert({
+      name: v.name,
+      year: v.year,
+      price: v.price,
+      mileage: v.mileage,
+      trans: v.trans,
+      fuel: v.fuel,
+      color: v.color,
+      reg_number: v.regNumber,
+      make: 'Mazda',
+      status: 'Available',
+      listing: 'private',
+      // Unique per submission: two sellers offering the same model must not
+      // collide on the slug and have the second insert rejected.
+      slug: `${slugBase}-${Date.now().toString(36)}`,
+      img: v.images[0] ?? null,
+      images: v.images,
+      description: [v.description, `Listed by ${v.sellerName} · ${v.sellerPhone}`].filter(Boolean).join('\n\n'),
+      approval_status: 'Pending',
+      source: 'public',
+    });
+    if (error) return { ok: false, reason: friendlyError(error, 'Could not send your listing. Try again.') };
+    return { ok: true };
+  }, []);
+
+  const submitPartListing = useCallback(async (p) => {
+    const { error } = await supabase.from('parts').insert({
+      name: p.name,
+      brand: p.brand || null,
+      price: p.price,
+      stock: p.stock,
+      compat: p.compat,
+      img: p.images[0] ?? null,
+      description: [p.description, `Offered by ${p.sellerName} · ${p.sellerPhone}`].filter(Boolean).join('\n\n'),
+      approval_status: 'Pending',
+      source: 'public',
+    });
+    if (error) return { ok: false, reason: friendlyError(error, 'Could not send your listing. Try again.') };
+    return { ok: true };
+  }, []);
+
   const submitEnquiry = useCallback(async (enquiryData) => {
     const { error } = await supabase.from('enquiries').insert(enquiryToRow({
       customer: enquiryData.name,
@@ -522,7 +576,7 @@ export const AppProvider = ({ children }) => {
       cartSubtotal, cartItemCount, isCartOpen, cartNotice,
       isTestDriveOpen, testDriveTargetVehicle,
       reviews, publishedReviews, submitReview, isReviewOpen,
-      submitOrder, submitEnquiry, contact, waNumber, banners, faqs, catalogueError, retryCatalogue
+      submitOrder, submitEnquiry, submitVehicleListing, submitPartListing, contact, waNumber, banners, faqs, catalogueError, retryCatalogue
     ]
   );
 
