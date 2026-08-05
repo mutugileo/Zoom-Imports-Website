@@ -568,6 +568,9 @@ export const AppProvider = ({ children }) => {
 
       submitOrder,
       submitEnquiry,
+      submitVehicleListing,
+      submitPartListing,
+      settings,
       formatKES,
       contact,
       waNumber,
