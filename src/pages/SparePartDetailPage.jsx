@@ -196,10 +196,10 @@ export const SparePartDetailPage = () => {
 
           <div style={{ borderTop: '1px solid rgba(27,36,48,.08)', paddingTop: '16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: 'var(--text-sm)', color: '#333d49' }}>
-              <SiteIcon icon={ShieldCheck} variant="trust" size={16} /> 12-Month Genuine Parts Guarantee
+              <SiteIcon icon={ShieldCheck} variant="trust" size={16} /> {part.brand ? `${part.brand} — supplied as listed` : 'Supplied as listed'}
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: 'var(--text-sm)', color: '#333d49' }}>
-              <SiteIcon icon={Truck} variant="trust" size={16} /> Same-day delivery in Nairobi or free depot collection
+              <SiteIcon icon={Truck} variant="trust" size={16} /> Delivery in Nairobi or collection from the depot
             </div>
           </div>
 

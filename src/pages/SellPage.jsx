@@ -173,13 +173,13 @@ export const SellPage = ({ mode = 'car' }) => {
           working day to talk through {isCar ? 'the car' : 'the parts'} and agree a price.
         </p>
         <p style={{ fontSize: 'var(--text-sm)', lineHeight: 1.7, color: 'var(--text-muted)', marginBottom: '26px' }}>
-          Photos move this along faster than anything else. Send them on WhatsApp and we can
-          often quote the same day.
+          Your photos came through with it. Someone checks the listing before it goes on
+          the site, so it will not appear straight away.
         </p>
 
         <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
           <a href={waHref} target="_blank" rel="noopener noreferrer" className="btn-primary">
-            <MessageSquare size={16} /> Send photos on WhatsApp
+            <MessageSquare size={16} /> Ask us a question
           </a>
           <button onClick={() => navigateTo(isCar ? 'vehicles' : 'parts')} className="btn-secondary">
             Back to the {isCar ? 'lot' : 'catalogue'}
@@ -393,9 +393,9 @@ export const SellPage = ({ mode = 'car' }) => {
               One of our buyers rings you, usually the same afternoon, to go through the
               details and book a look.
             </Aside>
-            <Aside icon={Camera} title="Photos speed it up">
-              Four corners, the interior and the dash reading. Send them on WhatsApp and we
-              can often quote before you visit.
+            <Aside icon={Camera} title="What to photograph">
+              Four corners, the interior and the dash reading. Add them above — the clearer
+              the pictures, the quicker we can price it.
             </Aside>
             <Aside icon={ShieldCheck} title="Your figures, marked as yours">
               {isCar
