@@ -81,7 +81,7 @@ export const AboutPage = () => {
               {[
                 { figure: '500+', tone: 'var(--primary)', label: 'Vehicles handed over', sub: 'Verified Japan auction grades' },
                 { figure: '100%', tone: 'var(--accent)', label: 'Genuine spare parts', sub: '12-month warranty cover' },
-                { figure: '24 hrs', tone: '#2f6690', label: 'Nairobi delivery', sub: 'Fast dispatch to your location' },
+                { figure: '24 hrs', tone: 'var(--primary)', label: 'Nairobi delivery', sub: 'Fast dispatch to your location' },
               ].map((s) => (
                 <div
                   key={s.label}
@@ -168,7 +168,7 @@ export const AboutPage = () => {
               onClick={() => navigateTo('vehicles')}
               className="btn-primary"
               style={{
-                background: 'var(--accent)',
+                background: 'var(--accent-fill)',
                 width: '100%',
                 padding: '12px 20px',
                 textAlign: 'center',

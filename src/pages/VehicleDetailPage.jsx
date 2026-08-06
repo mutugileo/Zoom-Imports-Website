@@ -596,7 +596,7 @@ export const VehicleDetailPage = () => {
           onClick={openTestDrive}
           style={{
             flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
-            padding: '12px', borderRadius: '8px', background: 'var(--accent)', color: '#fff',
+            padding: '12px', borderRadius: '8px', background: 'var(--accent-fill)', color: 'var(--on-accent)',
             fontWeight: 700, fontSize: '13px', border: 'none', cursor: 'pointer',
           }}
         >

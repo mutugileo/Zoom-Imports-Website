@@ -547,7 +547,7 @@ export const Header = () => {
                   className="mono"
                   style={{
                     position: 'absolute', top: '-6px', right: '-8px',
-                    background: 'var(--accent)', color: '#fff', fontSize: '10px', fontWeight: 700,
+                    background: 'var(--accent-fill)', color: 'var(--on-accent)', fontSize: '10px', fontWeight: 700,
                     minWidth: '16px', height: '16px', borderRadius: '999px',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     padding: '0 4px', border: '1.5px solid #fff',

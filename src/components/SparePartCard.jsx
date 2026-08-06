@@ -108,7 +108,7 @@ export const SparePartCard = ({
         <div style={{ position: 'absolute', top: '12px', right: '12px', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px', zIndex: 10 }}>
           <span className="badge badge-sale pcard-sale" style={{ borderRadius: '9999px' }}>Sale</span>
           {savings > 0 && (
-            <span className="mono" style={{ fontSize: '10px', padding: '3px 9px', borderRadius: '9999px', background: 'var(--accent)', color: '#fff', fontWeight: 700 }}>
+            <span className="mono" style={{ fontSize: '10px', padding: '3px 9px', borderRadius: '9999px', background: 'var(--accent-fill)', color: 'var(--on-accent)', fontWeight: 700 }}>
               Save {formatKES(savings)}
             </span>
           )}
