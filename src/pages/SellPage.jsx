@@ -230,7 +230,10 @@ export const SellPage = ({ mode = 'car' }) => {
         </button>
 
         <div className="mono" style={{ color: 'var(--accent)', marginBottom: '12px' }}>
-          {isCar ? 'Sell through us' : 'Supply the shelf'}
+          {/* "Supply the shelf" was in-house language. Someone arriving with
+              a boot full of parts has to recognise the page as theirs in the
+              first two words. */}
+          {isCar ? 'Sell your Mazda' : 'Sell spare parts'}
         </div>
         <h1
           style={{
@@ -239,7 +242,7 @@ export const SellPage = ({ mode = 'car' }) => {
             color: 'var(--text-dark)', lineHeight: 1.05, marginBottom: '14px', maxWidth: '20ch',
           }}
         >
-          {isCar ? 'List your Mazda on our lot' : 'List your parts on our shelf'}
+          {isCar ? 'List your Mazda on our lot' : 'List your Mazda spare parts with us'}
         </h1>
         <p style={{ fontSize: 'var(--text-md)', color: 'var(--text-muted)', maxWidth: '58ch', lineHeight: 1.65 }}>
           {isCar
