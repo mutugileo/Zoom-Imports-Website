@@ -12,7 +12,11 @@ export default defineConfig({
     alias: { '@shared': shared },
   },
   server: {
-    port: 3000,
+    /* 3000 by default so `npm run dev` behaves as it always has, but the
+       harness can assign a free one via PORT when 3000 is already taken —
+       nothing here depends on the exact number (no OAuth callback, no CORS
+       allowlist), so failing to start is worse than moving. */
+    port: Number(process.env.PORT) || 3000,
     open: false,
   },
 })
