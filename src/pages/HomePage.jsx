@@ -539,8 +539,8 @@ export const HomePage = () => {
                 onClick={() => setSelectedCategory(null)}
                 className="mono"
                 style={{
-                  background: selectedCategory === null ? 'var(--primary)' : '#fff',
-                  color: selectedCategory === null ? '#fff' : 'var(--text-body)',
+                  background: selectedCategory === null ? 'var(--primary)' : 'var(--bg-card)',
+                  color: selectedCategory === null ? 'var(--on-primary)' : 'var(--text-body)',
                   border: '1px solid var(--border-light)',
                   borderRadius: '999px', padding: '8px 14px', cursor: 'pointer',
                   fontSize: '12px', fontWeight: 600,
@@ -558,8 +558,8 @@ export const HomePage = () => {
                     onClick={() => setSelectedCategory(isSel ? null : c.name)}
                     className="mono"
                     style={{
-                      background: isSel ? 'var(--primary)' : '#fff',
-                      color: isSel ? '#fff' : 'var(--text-body)',
+                      background: isSel ? 'var(--primary)' : 'var(--bg-card)',
+                      color: isSel ? 'var(--on-primary)' : 'var(--text-body)',
                       border: `1px solid ${isSel ? 'var(--primary)' : 'var(--border-light)'}`,
                       borderRadius: '999px', padding: '8px 14px', cursor: 'pointer',
                       display: 'flex', alignItems: 'center', gap: '8px',
@@ -567,7 +567,7 @@ export const HomePage = () => {
                       transition: 'all 0.2s ease',
                     }}
                   >
-                    <span style={{ width: '7px', height: '7px', borderRadius: '999px', background: isSel ? '#fff' : c.color }} />
+                    <span style={{ width: '7px', height: '7px', borderRadius: '999px', background: isSel ? 'var(--on-primary)' : c.color }} />
                     {c.name} ({count})
                   </button>
                 );

@@ -465,7 +465,7 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
 /* ---------- Scrollbar ---------- */
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #f1efea; }
+::-webkit-scrollbar-track { background: var(--bg-cream); }
 ::-webkit-scrollbar-thumb { background: #c2c9d1; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #9aa5b1; }
 
@@ -515,11 +515,11 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
   white-space: nowrap;
 }
 .badge-available { background: var(--primary-light); color: var(--primary); }
-.badge-reserved { background: #fbf1df; color: #946118; }
-.badge-sold { background: #eef0f2; color: #6b7480; }
+.badge-reserved { background: color-mix(in srgb, #d9a441 16%, transparent); color: #d9a441; }
+.badge-sold { background: color-mix(in srgb, var(--text-muted) 16%, transparent); color: var(--text-muted); }
 .badge-sale { background: var(--accent-fill); color: var(--on-accent); }
-.badge-low-stock { background: #fbf1df; color: #946118; }
-.badge-out-stock { background: #f6e6e6; color: #a13f3f; }
+.badge-low-stock { background: color-mix(in srgb, #d9a441 16%, transparent); color: #d9a441; }
+.badge-out-stock { background: color-mix(in srgb, #e5484d 16%, transparent); color: #e5484d; }
 .badge-new { background: #eaf1f6; color: #2f6690; }
 /* Listing provenance.
  *
@@ -541,7 +541,7 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
 .badge-owned,
 .badge-listing-owned {
   background: #FFF4CC;
-  color: #9A6700;
+  color: #7F5200;   /* was #9A6700 — 4.42:1 on this tint, under AA */
   border: 1px solid #D4A017;
 }
 
@@ -1345,7 +1345,7 @@ details > summary svg { transition: transform 200ms ease; }
 }
 /* Hovering the chip that is already on should read as "still on", not as a
    second, different state. */
-.chip.is-active:hover { background: #d6e6eb; }
+.chip.is-active:hover { background: color-mix(in srgb, var(--primary) 22%, transparent); }
 
 /* The make pills on the parts page — larger, solid when chosen */
 .chip-solid {
@@ -1421,7 +1421,7 @@ details > summary svg { transition: transform 200ms ease; }
   background: var(--primary-light);
   color: var(--primary);
 }
-.cat-btn.is-active:hover { background: #d6e6eb; }
+.cat-btn.is-active:hover { background: color-mix(in srgb, var(--primary) 22%, transparent); }
 
 /* The availability toggle */
 .filter-check {
@@ -1935,22 +1935,24 @@ input[type='email'] {
   text-transform: uppercase;
 }
 
+/* --verify flips with the theme (#4f8b73 light, #41b883 dark); the fixed
+   #2b634e it replaces measured 2.68:1 against the dark page. */
 .badge-exact-fit {
-  background: rgba(79, 139, 115, 0.12);
-  color: #2b634e;
-  border: 1px solid rgba(79, 139, 115, 0.35);
+  background: color-mix(in srgb, var(--verify) 14%, transparent);
+  color: var(--verify);
+  border: 1px solid color-mix(in srgb, var(--verify) 38%, transparent);
 }
 
 .badge-universal {
-  background: rgba(43, 48, 55, 0.12);
-  color: var(--primary-hover);
-  border: 1px solid rgba(43, 48, 55, 0.3);
+  background: color-mix(in srgb, var(--primary) 14%, transparent);
+  color: var(--primary);
+  border: 1px solid color-mix(in srgb, var(--primary) 34%, transparent);
 }
 
 .badge-check-fit {
-  background: rgba(200, 16, 46, 0.12);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
   color: var(--accent);
-  border: 1px solid rgba(200, 16, 46, 0.3);
+  border: 1px solid color-mix(in srgb, var(--accent) 34%, transparent);
 }
 
 /* 360° Hotspot Pins */
