@@ -247,7 +247,7 @@ export const SellPage = ({ mode = 'car' }) => {
         <p style={{ fontSize: 'var(--text-md)', color: 'var(--text-muted)', maxWidth: '58ch', lineHeight: 1.65 }}>
           {isCar
             ? 'Tell us what you have and we will come back with what we think it will fetch. Cars listed through us carry a seller badge, so buyers know whose figures they are reading.'
-            : 'New or used, genuine or aftermarket — tell us what you hold and which models it fits. We confirm fitment before anything goes on the shelf.'}
+            : 'New or used, genuine or aftermarket — tell us what you hold and which models it fits. We confirm what it fits before it is listed.'}
         </p>
       </section>
 
@@ -360,7 +360,7 @@ export const SellPage = ({ mode = 'car' }) => {
 
             <Fieldset title={isCar ? 'Price and condition' : 'Price and notes'}>
               <Field label={isCar ? 'Asking price (KES)' : 'Asking price per unit (KES)'} required>
-                <input className="field" id="sell-price" aria-invalid={error?.key === 'price' || undefined} value={form.price} onChange={set('price')} placeholder="1450000" inputMode="numeric" />
+                <input className="field" id="sell-price" aria-invalid={error?.key === 'price' || undefined} value={form.price} onChange={set('price')} placeholder={isCar ? '1450000' : '4500'} inputMode="numeric" />
               </Field>
               <Field label="Photos" required>
                 {/* Compressed in the browser before upload, so a seller on a
@@ -407,7 +407,7 @@ export const SellPage = ({ mode = 'car' }) => {
             )}
 
             <button type="submit" className="btn-primary" style={{ width: '100%', padding: '14px', fontSize: 'var(--text-base)' }}>
-              Send it to the yard
+              {isCar ? 'Send it to the yard' : 'Send it to the parts counter'}
             </button>
             <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-dim)', marginTop: '11px', lineHeight: 1.6, textAlign: 'center' }}>
               No obligation. We will call you back with a figure before anything is listed.
@@ -417,17 +417,19 @@ export const SellPage = ({ mode = 'car' }) => {
           {/* What happens next — the questions people ask before filling this in */}
           <aside style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <Aside icon={Clock} title="We call within a day">
-              One of our buyers rings you, usually the same afternoon, to go through the
-              details and book a look.
+              {isCar
+                ? 'One of our buyers rings you, usually the same afternoon, to go through the details and book a look.'
+                : 'One of our parts buyers rings you, usually the same afternoon, to check the part numbers and agree a price.'}
             </Aside>
             <Aside icon={Camera} title="What to photograph">
-              Four corners, the interior and the dash reading. Add them above — the clearer
-              the pictures, the quicker we can price it.
+              {isCar
+                ? 'Four corners, the interior and the dash reading. Add them above — the clearer the pictures, the quicker we can price it.'
+                : 'The part number stamped on it, any box or label, and the wear surfaces. Add them above — a readable part number is what lets us price it without guessing.'}
             </Aside>
-            <Aside icon={ShieldCheck} title="Your figures, marked as yours">
+            <Aside icon={ShieldCheck} title={isCar ? 'Your figures, marked as yours' : 'We check the fitment first'}>
               {isCar
                 ? 'Cars we have not inspected carry a seller badge on the listing, and the dossier says the numbers are yours. We do not present them as our own findings.'
-                : 'Parts go on the shelf only once we have confirmed the fitment ourselves.'}
+                : 'Nothing is listed until we have confirmed which models it actually fits. That check is ours, so a buyer is never relying on a guess.'}
             </Aside>
             <Aside icon={Banknote} title="No listing fee">
               Nothing to pay to be listed. We agree the split when there is a sale to split.
