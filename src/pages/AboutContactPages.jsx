@@ -277,13 +277,19 @@ export const ContactPage = () => {
             </div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <SiteIcon icon={Mail} variant="contact" size={19} />
-            <div>
-              <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-dark)' }}>Email Inquiry</div>
-              <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)' }}>{contact.email}</div>
+          {/* Only rendered once there is an address to render. With
+              site_contact.email blank this printed the heading over an empty
+              line, which reads as a broken row rather than as a channel the
+              yard does not offer. */}
+          {contact.email && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <SiteIcon icon={Mail} variant="contact" size={19} />
+              <div>
+                <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-dark)' }}>Email Inquiry</div>
+                <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)' }}>{contact.email}</div>
+              </div>
             </div>
-          </div>
+          )}
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <SiteIcon icon={Clock} variant="contact" size={19} />

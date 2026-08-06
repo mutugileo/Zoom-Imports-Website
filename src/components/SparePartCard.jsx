@@ -5,6 +5,7 @@ import { clickableCard } from "../lib/clickable";
 import { pathFor } from "../lib/router";
 import { useAddedFlash } from "../lib/useAddedFlash";
 import { stockLabel, stockClass } from "@shared/lib/format";
+import { modelOf } from "@shared/data/mazdaModels";
 import { Plus, Check } from "lucide-react";
 
 /**
@@ -34,8 +35,21 @@ export const SparePartCard = ({
   const savings = part.promo ? part.price - part.promo : 0;
   const [added, confirm] = useAddedFlash();
 
-  // Compatibility badge system determination
-  const fitmentType = fitment
+  /**
+   * Which fitment badge this part carries.
+   *
+   * A confirmed fit is EITHER a compatibility rule or the part's own `compat`
+   * field naming a real model — the same test partsForVehicle applies, where
+   * `namedByRule || namedByField` both rank 0.
+   *
+   * Reading only the rule made this card disagree with every other surface:
+   * with the rules table empty, a part whose compat field says "CX-5" was
+   * listed under "Spares we stock for the CX-5" on the vehicle page and read
+   * "Fits CX-5" on its own detail page, while its card said "Check Fitment" —
+   * three answers to one question, and the card's was the wrong one.
+   */
+  const namedModel = modelOf(part.compat);
+  const fitmentType = fitment || namedModel
     ? 'exact'
     : part.compat?.toLowerCase().includes('universal')
     ? 'universal'
