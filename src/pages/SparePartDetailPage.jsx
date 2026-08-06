@@ -66,7 +66,7 @@ export const SparePartDetailPage = () => {
         
         {/* Left: Image & Specs */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <div style={{ width: '100%', height: '380px', borderRadius: '10px', overflow: 'hidden', border: '1px solid rgba(27,36,48,.1)', background: '#fff' }}>
+          <div style={{ width: '100%', height: '380px', borderRadius: '10px', overflow: 'hidden', border: '1px solid var(--border-light)', background: 'var(--bg-card)' }}>
             <Img src={part.img} alt={part.name} sizes="(max-width: 860px) 100vw, 46vw" loading="eager" />
           </div>
 
@@ -74,7 +74,7 @@ export const SparePartDetailPage = () => {
             <h3 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text-dark)', marginBottom: '10px' }}>
               Compatible Vehicle Models
             </h3>
-            <div style={{ background: '#fff', border: '1px solid rgba(27,36,48,.1)', borderRadius: '10px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-light)', borderRadius: '10px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {matchingRules.length === 0 ? (
                 <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)' }}>Compatible with most {part.compat} vehicles. Contact us to verify your chassis number.</div>
               ) : (
@@ -90,7 +90,7 @@ export const SparePartDetailPage = () => {
         </div>
 
         {/* Right: Price & Cart Actions */}
-        <div style={{ background: '#fff', border: '1px solid rgba(27,36,48,.1)', borderRadius: '12px', padding: '28px', boxShadow: 'var(--shadow-md)', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-light)', borderRadius: '12px', padding: '28px', boxShadow: 'var(--shadow-md)', display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
               <span style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
@@ -117,12 +117,12 @@ export const SparePartDetailPage = () => {
             </div>
           </div>
 
-          <div style={{ fontSize: 'var(--text-base)', lineHeight: 1.6, color: 'var(--text-body)', background: '#f9f8f6', padding: '16px', borderRadius: '8px' }}>
+          <div style={{ fontSize: 'var(--text-base)', lineHeight: 1.6, color: 'var(--text-body)', background: 'var(--bg-cream)', padding: '16px', borderRadius: '8px' }}>
             {part.description}
           </div>
 
           {/* Specification — the counter's own record of this part */}
-          <div style={{ border: '1px solid rgba(27,36,48,.1)', borderRadius: '8px', padding: '2px 16px' }}>
+          <div style={{ border: '1px solid var(--border-light)', borderRadius: '8px', padding: '2px 16px' }}>
             {specs.map(([label, value], i) => (
               <div
                 key={label}
@@ -143,7 +143,7 @@ export const SparePartDetailPage = () => {
           {/* Quantity Selector */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             <span style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-dark)' }}>Quantity:</span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'var(--text-on-ink)', border: '1px solid #d8dde2', borderRadius: '6px', padding: '6px 12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'var(--bg-app)', border: '1px solid var(--border-medium)', borderRadius: '6px', padding: '6px 12px' }}>
               <button 
                 onClick={() => setQty(Math.max(1, qty - 1))}
                 style={{ border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center' }}

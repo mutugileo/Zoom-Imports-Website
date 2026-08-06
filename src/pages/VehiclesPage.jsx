@@ -269,7 +269,7 @@ export const VehiclesPage = () => {
             ) : filtered.length === 0 ? (
               <div
                 style={{
-                  background: '#fff', border: '1px solid var(--border-light)', borderRadius: '12px',
+                  background: 'var(--bg-card)', border: '1px solid var(--border-light)', borderRadius: '12px',
                   padding: '64px 30px', textAlign: 'center',
                 }}
               >

@@ -109,7 +109,7 @@ export const ImagePicker = ({ bucket, value = [], onChange, max = 10 }) => {
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '10px' }}>
           {value.map((url, i) => (
             <div key={url} style={{ width: '104px' }}>
-              <div style={{ position: 'relative', height: '74px', borderRadius: '8px', overflow: 'hidden', border: i === 0 ? '2px solid var(--primary-ink)' : '1px solid #d8dde2', background: '#edf1f6' }}>
+              <div style={{ position: 'relative', height: '74px', borderRadius: '8px', overflow: 'hidden', border: i === 0 ? '2px solid var(--primary-ink)' : '1px solid #d8dde2', background: 'var(--bg-app)' }}>
                 <img src={url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
                 <button
                   type="button"
@@ -148,7 +148,7 @@ export const ImagePicker = ({ bucket, value = [], onChange, max = 10 }) => {
           disabled={busy}
           style={{
             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-            gap: '6px', height: value.length ? '68px' : '104px', width: '100%', background: '#fff',
+            gap: '6px', height: value.length ? '68px' : '104px', width: '100%', background: 'var(--bg-card)',
             border: '1.5px dashed #d8dde2', borderRadius: '8px',
             cursor: busy ? 'progress' : 'pointer', color: 'var(--text-dim)',
           }}

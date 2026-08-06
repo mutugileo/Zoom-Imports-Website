@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useApp } from '../context/AppContext';
 import {
   Search, ShoppingCart, Menu, X, MapPin, Phone,
-  ArrowUpRight, MessageCircle,
+  ArrowUpRight, MessageCircle, Sun, Moon,
 } from 'lucide-react';
 import { Img } from './Img';
 import { pathFor } from '../lib/router';
@@ -47,7 +47,7 @@ const MOBILE_NAV = [
 export const Header = () => {
   const {
     currentView, navigateTo, cartItemCount, cartSubtotal, setIsCartOpen,
-    vehicles, parts, formatKES, contact, waNumber,
+    vehicles, parts, formatKES, contact, waNumber, theme, toggleTheme,
   } = useApp();
 
   const [query, setQuery] = useState('');
@@ -247,7 +247,11 @@ export const Header = () => {
       <div
         style={{
           position: 'relative',
-          background: overlay ? 'transparent' : 'rgba(255,255,255,0.92)',
+          /* Was a literal white. On the dark theme that left a white bar
+             carrying white logotype and washed-out nav links — the one place
+             the page could not be read at all. The token flips; the 0.92
+             translucency it had is now carried by the blur below. */
+          background: overlay ? 'transparent' : 'var(--bg-card)',
           backdropFilter: overlay ? 'none' : 'blur(4px)',
           WebkitBackdropFilter: overlay ? 'none' : 'blur(4px)',
           borderBottom: `1px solid ${overlay ? 'transparent' : 'var(--border-light)'}`,
@@ -264,7 +268,10 @@ export const Header = () => {
         {/* Brand */}
         <button
           onClick={() => go('home')}
-          style={{ background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: 0, flexShrink: 0 }}
+          /* Shrinkable, not fixed. At flexShrink: 0 the 177px brand block
+             refused to give any ground, so on a 320px screen the row measured
+             358px and pushed the menu button 38px off the right edge. */
+          style={{ background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: 0, flexShrink: 1, minWidth: 0 }}
           aria-label="Zoom Imports — home"
         >
           {/* The badge carries the wordmark already, so the type beside it is
@@ -278,11 +285,13 @@ export const Header = () => {
               decoding="async"
               style={{ width: '36px', height: '36px', borderRadius: '8px', objectFit: 'cover', flexShrink: 0 }}
             />
-            <span>
-              <span style={{ display: 'block', fontFamily: 'var(--font-serif)', fontWeight: 700, fontSize: 'var(--text-2xl)', color: overlay ? '#ffffff' : 'var(--text-dark)', lineHeight: 1.05, transition: 'color 320ms ease' }}>
+            <span style={{ minWidth: 0 }}>
+              <span className="brand-wordmark" style={{ display: 'block', fontFamily: 'var(--font-serif)', fontWeight: 700, fontSize: 'var(--text-2xl)', color: overlay ? '#ffffff' : 'var(--text-dark)', lineHeight: 1.05, transition: 'color 320ms ease', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 Zoom Imports
               </span>
-              <span className="mono" style={{ display: 'block', fontSize: 'var(--text-2xs)', color: overlay ? 'rgba(238,242,247,0.82)' : 'var(--text-dim)', transition: 'color 320ms ease' }}>
+              {/* The establishment line is the first thing to go when the row
+                  runs out of width — it is reassurance, not wayfinding. */}
+              <span className="mono brand-est" style={{ display: 'block', fontSize: 'var(--text-2xs)', color: overlay ? 'rgba(238,242,247,0.82)' : 'var(--text-dim)', transition: 'color 320ms ease', whiteSpace: 'nowrap' }}>
                 Nairobi · Est. 2014
               </span>
             </span>
@@ -403,7 +412,7 @@ export const Header = () => {
               <div
                 style={{
                   position: 'absolute', top: 'calc(100% + 8px)', right: 0,
-                  width: 'min(380px, 85vw)', background: '#fff',
+                  width: 'min(380px, 85vw)', background: 'var(--bg-card)',
                   border: '1px solid var(--border-light)', borderRadius: '12px',
                   boxShadow: 'var(--shadow-lg)', overflow: 'hidden', zIndex: 20,
                 }}
@@ -482,6 +491,35 @@ export const Header = () => {
               </div>
             )}
           </div>
+
+          {/* Theme Mode Toggle Button */}
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            className="theme-toggle-btn"
+            style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '999px',
+              border: `1px solid ${overlay ? 'rgba(255,255,255,0.28)' : 'var(--border-medium)'}`,
+              background: overlay ? 'rgba(255,255,255,0.14)' : 'var(--bg-cream)',
+              color: overlay ? '#ffffff' : 'var(--text-dark)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              flexShrink: 0,
+              transition: 'transform 0.25s ease, background 0.25s ease, border-color 0.25s ease',
+            }}
+          >
+            {theme === 'dark' ? (
+              <Sun size={17} style={{ color: overlay ? '#f6c95b' : 'var(--accent)' }} />
+            ) : (
+              <Moon size={17} style={{ color: 'var(--primary-ink)' }} />
+            )}
+          </button>
 
           <button
             onClick={() => setIsCartOpen(true)}

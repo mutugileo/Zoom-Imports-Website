@@ -42,7 +42,7 @@ export const CheckoutPage = () => {
   if (submittedOrder) {
     return (
       <div className="animate-fade-in" style={{ padding: '60px var(--gutter)', display: 'flex', justifyContent: 'center' }}>
-        <div style={{ background: '#fff', border: '1px solid rgba(27,36,48,.1)', borderRadius: '16px', padding: 'clamp(26px, 5vw, 48px)', maxWidth: '560px', width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px', boxShadow: 'var(--shadow-lg)' }}>
+        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-light)', borderRadius: '16px', padding: 'clamp(26px, 5vw, 48px)', maxWidth: '560px', width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px', boxShadow: 'var(--shadow-lg)' }}>
           <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'var(--primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <CheckCircle2 size={36} color="var(--primary)" />
           </div>
@@ -55,7 +55,7 @@ export const CheckoutPage = () => {
             Thank you, <strong>{submittedOrder.customer}</strong>. Your order reference has been generated below. Our dealership staff will confirm stock and arrange payment with you on WhatsApp.
           </p>
 
-          <div style={{ fontSize: 'var(--text-3xl)', fontWeight: 700, color: 'var(--primary)', background: 'var(--text-on-ink)', padding: '14px 32px', borderRadius: '8px', letterSpacing: '.05em', fontFamily: 'monospace' }}>
+          <div style={{ fontSize: 'var(--text-3xl)', fontWeight: 700, color: 'var(--primary)', background: 'var(--bg-app)', padding: '14px 32px', borderRadius: '8px', letterSpacing: '.05em', fontFamily: 'monospace' }}>
             {submittedOrder.ref}
           </div>
 
@@ -106,7 +106,7 @@ export const CheckoutPage = () => {
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
         <button 
           onClick={() => navigateTo('parts')}
-          style={{ background: 'var(--text-on-ink)', border: 'none', borderRadius: '50%', width: '36px', height: '36px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          style={{ background: 'var(--bg-app)', border: 'none', borderRadius: '50%', width: '36px', height: '36px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         >
           <ArrowLeft size={16} color="var(--text-dark)" />
         </button>
@@ -121,7 +121,7 @@ export const CheckoutPage = () => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           
           {/* Contact Details */}
-          <div style={{ background: '#fff', border: '1px solid rgba(27,36,48,.1)', borderRadius: '10px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-light)', borderRadius: '10px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <h3 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text-dark)' }}>
               Contact Information
             </h3>
@@ -136,7 +136,7 @@ export const CheckoutPage = () => {
                   required
                   value={name} 
                   onChange={(e) => setName(e.target.value)} 
-                  style={{ width: '100%', padding: '12px 14px', borderRadius: '8px', border: '1px solid rgba(27,36,48,.16)', outline: 'none', fontSize: 'var(--text-sm)' }} 
+                  style={{ width: '100%', padding: '12px 14px', borderRadius: '8px', border: '1px solid var(--border-medium)', outline: 'none', fontSize: 'var(--text-sm)' }} 
                 />
               </div>
 
@@ -149,7 +149,7 @@ export const CheckoutPage = () => {
                   required
                   value={phone} 
                   onChange={(e) => setPhone(e.target.value)} 
-                  style={{ width: '100%', padding: '12px 14px', borderRadius: '8px', border: '1px solid rgba(27,36,48,.16)', outline: 'none', fontSize: 'var(--text-sm)' }} 
+                  style={{ width: '100%', padding: '12px 14px', borderRadius: '8px', border: '1px solid var(--border-medium)', outline: 'none', fontSize: 'var(--text-sm)' }} 
                 />
               </div>
             </div>
@@ -162,13 +162,13 @@ export const CheckoutPage = () => {
                 type="email" 
                 value={email} 
                 onChange={(e) => setEmail(e.target.value)} 
-                style={{ width: '100%', padding: '12px 14px', borderRadius: '8px', border: '1px solid rgba(27,36,48,.16)', outline: 'none', fontSize: 'var(--text-sm)' }} 
+                style={{ width: '100%', padding: '12px 14px', borderRadius: '8px', border: '1px solid var(--border-medium)', outline: 'none', fontSize: 'var(--text-sm)' }} 
               />
             </div>
           </div>
 
           {/* Delivery Method */}
-          <div style={{ background: '#fff', border: '1px solid rgba(27,36,48,.1)', borderRadius: '10px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-light)', borderRadius: '10px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <h3 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text-dark)' }}>
               Delivery Method
             </h3>
@@ -178,7 +178,7 @@ export const CheckoutPage = () => {
                 onClick={() => setDelivery('Delivery')}
                 style={{ 
                   background: delivery === 'Delivery' ? 'var(--primary-light)' : '#fff', 
-                  border: delivery === 'Delivery' ? '1.5px solid var(--primary)' : '1px solid rgba(27,36,48,.16)', 
+                  border: delivery === 'Delivery' ? '1.5px solid var(--primary)' : '1px solid var(--border-medium)', 
                   borderRadius: '8px', 
                   padding: '14px', 
                   textAlign: 'center', 
@@ -199,7 +199,7 @@ export const CheckoutPage = () => {
                 onClick={() => setDelivery('Collection')}
                 style={{ 
                   background: delivery === 'Collection' ? 'var(--primary-light)' : '#fff', 
-                  border: delivery === 'Collection' ? '1.5px solid var(--primary)' : '1px solid rgba(27,36,48,.16)', 
+                  border: delivery === 'Collection' ? '1.5px solid var(--primary)' : '1px solid var(--border-medium)', 
                   borderRadius: '8px', 
                   padding: '14px', 
                   textAlign: 'center', 
@@ -227,11 +227,11 @@ export const CheckoutPage = () => {
                   required
                   value={address} 
                   onChange={(e) => setAddress(e.target.value)} 
-                  style={{ width: '100%', padding: '12px 14px', borderRadius: '8px', border: '1px solid rgba(27,36,48,.16)', outline: 'none', fontSize: 'var(--text-sm)' }} 
+                  style={{ width: '100%', padding: '12px 14px', borderRadius: '8px', border: '1px solid var(--border-medium)', outline: 'none', fontSize: 'var(--text-sm)' }} 
                 />
               </div>
             ) : (
-              <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)', background: 'var(--text-on-ink)', padding: '12px 14px', borderRadius: '6px' }}>
+              <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)', background: 'var(--bg-app)', padding: '12px 14px', borderRadius: '6px' }}>
                 Collection point: <strong>{contact.location}</strong>{contact.hours ? `. Open ${contact.hours}.` : '.'}
               </div>
             )}
@@ -240,12 +240,12 @@ export const CheckoutPage = () => {
         </div>
 
         {/* Right: Order Summary */}
-        <div style={{ background: '#fff', border: '1px solid rgba(27,36,48,.1)', borderRadius: '10px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px', boxShadow: 'var(--shadow-sm)' }}>
+        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-light)', borderRadius: '10px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px', boxShadow: 'var(--shadow-sm)' }}>
           <h3 style={{ fontSize: 'var(--text-lg)', fontWeight: 600, color: 'var(--text-dark)' }}>
             Order Summary
           </h3>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', borderBottom: '1px solid rgba(27,36,48,.1)', paddingBottom: '14px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', borderBottom: '1px solid var(--border-light)', paddingBottom: '14px' }}>
             {cart.map(item => (
               <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-sm)', color: 'var(--text-body)' }}>
                 <span>{item.name} × {item.qty}</span>
@@ -259,7 +259,7 @@ export const CheckoutPage = () => {
             <span style={{ fontStyle: 'italic' }}>Confirmed by dealership</span>
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xl)', fontWeight: 700, color: 'var(--text-dark)', borderTop: '1px solid rgba(27,36,48,.1)', paddingTop: '12px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xl)', fontWeight: 700, color: 'var(--text-dark)', borderTop: '1px solid var(--border-light)', paddingTop: '12px' }}>
             <span>Total Payable</span>
             <span style={{ color: 'var(--primary)' }}>{formatKES(cartSubtotal)}</span>
           </div>

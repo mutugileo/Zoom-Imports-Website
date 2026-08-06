@@ -241,7 +241,7 @@ export const VehicleDetailPage = () => {
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
                       style={{
-                        flex: 1, padding: '12px 8px', border: 'none', background: isSel ? '#fff' : 'transparent',
+                        flex: 1, padding: '12px 8px', border: 'none', background: isSel ? 'var(--bg-card)' : 'transparent',
                         fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: isSel ? 700 : 500,
                         color: isSel ? 'var(--primary)' : 'var(--text-muted)', cursor: 'pointer',
                         borderBottom: isSel ? '2px solid var(--primary)' : '2px solid transparent',
@@ -432,7 +432,7 @@ export const VehicleDetailPage = () => {
                   ...revealStyle(fitShown, i + 1),
                 }}
               >
-                <div style={{ height: '128px', background: '#fff' }}>
+                <div style={{ height: '128px', background: 'var(--bg-card)' }}>
                   <Img src={p.img} alt={p.name} sizes="(max-width: 900px) 50vw, 22vw" style={{ objectFit: 'contain' }} />
                 </div>
                 <div style={{ padding: '13px 14px 15px', display: 'flex', flexDirection: 'column', gap: '5px', flex: 1 }}>
@@ -485,10 +485,10 @@ export const VehicleDetailPage = () => {
         .dossier-preview {
           margin-bottom: 18px;
           padding: 18px;
-          border: 1px solid rgba(43, 48, 55, 0.18);
+          border: 1px solid var(--border-medium);
           border-radius: 12px;
           background:
-            radial-gradient(95% 130% at 100% 0%, rgba(43, 48, 55, 0.09), transparent 60%),
+            radial-gradient(95% 130% at 100% 0%, rgba(128, 128, 128, 0.10), transparent 60%),
             var(--primary-light);
         }
         .dossier-preview-head {
@@ -504,9 +504,9 @@ export const VehicleDetailPage = () => {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          border: 1px solid rgba(43, 48, 55, 0.17);
+          border: 1px solid var(--border-light);
           border-radius: 10px;
-          background: #fff;
+          background: var(--bg-card);
           color: var(--primary);
         }
         .dossier-preview-head .mono {
@@ -527,14 +527,14 @@ export const VehicleDetailPage = () => {
           grid-template-columns: repeat(2, minmax(0, 1fr));
           gap: 1px;
           overflow: hidden;
-          border: 1px solid rgba(43, 48, 55, 0.14);
+          border: 1px solid var(--border-medium);
           border-radius: 9px;
-          background: rgba(43, 48, 55, 0.14);
+          background: var(--border-medium);
         }
         .dossier-preview-grid > div {
           min-width: 0;
           padding: 11px 12px;
-          background: rgba(255, 255, 255, 0.88);
+          background: var(--bg-card);
         }
         .dossier-preview-grid span,
         .dossier-preview-grid strong { display: block; }

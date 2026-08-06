@@ -54,7 +54,7 @@ export const SparePartCard = ({
         minHeight: `${height}px`,
         borderRadius: '16px',
         overflow: 'hidden',
-        border: '1px solid rgba(27,36,48,0.1)',
+        border: '1px solid var(--border-light)',
         boxShadow: '0 12px 30px -12px rgba(13,25,38,0.15)',
         ...style
       }}

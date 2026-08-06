@@ -517,7 +517,7 @@ export const HomePage = () => {
                 placeholder="Enter Chassis / Model (KE2FW, CX-5, Forester)..."
                 style={{
                   width: '100%', padding: '10px 14px 10px 38px', borderRadius: '999px',
-                  border: '1px solid var(--border-medium)', background: '#fff',
+                  border: '1px solid var(--border-medium)', background: 'var(--bg-card)',
                   fontSize: 'var(--text-sm)', outline: 'none',
                 }}
               />
@@ -578,7 +578,7 @@ export const HomePage = () => {
 
         <div className="parts-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '18px' }}>
           {showcaseParts.length === 0 ? (
-            <div style={{ gridColumn: '1 / -1', padding: '36px', textAlign: 'center', background: '#fff', borderRadius: '12px', color: 'var(--text-muted)' }}>
+            <div style={{ gridColumn: '1 / -1', padding: '36px', textAlign: 'center', background: 'var(--bg-card)', borderRadius: '12px', color: 'var(--text-muted)' }}>
               No spare parts found matching chassis query &ldquo;{chassisQuery}&rdquo;.
             </div>
           ) : (

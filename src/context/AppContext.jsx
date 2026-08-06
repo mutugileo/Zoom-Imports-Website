@@ -62,6 +62,30 @@ export const AppProvider = ({ children }) => {
   const [testDriveTargetVehicle, setTestDriveTargetVehicle] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
 
+  const [theme, setTheme] = useState(() => {
+    if (typeof window === 'undefined') return 'dark';
+    try {
+      const saved = localStorage.getItem('zm_theme');
+      if (saved === 'light' || saved === 'dark') return saved;
+    } catch { /* private mode fallback */ }
+    return window.matchMedia?.('(prefers-color-scheme: light)')?.matches ? 'light' : 'dark';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    try {
+      localStorage.setItem('zm_theme', theme);
+    } catch { /* ignore */ }
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    if (metaTheme) {
+      metaTheme.setAttribute('content', theme === 'dark' ? '#14171c' : '#ffffff');
+    }
+  }, [theme]);
+
+  const toggleTheme = useCallback(() => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  }, []);
+
   /**
    * Catalogue — read-only on this surface.
    *
@@ -589,6 +613,8 @@ export const AppProvider = ({ children }) => {
       waNumber,
       banners,
       faqs,
+      theme,
+      toggleTheme,
     }),
     [
       currentView, navigateTo, navigateBackFromDetail, pageTransition, returningVehicleId, returningPartId,
@@ -598,7 +624,8 @@ export const AppProvider = ({ children }) => {
       cartSubtotal, cartItemCount, isCartOpen, cartNotice,
       isTestDriveOpen, testDriveTargetVehicle,
       reviews, publishedReviews, submitReview, isReviewOpen,
-      submitOrder, submitEnquiry, submitVehicleListing, submitPartListing, settings, contact, waNumber, banners, faqs, catalogueError, retryCatalogue
+      submitOrder, submitEnquiry, submitVehicleListing, submitPartListing, settings, contact, waNumber, banners, faqs, catalogueError, retryCatalogue,
+      theme, toggleTheme
     ]
   );
 

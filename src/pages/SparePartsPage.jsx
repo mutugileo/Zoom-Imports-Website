@@ -206,7 +206,7 @@ export const SparePartsPage = () => {
           <div ref={resultsRef} style={{ flex: 1, minWidth: 0 }}>
             <div
               style={{
-                display: 'flex', gap: '10px', alignItems: 'center', background: '#fff',
+                display: 'flex', gap: '10px', alignItems: 'center', background: 'var(--bg-card)',
                 border: '1px solid var(--border-light)', borderRadius: '10px',
                 padding: '11px 16px', marginBottom: '18px',
               }}
@@ -238,7 +238,7 @@ export const SparePartsPage = () => {
                  empty when it is not. */
               <Failed onRetry={retryCatalogue} />
             ) : filtered.length === 0 ? (
-              <div style={{ background: '#fff', border: '1px solid var(--border-light)', borderRadius: '12px', padding: '60px 30px', textAlign: 'center' }}>
+              <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-light)', borderRadius: '12px', padding: '60px 30px', textAlign: 'center' }}>
                 <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-2xl)', color: 'var(--text-dark)', marginBottom: '8px' }}>
                   No parts match that combination
                 </h2>

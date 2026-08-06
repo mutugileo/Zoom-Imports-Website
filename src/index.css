@@ -97,6 +97,24 @@
   --accent-soft: rgba(200, 16, 46, 0.14);
   --brand-red: #e01a2b;
 
+  /* Fill and label are separate tokens from the text colour, and they have to
+   * be, because on a dark card no single red can do both jobs.
+   *
+   * Text red needs to be LIGHT enough to clear 4.5:1 against the card; a white
+   * label needs its fill to be DARK enough to clear 4.5:1 the other way. On
+   * --bg-card those two demands cross over — they need L >= 0.245 and
+   * L <= 0.183 respectively — so one value is arithmetically impossible.
+   * Overloading --accent for both is what left white-on-red at 4.33:1.
+   *
+   * So --accent paints text, --accent-fill paints buttons and badges, and
+   * --on-accent is whatever label that fill can actually carry. --on-primary
+   * exists for the same reason: primary is a bright blue in both themes and
+   * white on it is 2.43:1, so it needs a dark label, not a light one. */
+  --accent-fill: #c8102e;
+  --accent-fill-hover: #a60d26;
+  --on-accent: #ffffff;
+  --on-primary: #0f1217;
+
   /* Verification signal — deliberately not the brand colour, so "inspected"
      reads as its own mark rather than decoration. Now that primary is blue-teal
      this green separates from it more cleanly than it did from the forest.
@@ -137,6 +155,130 @@
      the number lives in one place rather than being guessed per page. */
   --header-h: 62px;
   --rail-top: calc(var(--header-h) + 18px);
+}
+
+/* Light Theme Tokens */
+html[data-theme="light"] {
+  --ink: #14171c;
+  --ink-raised: #20242b;
+  --ink-line: rgba(20, 23, 28, 0.12);
+
+  --bg-app: #ecf0f4;
+  --bg-cream: #e9edf2;
+  --bg-card: #ffffff;
+  --page-wash: linear-gradient(146deg, #ebeff3 0%, #f6f8fa 46%, #edf1f5 100%);
+  --band-line: rgba(20, 23, 28, 0.11);
+
+  --primary: #38b0f0;
+  --primary-hover: #1ea3ec;
+  --primary-light: #e4f3fd;
+  --primary-ink: #0a72ac;
+
+  --accent: #c8102e;
+  --accent-light: #ff8a94;
+  --accent-soft: rgba(200, 16, 46, 0.14);
+  --brand-red: #e01a2b;
+  --accent-fill: #c8102e;          /* white label: 5.88 */
+  --accent-fill-hover: #a60d26;
+  --on-accent: #ffffff;
+  --on-primary: #0f1217;           /* on #38b0f0: 7.72 — white would be 2.43 */
+  --verify: #4f8b73;
+
+  --text-dark: #171a1f;
+  --text-body: #343a42;
+  --text-muted: #626a75;
+  --text-dim: #5f6772;
+  --text-on-ink: #eef2f7;
+  --text-on-ink-dim: rgba(238,242,247, 0.62);
+
+  --border-light: rgba(27, 36, 48, 0.1);
+  --border-medium: rgba(27, 36, 48, 0.16);
+  --shadow-sm: 0 1px 3px rgba(16,28,42, 0.06);
+  --shadow-md: 0 12px 24px -10px rgba(16,28,42, 0.18);
+  --shadow-lg: 0 20px 50px -25px rgba(0, 0, 0, 0.35);
+}
+
+/* Dark Theme Tokens (Default Rich Dark) */
+html[data-theme="dark"] {
+  --ink: #0f1217;
+  --ink-raised: #181c23;
+  --ink-line: rgba(255, 255, 255, 0.12);
+
+  --bg-app: #12151b;
+  --bg-cream: #181d26;
+  --bg-card: #1d222d;
+  --page-wash: linear-gradient(146deg, #12151b 0%, #171c25 46%, #12151b 100%);
+  --band-line: rgba(255, 255, 255, 0.1);
+
+  --primary: #38b0f0;
+  --primary-hover: #5ec2f7;
+  --primary-light: #162b3a;
+  --primary-ink: #38b0f0;
+
+  /* Lightened from #e62e49, which measured 3.68:1 on --bg-card and failed AA
+     everywhere it carried a price. This clears every dark surface: card 5.30,
+     app 6.09, ink 6.25, raised 5.69, cream 5.63. */
+  --accent: #ff5c6b;
+  --accent-light: #ff8a94;
+  --accent-soft: rgba(255, 92, 107, 0.20);
+  --brand-red: #ff334b;            /* display type only — 4.42 on card */
+  /* Slightly brighter than the light theme's fill so the button still reads as
+     a shape against a dark card, while keeping the white label at 5.45. */
+  --accent-fill: #d11430;
+  --accent-fill-hover: #b81029;
+  --on-accent: #ffffff;
+  --on-primary: #0f1217;
+  --verify: #41b883;
+
+  --text-dark: #f2f5f9;
+  --text-body: #d2dae5;
+  --text-muted: #95a3b5;
+  /* Was #798799 — 4.35:1 on --bg-card, just under AA on the surface it is used
+     on most. */
+  --text-dim: #8592a4;
+  --text-on-ink: #f2f5f9;
+  --text-on-ink-dim: rgba(242,245,249, 0.65);
+
+  --border-light: rgba(255, 255, 255, 0.1);
+  --border-medium: rgba(255, 255, 255, 0.18);
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 14px 28px -10px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 24px 60px -20px rgba(0, 0, 0, 0.8);
+}
+
+/* Glassmorphism & Micro-Animation Enhancements */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-light);
+}
+
+html[data-theme="light"] .glass-panel {
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.glass-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  color: var(--text-dark);
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), boxShadow 0.28s ease, border-color 0.28s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-medium);
+}
+
+.btn-glow:hover {
+  box-shadow: 0 0 16px rgba(56, 176, 240, 0.4);
+}
+
+.theme-toggle-btn:hover {
+  transform: scale(1.08) rotate(8deg);
 }
 
 @media (max-width: 900px) { :root { --gutter: 28px; } }
@@ -284,9 +426,9 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
 .site-icon-trust {
   width: 34px;
   height: 34px;
-  border: 1px solid rgba(43, 48, 55, 0.16);
+  border: 1px solid var(--border-light);
   border-radius: 11px;
-  background: #ffffff;
+  background: var(--bg-card);
   color: var(--primary);
 }
 
@@ -375,7 +517,7 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
 .badge-available { background: var(--primary-light); color: var(--primary); }
 .badge-reserved { background: #fbf1df; color: #946118; }
 .badge-sold { background: #eef0f2; color: #6b7480; }
-.badge-sale { background: var(--accent); color: #ffffff; }
+.badge-sale { background: var(--accent-fill); color: var(--on-accent); }
 .badge-low-stock { background: #fbf1df; color: #946118; }
 .badge-out-stock { background: #f6e6e6; color: #a13f3f; }
 .badge-new { background: #eaf1f6; color: #2f6690; }
@@ -484,7 +626,7 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
 
 .btn-primary {
   background: var(--primary);
-  color: #ffffff;
+  color: var(--on-primary);
   box-shadow: 0 8px 24px -6px rgba(43, 48, 55, 0.4);
 }
 .btn-primary:hover {
@@ -495,8 +637,8 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
 .btn-primary:active { transform: scale(0.98); }
 
 .btn-pill-primary {
-  background: var(--accent);
-  color: #ffffff;
+  background: var(--accent-fill);
+  color: var(--on-accent);
   border-radius: 9999px;
   padding: 13px 26px;
   display: inline-flex;
@@ -512,25 +654,25 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
   transition: all 250ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .btn-pill-primary:hover {
-  background: #bb5821;
+  background: var(--accent-fill-hover);
   transform: translateY(-2px);
   box-shadow: 0 12px 28px -6px rgba(200, 16, 46, 0.6);
 }
 
 .btn-accent {
-  background: var(--accent);
-  color: #ffffff;
+  background: var(--accent-fill);
+  color: var(--on-accent);
   box-shadow: 0 8px 24px -6px rgba(200, 16, 46, 0.45);
 }
 .btn-accent:hover {
-  background: #bb5821;
+  background: var(--accent-fill-hover);
   transform: translateY(-2px);
   box-shadow: 0 14px 32px -6px rgba(200, 16, 46, 0.6);
 }
 .btn-accent:active { transform: scale(0.98); }
 
 .btn-secondary {
-  background: #ffffff;
+  background: var(--bg-card);
   border: 1px solid var(--border-medium);
   color: var(--text-dark);
   box-shadow: 0 4px 12px -4px rgba(13, 25, 38, 0.08);
@@ -545,7 +687,7 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
 
 .btn-whatsapp {
   background: var(--primary);
-  color: #ffffff;
+  color: var(--on-primary);
   border-radius: 9999px;
   box-shadow: 0 8px 24px -6px rgba(43, 48, 55, 0.4);
 }
@@ -601,9 +743,9 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
 }
 
 .doppelrand-card-inner {
-  background: #ffffff;
+  background: var(--bg-card);
   border-radius: 14px;
-  border: 1px solid rgba(20, 23, 28, 0.06);
+  border: 1px solid var(--border-light);
 }
 
 .card {
@@ -631,7 +773,9 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
   padding: 20px;
 }
 .modal-content {
-  background: #ffffff;
+  background: var(--bg-card);
+  color: var(--text-dark);
+  border: 1px solid var(--border-light);
   border-radius: 14px;
   max-width: 600px;
   width: 100%;
@@ -650,7 +794,8 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
   border: 1px solid var(--border-medium);
   outline: none;
   font-size: var(--text-sm);
-  background: #fff;
+  background: var(--bg-card);
+  color: var(--text-dark);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 .field:focus {
@@ -1143,7 +1288,7 @@ details > summary svg { transition: transform 200ms ease; }
   overflow-y: auto;
   /* Reaching the end of the rail must not start scrolling the page behind it */
   overscroll-behavior: contain;
-  background: #fff;
+  background: var(--bg-card);
   border: 1px solid var(--border-light);
   border-radius: 12px;
   padding: 20px;
@@ -1181,7 +1326,7 @@ details > summary svg { transition: transform 200ms ease; }
   font-weight: 500;
   cursor: pointer;
   border: 1px solid var(--border-light);
-  background: #fff;
+  background: var(--bg-card);
   color: var(--text-body);
   transition: background 0.2s ease, border-color 0.2s ease,
               color 0.2s ease, transform 0.15s ease;
@@ -1225,9 +1370,9 @@ details > summary svg { transition: transform 200ms ease; }
   font-weight: 600;
   border-color: transparent;
   background: var(--primary);
-  color: #fff;
+  color: var(--on-primary);
 }
-.chip-solid.is-active:hover { background: var(--primary-hover); color: #fff; }
+.chip-solid.is-active:hover { background: var(--primary-hover); color: var(--on-primary); }
 
 /* The category column on the parts page */
 .cat-btn {
@@ -1308,7 +1453,7 @@ details > summary svg { transition: transform 200ms ease; }
   padding: 0 11px;
   border-radius: 8px;
   border: 1px solid var(--border-light);
-  background: #fff;
+  background: var(--bg-card);
   color: var(--text-body);
   font-family: var(--font-mono);
   font-size: var(--text-sm);
@@ -1331,9 +1476,9 @@ details > summary svg { transition: transform 200ms ease; }
   font-weight: 700;
   border-color: var(--primary);
   background: var(--primary);
-  color: #fff;
+  color: var(--on-primary);
 }
-.pager-btn[aria-current='page']:hover { background: var(--primary-hover); color: #fff; }
+.pager-btn[aria-current='page']:hover { background: var(--primary-hover); color: var(--on-primary); }
 .pager-btn:disabled {
   opacity: 0.42;
   cursor: not-allowed;
@@ -1473,7 +1618,7 @@ details > summary svg { transition: transform 200ms ease; }
   padding: 0 14px;
   border: 1px solid var(--border-medium);
   border-radius: 12px;
-  background: #fff;
+  background: var(--bg-card);
   color: var(--text-dim);
   transition: border-color 200ms ease, box-shadow 200ms ease;
 }
@@ -1562,7 +1707,7 @@ details > summary svg { transition: transform 200ms ease; }
   padding: 13px 14px;
   border-radius: 12px;
   background: var(--primary);
-  color: #fff;
+  color: var(--on-primary);
   transition: background 200ms ease, transform 160ms ease;
 }
 .mobile-whatsapp:hover { background: var(--primary-hover); }
@@ -1635,7 +1780,7 @@ details > summary svg { transition: transform 200ms ease; }
   padding: 10px 16px;
   border-radius: var(--radius-md);
   background: var(--primary);
-  color: #ffffff;
+  color: var(--on-primary);
   font-size: var(--text-sm);
   font-weight: 600;
   transition: top 180ms ease;
@@ -1815,8 +1960,8 @@ input[type='email'] {
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  background: var(--accent);
-  color: #ffffff;
+  background: var(--accent-fill);
+  color: var(--on-accent);
   border: 2px solid #ffffff;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
   cursor: pointer;
@@ -2207,4 +2352,36 @@ input:focus-visible {
 
 @media (prefers-reduced-motion: reduce) {
   .dossier-rows { transition: none; }
+}
+
+/* Narrow phones: the header row is brand + three 40px controls. Below ~360px
+   the brand has to give up its second line or the menu button is pushed off
+   the right edge — measured 358px of content in a 320px bar. */
+@media (max-width: 359px) {
+  .brand-est { display: none !important; }
+  .brand-wordmark { font-size: var(--text-lg) !important; }
+}
+
+/* Form controls inherit the theme — same omission as the admin had.
+ *
+ * A bare <input> with no background of its own falls back to the user agent's
+ * white-with-black-text. On the light theme it sat on a white card and looked
+ * correct, so the gap went unnoticed; on dark it is a white slab. Element
+ * selectors, so anything with its own class keeps what it set. */
+input,
+select,
+textarea {
+  background-color: transparent;
+  color: var(--text-dark);
+  font-family: inherit;
+}
+input::placeholder,
+textarea::placeholder { color: var(--text-dim); }
+
+html[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) opacity(0.7);
+}
+html[data-theme="dark"] select option {
+  background-color: var(--bg-card);
+  color: var(--text-dark);
 }

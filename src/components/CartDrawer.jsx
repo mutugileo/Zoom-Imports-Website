@@ -46,7 +46,7 @@ export const CartDrawer = () => {
         aria-label="Shopping cart"
         style={{
           position: 'relative', width: '420px', maxWidth: '100%', height: '100%',
-          background: '#fff', boxShadow: '-14px 0 44px rgba(0,0,0,0.28)',
+          background: 'var(--bg-card)', boxShadow: '-14px 0 44px rgba(0,0,0,0.28)',
           display: 'flex', flexDirection: 'column', zIndex: 1,
           animation: 'fadeIn 0.25s cubic-bezier(0.22, 1, 0.36, 1)',
         }}
@@ -129,7 +129,7 @@ export const CartDrawer = () => {
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div
                       style={{
-                        display: 'flex', alignItems: 'center', gap: '10px', background: '#fff',
+                        display: 'flex', alignItems: 'center', gap: '10px', background: 'var(--bg-card)',
                         border: '1px solid var(--border-medium)', borderRadius: '6px', padding: '3px 8px',
                       }}
                     >
