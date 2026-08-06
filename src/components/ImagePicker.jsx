@@ -128,7 +128,7 @@ export const ImagePicker = ({ bucket, value = [], onChange, max = 10 }) => {
                 <button
                   type="button"
                   onClick={() => makeCover(i)}
-                  style={{ marginTop: '4px', border: 'none', background: 'transparent', padding: 0, fontSize: 'var(--text-xs)', color: '#5f6b7a', cursor: 'pointer', fontWeight: 600 }}
+                  style={{ marginTop: '4px', border: 'none', background: 'transparent', padding: 0, fontSize: 'var(--text-xs)', color: 'var(--text-muted)', cursor: 'pointer', fontWeight: 600 }}
                 >
                   Make cover
                 </button>
@@ -150,7 +150,7 @@ export const ImagePicker = ({ bucket, value = [], onChange, max = 10 }) => {
             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
             gap: '6px', height: value.length ? '68px' : '104px', width: '100%', background: '#fff',
             border: '1.5px dashed #d8dde2', borderRadius: '8px',
-            cursor: busy ? 'progress' : 'pointer', color: '#5c6a78',
+            cursor: busy ? 'progress' : 'pointer', color: 'var(--text-dim)',
           }}
         >
           <Upload size={18} aria-hidden="true" />

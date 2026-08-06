@@ -204,7 +204,7 @@ export const Header = () => {
           aria-hidden="true"
           style={{
             position: 'absolute', left: 0, right: 0, top: 0, height: '150px',
-            background: 'linear-gradient(180deg, rgba(22,40,58,0.88) 0%, rgba(22,40,58,0.62) 55%, rgba(22,40,58,0) 100%)',
+            background: 'linear-gradient(180deg, rgba(20,23,28,0.88) 0%, rgba(20,23,28,0.62) 55%, rgba(20,23,28,0) 100%)',
             opacity: overlay ? 1 : 0,
             transition: 'opacity 320ms ease',
             pointerEvents: 'none',

@@ -21,9 +21,9 @@ export const Vignette = () => (
       inset: 0,
       pointerEvents: 'none',
       zIndex: 9997,
-      background: `radial-gradient(ellipse at center, transparent 58%, rgba(22, 40, 58, ${
+      background: `radial-gradient(ellipse at center, transparent 58%, rgba(20, 23, 28, ${
         MOTION.vignette.strength * 0.5
-      }) 94%, rgba(22, 40, 58, ${MOTION.vignette.strength}) 100%)`,
+      }) 94%, rgba(20, 23, 28, ${MOTION.vignette.strength}) 100%)`,
     }}
   />
 );

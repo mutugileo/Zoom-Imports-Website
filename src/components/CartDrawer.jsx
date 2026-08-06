@@ -35,7 +35,7 @@ export const CartDrawer = () => {
     <div style={{ position: 'fixed', inset: 0, zIndex: 10000, display: 'flex', justifyContent: 'flex-end' }}>
       <div
         onClick={close}
-        style={{ position: 'absolute', inset: 0, background: 'rgba(22,40,58,0.62)', backdropFilter: 'blur(4px)' }}
+        style={{ position: 'absolute', inset: 0, background: 'rgba(20,23,28,0.62)', backdropFilter: 'blur(4px)' }}
       />
 
       <aside

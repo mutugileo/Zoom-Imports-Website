@@ -93,7 +93,7 @@ export const Footer = () => {
    * the column titles and the legal line sit at 0.68 (5.15:1).
    */
   return (
-    <footer style={{ background: 'rgba(30, 52, 73, 0.92)', color: 'var(--text-on-ink)', borderTop: '1px solid rgba(255,255,255,0.16)', backdropFilter: 'blur(14px) saturate(1.2)', WebkitBackdropFilter: 'blur(14px) saturate(1.2)' }}>
+    <footer style={{ background: 'rgba(32, 36, 43, 0.92)', color: 'var(--text-on-ink)', borderTop: '1px solid rgba(255,255,255,0.16)', backdropFilter: 'blur(14px) saturate(1.2)', WebkitBackdropFilter: 'blur(14px) saturate(1.2)' }}>
       <div
         className="footer-top"
         style={{

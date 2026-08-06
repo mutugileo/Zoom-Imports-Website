@@ -51,7 +51,7 @@ export const AboutPage = () => {
                   fontFamily: 'Source Serif 4, serif',
                   fontWeight: 600,
                   fontSize: 'var(--text-3xl)',
-                  color: '#16232e',
+                  color: 'var(--text-dark)',
                   marginBottom: '14px',
                   lineHeight: 1.2,
                 }}
@@ -62,7 +62,7 @@ export const AboutPage = () => {
                 style={{
                   fontSize: 'var(--text-base)',
                   lineHeight: 1.65,
-                  color: '#333d49',
+                  color: 'var(--text-body)',
                 }}
               >
                 Zoom Imports is Nairobi’s premier dealer in hand-picked foreign used import vehicles and genuine OEM spare parts. Located along K-Mall, Kiambu Rd, Thindigua, we bridge the gap between quality international sourcing and transparent local delivery.
@@ -122,7 +122,7 @@ export const AboutPage = () => {
             ref={promiseRef}
             className="about-promise-card"
             style={{
-              background: '#1e3449',
+              background: 'var(--ink-raised)',
               color: '#fff',
               borderRadius: '16px',
               padding: '32px',

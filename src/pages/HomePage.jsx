@@ -194,7 +194,7 @@ export const HomePage = () => {
                 color: '#fff',
                 marginBottom: '18px',
                 maxWidth: '14ch',
-                textShadow: '0 2px 22px rgba(22,40,58,0.7)',
+                textShadow: '0 2px 22px rgba(20,23,28,0.7)',
               }}
             >
               Every import,
@@ -212,7 +212,7 @@ export const HomePage = () => {
                 color: 'rgba(238,242,247,0.94)',
                 maxWidth: '46ch',
                 marginBottom: '26px',
-                textShadow: '0 1px 14px rgba(22,40,58,0.7)',
+                textShadow: '0 1px 14px rgba(20,23,28,0.7)',
               }}
             >
               Inspection report, chassis number, verified odometer and duty receipt — on the table
@@ -398,7 +398,7 @@ export const HomePage = () => {
                   </div>
                   <div className="vcard-scrim" aria-hidden="true" />
                   <div style={{ position: 'relative', marginTop: 'auto', padding: '18px 20px' }}>
-                    <span style={{ fontFamily: 'var(--font-serif)', fontWeight: 600, fontSize: 'var(--text-xl)', color: '#fff', letterSpacing: '-0.01em', textShadow: '0 1px 14px rgba(22,40,58,0.6)' }}>
+                    <span style={{ fontFamily: 'var(--font-serif)', fontWeight: 600, fontSize: 'var(--text-xl)', color: '#fff', letterSpacing: '-0.01em', textShadow: '0 1px 14px rgba(20,23,28,0.6)' }}>
                       {b.title}
                     </span>
                   </div>
@@ -715,10 +715,10 @@ export const HomePage = () => {
            layer below, not this one. */
         .hero-scrim-v {
           background: linear-gradient(180deg,
-            rgba(22,40,58,0.30) 0%,
-            rgba(22,40,58,0.02) 18%,
-            rgba(22,40,58,0.02) 70%,
-            rgba(22,40,58,0.10) 100%);
+            rgba(20,23,28,0.30) 0%,
+            rgba(20,23,28,0.02) 18%,
+            rgba(20,23,28,0.02) 70%,
+            rgba(20,23,28,0.10) 100%);
         }
 
         /* The copy's ground, and the reason the car is visible.
@@ -744,11 +744,11 @@ export const HomePage = () => {
          * legibility regression, since the copy's coverage is unchanged. */
         .hero-scrim-h {
           background: linear-gradient(90deg,
-            rgba(22,40,58,0.96) 0%,
-            rgba(22,40,58,0.94) 40%,
-            rgba(22,40,58,0.60) 58%,
-            rgba(22,40,58,0.15) 76%,
-            rgba(22,40,58,0) 88%);
+            rgba(20,23,28,0.96) 0%,
+            rgba(20,23,28,0.94) 40%,
+            rgba(20,23,28,0.60) 58%,
+            rgba(20,23,28,0.15) 76%,
+            rgba(20,23,28,0) 88%);
           -webkit-mask-image: linear-gradient(180deg, transparent 28%, #000 52%, #000 100%);
           mask-image: linear-gradient(180deg, transparent 28%, #000 52%, #000 100%);
         }
@@ -765,9 +765,9 @@ export const HomePage = () => {
           }
           .hero-scrim-h {
             background: linear-gradient(90deg,
-              rgba(22,40,58,0.94) 0%,
-              rgba(22,40,58,0.90) 60%,
-              rgba(22,40,58,0.86) 100%);
+              rgba(20,23,28,0.94) 0%,
+              rgba(20,23,28,0.90) 60%,
+              rgba(20,23,28,0.86) 100%);
             -webkit-mask-image: linear-gradient(180deg, transparent 22%, #000 46%, #000 100%);
             mask-image: linear-gradient(180deg, transparent 22%, #000 46%, #000 100%);
           }
@@ -832,7 +832,7 @@ const FeatureCard = ({ vehicle, vehicles = [], formatKES, onOpen, style }) => {
       <div
         style={{
           position: 'absolute', inset: 0,
-          background: 'linear-gradient(180deg, rgba(22,40,58,0.1) 30%, rgba(22,40,58,0.92) 100%)',
+          background: 'linear-gradient(180deg, rgba(20,23,28,0.1) 30%, rgba(20,23,28,0.92) 100%)',
         }}
       />
     </div>

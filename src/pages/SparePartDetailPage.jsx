@@ -58,7 +58,7 @@ export const SparePartDetailPage = () => {
         </button>
 
         <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text-dim)' }}>
-          <span onClick={() => navigateTo('home')} style={{ cursor: 'pointer' }}>Home</span> / <span onClick={() => navigateBackFromDetail('parts')} style={{ cursor: 'pointer' }}>Spare Parts</span> / <strong style={{ color: '#16232e' }}>{part.name}</strong>
+          <span onClick={() => navigateTo('home')} style={{ cursor: 'pointer' }}>Home</span> / <span onClick={() => navigateBackFromDetail('parts')} style={{ cursor: 'pointer' }}>Spare Parts</span> / <strong style={{ color: 'var(--text-dark)' }}>{part.name}</strong>
         </div>
       </div>
 
@@ -71,17 +71,17 @@ export const SparePartDetailPage = () => {
           </div>
 
           <div ref={fitRef} style={revealStyle(fitShown)}>
-            <h3 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: '#16232e', marginBottom: '10px' }}>
+            <h3 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text-dark)', marginBottom: '10px' }}>
               Compatible Vehicle Models
             </h3>
             <div style={{ background: '#fff', border: '1px solid rgba(27,36,48,.1)', borderRadius: '10px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {matchingRules.length === 0 ? (
-                <div style={{ fontSize: 'var(--text-sm)', color: '#5f6b7a' }}>Compatible with most {part.compat} vehicles. Contact us to verify your chassis number.</div>
+                <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)' }}>Compatible with most {part.compat} vehicles. Contact us to verify your chassis number.</div>
               ) : (
                 matchingRules.map(rule => (
                   <div key={rule.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid #f0f0f0', fontSize: 'var(--text-sm)' }}>
-                    <span style={{ fontWeight: 600, color: '#1b5566' }}>{rule.make} {rule.model}</span>
-                    <span style={{ color: '#5f6b7a' }}>Years: {rule.years}</span>
+                    <span style={{ fontWeight: 600, color: 'var(--primary)' }}>{rule.make} {rule.model}</span>
+                    <span style={{ color: 'var(--text-muted)' }}>Years: {rule.years}</span>
                   </div>
                 ))
               )}
@@ -93,7 +93,7 @@ export const SparePartDetailPage = () => {
         <div style={{ background: '#fff', border: '1px solid rgba(27,36,48,.1)', borderRadius: '12px', padding: '28px', boxShadow: 'var(--shadow-md)', display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-              <span style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: '#5f6b7a', textTransform: 'uppercase' }}>
+              <span style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
                 {part.brand} · {part.category}
               </span>
               <span className={`badge badge-${stockClass(part.stock)}`}>
@@ -101,12 +101,12 @@ export const SparePartDetailPage = () => {
               </span>
             </div>
 
-            <h1 style={{ fontFamily: 'Source Serif 4, serif', fontSize: 'var(--text-4xl)', fontWeight: 600, color: '#16232e' }}>
+            <h1 style={{ fontFamily: 'Source Serif 4, serif', fontSize: 'var(--text-4xl)', fontWeight: 600, color: 'var(--text-dark)' }}>
               {part.name}
             </h1>
 
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px', marginTop: '12px' }}>
-              <span style={{ fontSize: 'var(--text-4xl)', fontWeight: 700, fontFamily: 'Source Serif 4, serif', color: '#1b5566' }}>
+              <span style={{ fontSize: 'var(--text-4xl)', fontWeight: 700, fontFamily: 'Source Serif 4, serif', color: 'var(--primary)' }}>
                 {formatKES(part.promo || part.price)}
               </span>
               {part.promo && (
@@ -117,7 +117,7 @@ export const SparePartDetailPage = () => {
             </div>
           </div>
 
-          <div style={{ fontSize: 'var(--text-base)', lineHeight: 1.6, color: '#333d49', background: '#f9f8f6', padding: '16px', borderRadius: '8px' }}>
+          <div style={{ fontSize: 'var(--text-base)', lineHeight: 1.6, color: 'var(--text-body)', background: '#f9f8f6', padding: '16px', borderRadius: '8px' }}>
             {part.description}
           </div>
 
@@ -142,20 +142,20 @@ export const SparePartDetailPage = () => {
 
           {/* Quantity Selector */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <span style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: '#16232e' }}>Quantity:</span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: '#eef2f7', border: '1px solid #d8dde2', borderRadius: '6px', padding: '6px 12px' }}>
+            <span style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-dark)' }}>Quantity:</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'var(--text-on-ink)', border: '1px solid #d8dde2', borderRadius: '6px', padding: '6px 12px' }}>
               <button 
                 onClick={() => setQty(Math.max(1, qty - 1))}
                 style={{ border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
               >
-                <Minus size={14} color="#5f6b7a" />
+                <Minus size={14} color="var(--text-muted)" />
               </button>
               <span style={{ fontSize: 'var(--text-base)', fontWeight: 600, minWidth: '20px', textAlign: 'center' }}>{qty}</span>
               <button 
                 onClick={() => setQty(qty + 1)}
                 style={{ border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
               >
-                <Plus size={14} color="#5f6b7a" />
+                <Plus size={14} color="var(--text-muted)" />
               </button>
             </div>
           </div>
@@ -195,10 +195,10 @@ export const SparePartDetailPage = () => {
           </div>
 
           <div style={{ borderTop: '1px solid rgba(27,36,48,.08)', paddingTop: '16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: 'var(--text-sm)', color: '#333d49' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: 'var(--text-sm)', color: 'var(--text-body)' }}>
               <SiteIcon icon={ShieldCheck} variant="trust" size={16} /> {part.brand ? `${part.brand} — supplied as listed` : 'Supplied as listed'}
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: 'var(--text-sm)', color: '#333d49' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: 'var(--text-sm)', color: 'var(--text-body)' }}>
               <SiteIcon icon={Truck} variant="trust" size={16} /> Delivery in Nairobi or collection from the depot
             </div>
           </div>

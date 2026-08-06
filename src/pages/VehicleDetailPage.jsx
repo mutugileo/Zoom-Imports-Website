@@ -205,7 +205,7 @@ export const VehicleDetailPage = () => {
               <div
                 style={{
                   marginTop: '20px', padding: '17px 19px', borderRadius: '10px',
-                  background: 'var(--primary-light)', border: '1px solid rgba(27,85,102,0.14)',
+                  background: 'var(--primary-light)', border: '1px solid rgba(43, 48, 55,0.14)',
                   display: 'flex', gap: '13px', alignItems: 'flex-start',
                 }}
               >
@@ -485,10 +485,10 @@ export const VehicleDetailPage = () => {
         .dossier-preview {
           margin-bottom: 18px;
           padding: 18px;
-          border: 1px solid rgba(27, 85, 102, 0.18);
+          border: 1px solid rgba(43, 48, 55, 0.18);
           border-radius: 12px;
           background:
-            radial-gradient(95% 130% at 100% 0%, rgba(27, 85, 102, 0.09), transparent 60%),
+            radial-gradient(95% 130% at 100% 0%, rgba(43, 48, 55, 0.09), transparent 60%),
             var(--primary-light);
         }
         .dossier-preview-head {
@@ -504,7 +504,7 @@ export const VehicleDetailPage = () => {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          border: 1px solid rgba(27, 85, 102, 0.17);
+          border: 1px solid rgba(43, 48, 55, 0.17);
           border-radius: 10px;
           background: #fff;
           color: var(--primary);
@@ -527,9 +527,9 @@ export const VehicleDetailPage = () => {
           grid-template-columns: repeat(2, minmax(0, 1fr));
           gap: 1px;
           overflow: hidden;
-          border: 1px solid rgba(27, 85, 102, 0.14);
+          border: 1px solid rgba(43, 48, 55, 0.14);
           border-radius: 9px;
-          background: rgba(27, 85, 102, 0.14);
+          background: rgba(43, 48, 55, 0.14);
         }
         .dossier-preview-grid > div {
           min-width: 0;

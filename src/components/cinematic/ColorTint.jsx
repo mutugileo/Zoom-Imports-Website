@@ -9,14 +9,14 @@ import { MOTION } from '../../lib/motion';
  * cuts rather than scrolling one flat document.
  */
 const GRADES = {
-  home: 'linear-gradient(160deg, rgba(27,85,102,0.55) 0%, transparent 45%, rgba(169,79,29,0.35) 100%)',
-  vehicles: 'linear-gradient(200deg, rgba(27,85,102,0.5) 0%, transparent 60%)',
-  'vehicle-detail': 'linear-gradient(180deg, rgba(22,40,58,0.6) 0%, transparent 40%, rgba(27,85,102,0.4) 100%)',
+  home: 'linear-gradient(160deg, rgba(43, 48, 55,0.55) 0%, transparent 45%, rgba(200, 16, 46,0.35) 100%)',
+  vehicles: 'linear-gradient(200deg, rgba(43, 48, 55,0.5) 0%, transparent 60%)',
+  'vehicle-detail': 'linear-gradient(180deg, rgba(20,23,28,0.6) 0%, transparent 40%, rgba(43, 48, 55,0.4) 100%)',
   parts: 'linear-gradient(200deg, rgba(47,102,144,0.35) 0%, transparent 55%)',
   'part-detail': 'linear-gradient(180deg, rgba(47,102,144,0.3) 0%, transparent 50%)',
-  checkout: 'linear-gradient(180deg, rgba(27,85,102,0.35) 0%, transparent 55%)',
-  about: 'linear-gradient(150deg, rgba(169,79,29,0.35) 0%, transparent 55%)',
-  contact: 'linear-gradient(150deg, rgba(27,85,102,0.4) 0%, transparent 55%)',
+  checkout: 'linear-gradient(180deg, rgba(43, 48, 55,0.35) 0%, transparent 55%)',
+  about: 'linear-gradient(150deg, rgba(200, 16, 46,0.35) 0%, transparent 55%)',
+  contact: 'linear-gradient(150deg, rgba(43, 48, 55,0.4) 0%, transparent 55%)',
 };
 
 export const ColorTint = ({ view }) => (

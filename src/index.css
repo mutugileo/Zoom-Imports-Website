@@ -28,16 +28,18 @@
   --text-fluid-2xl: clamp(30px, 4.4vw, 51px);
   --text-fluid-3xl: clamp(34px, 5vw, 62px);
 
-  /* Cinematic ground. Navy rather than the old near-black #0b1512: the dark
-     surfaces read as a colour instead of an absence of one, and the whole page
-     sits on one blue axis.
+  /* Cinematic ground — the showroom fascia, sampled from the signage.
+     Charcoal rather than the previous navy #16283a: the lot photography is
+     overwhelmingly red cars, and a blue ground fought every one of them. A
+     neutral dark lets the car carry the colour, which is exactly what the
+     black building does behind the sign.
 
-     Do not lighten past this. The hero scrim composites over an uploaded photo,
-     so the worst case is a blown-white pixel under the copy — at the thinnest
-     coverage the text ever sees (0.856 effective alpha) this navy still leaves
-     the eyebrow at 4.70:1. #0b1512 gave 6.06:1; the margin is spent. */
-  --ink: #16283a;
-  --ink-raised: #1e3449;
+     Cool, not pure black. #14171c keeps a trace of blue so it reads as a
+     chosen dark rather than an absence of one, and it is DARKER than the navy
+     it replaces — text-on-ink went from 13.35:1 to 15.98:1, so the hero scrim
+     has more margin over a blown-white pixel than before, not less. */
+  --ink: #14171c;
+  --ink-raised: #20242b;
   --ink-line: rgba(255, 255, 255, 0.12);
 
   /* Cool silver. One continuous canvas for the whole site.
@@ -54,23 +56,46 @@
      under AA. #ebeff3 leaves a small margin without lightening the wash away. */
   --page-wash: linear-gradient(146deg, #ebeff3 0%, #f6f8fa 46%, #edf1f5 100%);
   /* Hairline for light bands. --ink-line is white-on-dark and vanishes here. */
-  --band-line: rgba(22, 40, 58, 0.11);
+  --band-line: rgba(20, 23, 28, 0.11);
 
-  --primary: #1b5566;
-  --primary-hover: #226a80;
-  --primary-light: #e6eff2;
+  /* Graphite, not teal.
+   *
+   * Once the accent is red, a blue-teal primary made three accent hues on one
+   * page — red, teal and the green verification mark — each competing to be
+   * the thing you look at. Dropping the primary to a warm-neutral graphite
+   * leaves red carrying the brand alone and the green meaning one specific
+   * thing. It reads as structure rather than as a third opinion. */
+  --primary: #2b3037;
+  --primary-hover: #3a4049;
+  --primary-light: #eceef1;
 
-  /* Rust stays. It is the only warm note left, which is exactly why it now
-     carries every price, CTA and eyebrow — it cannot be confused with chrome.
-
-     Deepened from #c1622b, which measured 4.16:1 on white and 3.60:1 on cream
-     and so failed AA for small text everywhere it was used — including as the
-     fill behind the white .badge-sale label. This clears all three light grounds
-     (5.49 / 5.20 / 4.84). It is only 2.73:1 on navy, so it must never be used on
-     ink — that is what --accent-light is for, at 7.40:1. */
-  --accent: #a94f1d;
-  --accent-light: #f2a565;
-  --accent-soft: rgba(169, 79, 29, 0.15);
+  /* Red, from the sign — but NOT the sign's own red.
+   *
+   * The signage #e8112d measures 3.99:1 on --page-wash, under the 4.5 small
+   * text needs. It passes on white (4.62) and cards are white, so lifting it
+   * literally would look correct in isolation and fail everywhere the page
+   * shows through. That is the identical trap the old rust #c1622b was
+   * replaced for. Deepened to #c8102e, which clears all three light grounds
+   * (5.88 / 5.09 / 5.14) — better than the rust it replaces on every one.
+   *
+   * It is only 3.05:1 on ink, so it must never be used on the dark surfaces —
+   * that is what --accent-light is for, at 7.97:1.
+   *
+   * --accent-light is #ff8a94 rather than the #ff6b78 first tried, and the
+   * reason is the hero. It sets the italic word in the headline, which sits on
+   * a scrim over an uploaded photo: at the thinnest coverage that text ever
+   * sees (0.856 effective alpha over a blown-white pixel) #ff6b78 measured
+   * 4.25:1 and missed AA. Lightening costs nothing anywhere else — every other
+   * use is this colour against a dark ground or dark text against it as a
+   * fill, and both improve as it lightens. Worst case is now 5.19:1.
+   *
+   * --brand-red is the literal sign colour, kept for DISPLAY ONLY: large
+   * headline type, the header rule, and fills carrying white large text
+   * (4.83:1). Never small text, on any ground. */
+  --accent: #c8102e;
+  --accent-light: #ff8a94;
+  --accent-soft: rgba(200, 16, 46, 0.14);
+  --brand-red: #e01a2b;
 
   /* Verification signal — deliberately not the brand colour, so "inspected"
      reads as its own mark rather than decoration. Now that primary is blue-teal
@@ -83,12 +108,15 @@
      on the hero (dark) and on part cards and badges (light). */
   --verify: #4f8b73;
 
-  --text-dark: #16232e;
-  --text-body: #333d49;
-  --text-muted: #5f6b7a;
+  /* Shifted off the blue axis with the ink, so headings on a white card no
+     longer read navy against a charcoal header. Still cool, just far less so.
+     All three clear AA on every light ground: 15.09 / 9.93 / 4.74 on the wash. */
+  --text-dark: #171a1f;
+  --text-body: #343a42;
+  --text-muted: #626a75;
   /* Was #8a9aa8 — 2.89:1 on white, well under AA, and used for breadcrumbs and
      the header's est. line where it is often the only label present. */
-  --text-dim: #5c6a78;
+  --text-dim: #5f6772;
   --text-on-ink: #eef2f7;
   --text-on-ink-dim: rgba(238,242,247, 0.62);
 
@@ -220,7 +248,7 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
 .site-icon-journey {
   width: 42px;
   height: 42px;
-  border: 1px solid rgba(27, 85, 102, 0.16);
+  border: 1px solid rgba(43, 48, 55, 0.16);
   border-radius: 13px;
   background: var(--primary-light);
   color: var(--primary);
@@ -246,7 +274,7 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
 .site-icon-contact {
   width: 42px;
   height: 42px;
-  border: 1px solid rgba(27, 85, 102, 0.16);
+  border: 1px solid rgba(43, 48, 55, 0.16);
   border-radius: 13px;
   background: var(--primary-light);
   color: var(--primary);
@@ -256,7 +284,7 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
 .site-icon-trust {
   width: 34px;
   height: 34px;
-  border: 1px solid rgba(27, 85, 102, 0.16);
+  border: 1px solid rgba(43, 48, 55, 0.16);
   border-radius: 11px;
   background: #ffffff;
   color: var(--primary);
@@ -265,7 +293,7 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
 .site-icon-dark {
   width: 28px;
   height: 28px;
-  border: 1px solid rgba(242, 165, 101, 0.3);
+  border: 1px solid rgba(255, 138, 148, 0.3);
   border-radius: 9px;
   background: rgba(255, 255, 255, 0.08);
   color: var(--accent-light);
@@ -344,7 +372,7 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
   gap: 5px;
   white-space: nowrap;
 }
-.badge-available { background: #e6eff2; color: #1b5566; }
+.badge-available { background: var(--primary-light); color: var(--primary); }
 .badge-reserved { background: #fbf1df; color: #946118; }
 .badge-sold { background: #eef0f2; color: #6b7480; }
 .badge-sale { background: var(--accent); color: #ffffff; }
@@ -457,12 +485,12 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
 .btn-primary {
   background: var(--primary);
   color: #ffffff;
-  box-shadow: 0 8px 24px -6px rgba(27, 85, 102, 0.4);
+  box-shadow: 0 8px 24px -6px rgba(43, 48, 55, 0.4);
 }
 .btn-primary:hover {
   background: var(--primary-hover);
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px -6px rgba(27, 85, 102, 0.55);
+  box-shadow: 0 12px 28px -6px rgba(43, 48, 55, 0.55);
 }
 .btn-primary:active { transform: scale(0.98); }
 
@@ -480,24 +508,24 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
   font-weight: 700;
   border: none;
   cursor: pointer;
-  box-shadow: 0 8px 24px -6px rgba(169, 79, 29, 0.45);
+  box-shadow: 0 8px 24px -6px rgba(200, 16, 46, 0.45);
   transition: all 250ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .btn-pill-primary:hover {
   background: #bb5821;
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px -6px rgba(169, 79, 29, 0.6);
+  box-shadow: 0 12px 28px -6px rgba(200, 16, 46, 0.6);
 }
 
 .btn-accent {
   background: var(--accent);
   color: #ffffff;
-  box-shadow: 0 8px 24px -6px rgba(169, 79, 29, 0.45);
+  box-shadow: 0 8px 24px -6px rgba(200, 16, 46, 0.45);
 }
 .btn-accent:hover {
   background: #bb5821;
   transform: translateY(-2px);
-  box-shadow: 0 14px 32px -6px rgba(169, 79, 29, 0.6);
+  box-shadow: 0 14px 32px -6px rgba(200, 16, 46, 0.6);
 }
 .btn-accent:active { transform: scale(0.98); }
 
@@ -516,15 +544,15 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
 .btn-secondary:active { transform: scale(0.98); }
 
 .btn-whatsapp {
-  background: #1b5566;
+  background: var(--primary);
   color: #ffffff;
   border-radius: 9999px;
-  box-shadow: 0 8px 24px -6px rgba(27, 85, 102, 0.4);
+  box-shadow: 0 8px 24px -6px rgba(43, 48, 55, 0.4);
 }
 .btn-whatsapp:hover {
-  background: #226a80;
+  background: var(--primary-hover);
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px -6px rgba(27, 85, 102, 0.55);
+  box-shadow: 0 12px 28px -6px rgba(43, 48, 55, 0.55);
 }
 
 /* For use on the dark ground */
@@ -560,8 +588,8 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
 /* ---------- Doppelrand Hardware Surfaces ---------- */
 
 .doppelrand-card {
-  background: rgba(22, 40, 58, 0.04);
-  border: 1px solid rgba(22, 40, 58, 0.09);
+  background: rgba(20, 23, 28, 0.04);
+  border: 1px solid rgba(20, 23, 28, 0.09);
   padding: 6px;
   border-radius: 20px;
   box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.9), 0 16px 36px -14px rgba(13, 25, 38, 0.1);
@@ -575,7 +603,7 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
 .doppelrand-card-inner {
   background: #ffffff;
   border-radius: 14px;
-  border: 1px solid rgba(22, 40, 58, 0.06);
+  border: 1px solid rgba(20, 23, 28, 0.06);
 }
 
 .card {
@@ -594,7 +622,7 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(22,40,58, 0.78);
+  background: rgba(20,23,28, 0.78);
   backdrop-filter: blur(5px);
   z-index: 10000;
   display: flex;
@@ -649,10 +677,10 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
   inset: 0;
   pointer-events: none;
   background: linear-gradient(180deg,
-    rgba(22,40,58,0.42) 0%,
-    rgba(22,40,58,0.22) 50%,
-    rgba(22,40,58,0.50) 76%,
-    rgba(22,40,58,0.90) 100%);
+    rgba(20,23,28,0.42) 0%,
+    rgba(20,23,28,0.22) 50%,
+    rgba(20,23,28,0.50) 76%,
+    rgba(20,23,28,0.90) 100%);
 }
 
 .vcard-panel {
@@ -665,7 +693,7 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
   border-radius: 5px;
   /* the faint ring */
   border: 1px solid rgba(255, 255, 255, 0.30);
-  background: rgba(22,40,58, 0.72);
+  background: rgba(20,23,28, 0.72);
   /* Kept light so the bodywork stays readable through the plate — see
      GlassCard.jsx. Contrast comes from the 0.72 fill, not the blur. */
   backdrop-filter: blur(3px) saturate(1.1);
@@ -742,7 +770,7 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
 .vcard:focus-visible::after,
 .vcard:focus-within::after {
   border-color: var(--accent-light);
-  box-shadow: inset 0 0 0 1px rgba(22,40,58, 0.45);
+  box-shadow: inset 0 0 0 1px rgba(20,23,28, 0.45);
 }
 
 .vcard-foot {
@@ -769,7 +797,7 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
   font-weight: 700;
   color: #ffffff;
   letter-spacing: -0.01em;
-  text-shadow: 0 1px 14px rgba(22,40,58, 0.6);
+  text-shadow: 0 1px 14px rgba(20,23,28, 0.6);
 }
 
 .vcard-mobile-body { display: none; }
@@ -903,14 +931,19 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
   inset: 0;
   pointer-events: none;
   background: linear-gradient(180deg,
-    rgba(22,40,58,0.46) 0%,
-    rgba(22,40,58,0.20) 34%,
-    rgba(22,40,58,0.60) 62%,
-    rgba(22,40,58,0.92) 100%);
+    rgba(20,23,28,0.46) 0%,
+    rgba(20,23,28,0.20) 34%,
+    rgba(20,23,28,0.60) 62%,
+    rgba(20,23,28,0.92) 100%);
 }
 
-.pcard-stock { position: absolute; top: 14px; left: 14px; }
-.pcard-sale  { position: absolute; top: 14px; right: 14px; }
+/* Both badges sit inside their own absolutely-positioned flex column in
+   SparePartCard — the corner placement belongs to that wrapper, not to the
+   badge. Positioning them individually as well took each one out of its
+   column, so "In stock" landed on top of "Check fitment" instead of above it,
+   and "Sale" on top of "Save KES …". Left as plain flow items they stack. */
+.pcard-stock,
+.pcard-sale { position: static; }
 
 /* The spec plate */
 .pcard-plate {
@@ -922,7 +955,7 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
   padding: 12px 14px 13px;
   border-radius: 6px;
   border: 1px solid rgba(255, 255, 255, 0.30);
-  background: rgba(22,40,58, 0.78);
+  background: rgba(20,23,28, 0.78);
   backdrop-filter: blur(3px) saturate(1.1);
   -webkit-backdrop-filter: blur(3px) saturate(1.1);
   box-shadow: 0 12px 28px -16px rgba(0, 0, 0, 0.75);
@@ -1005,10 +1038,12 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
   font-weight: 600;
   cursor: pointer;
   background: var(--accent-light);
-  color: #2a1408;
+  /* Near-black with a red bias, not the old #2a1408 brown — that was mixed to
+     sit on an orange --accent-light and reads as mud on the red one. 6.76:1. */
+  color: #2b0509;
   transition: background 0.2s ease, transform 0.15s ease;
 }
-.pcard-add:hover { background: #f7bd8a; }
+.pcard-add:hover { background: #ff8a94; }
 .pcard-add:active { transform: scale(0.97); }
 .pcard-add:disabled {
   background: rgba(255, 255, 255, 0.16);
@@ -1380,7 +1415,7 @@ details > summary svg { transition: transform 200ms ease; }
   overflow-y: auto;
   overscroll-behavior: contain;
   background:
-    radial-gradient(90% 50% at 100% 0%, rgba(27, 85, 102, 0.09), transparent 70%),
+    radial-gradient(90% 50% at 100% 0%, rgba(43, 48, 55, 0.09), transparent 70%),
     var(--bg-card);
   border-left: 1px solid var(--band-line);
   box-shadow: -22px 0 55px -32px rgba(16, 28, 42, 0.46);
@@ -1444,7 +1479,7 @@ details > summary svg { transition: transform 200ms ease; }
 }
 .mobile-search:focus-within {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(27, 85, 102, 0.12);
+  box-shadow: 0 0 0 3px rgba(43, 48, 55, 0.12);
 }
 .mobile-search input {
   width: 100%;
@@ -1762,15 +1797,15 @@ input[type='email'] {
 }
 
 .badge-universal {
-  background: rgba(27, 85, 102, 0.12);
+  background: rgba(43, 48, 55, 0.12);
   color: var(--primary-hover);
-  border: 1px solid rgba(27, 85, 102, 0.3);
+  border: 1px solid rgba(43, 48, 55, 0.3);
 }
 
 .badge-check-fit {
-  background: rgba(169, 79, 29, 0.12);
+  background: rgba(200, 16, 46, 0.12);
   color: var(--accent);
-  border: 1px solid rgba(169, 79, 29, 0.3);
+  border: 1px solid rgba(200, 16, 46, 0.3);
 }
 
 /* 360° Hotspot Pins */
@@ -1805,7 +1840,7 @@ input[type='email'] {
   width: 240px;
   padding: 12px 14px;
   border-radius: 10px;
-  background: rgba(22, 40, 58, 0.95);
+  background: rgba(20, 23, 28, 0.95);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.18);
   color: var(--text-on-ink);
@@ -1859,7 +1894,7 @@ input:focus-visible {
   display: flex;
   gap: 10px;
   padding: 12px 16px;
-  background: rgba(22, 40, 58, 0.95);
+  background: rgba(20, 23, 28, 0.95);
   backdrop-filter: blur(16px);
   border-top: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.25);
@@ -2070,12 +2105,12 @@ input:focus-visible {
 @keyframes itemSelectedRevealFocus {
   0% {
     transform: scale(0.96);
-    box-shadow: 0 0 0 0 rgba(169, 79, 29, 0);
+    box-shadow: 0 0 0 0 rgba(200, 16, 46, 0);
     filter: blur(2px);
   }
   45% {
     transform: scale(1.02);
-    box-shadow: 0 0 0 6px rgba(169, 79, 29, 0.35), 0 12px 32px rgba(169, 79, 29, 0.2);
+    box-shadow: 0 0 0 6px rgba(200, 16, 46, 0.35), 0 12px 32px rgba(200, 16, 46, 0.2);
     border-color: var(--accent);
     filter: blur(0);
   }

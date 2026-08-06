@@ -43,19 +43,19 @@ export const CheckoutPage = () => {
     return (
       <div className="animate-fade-in" style={{ padding: '60px var(--gutter)', display: 'flex', justifyContent: 'center' }}>
         <div style={{ background: '#fff', border: '1px solid rgba(27,36,48,.1)', borderRadius: '16px', padding: 'clamp(26px, 5vw, 48px)', maxWidth: '560px', width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px', boxShadow: 'var(--shadow-lg)' }}>
-          <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: '#e6eff2', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <CheckCircle2 size={36} color="#1b5566" />
+          <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'var(--primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <CheckCircle2 size={36} color="var(--primary)" />
           </div>
 
-          <h1 style={{ fontFamily: 'Source Serif 4, serif', fontWeight: 600, fontSize: 'var(--text-4xl)', color: '#16232e' }}>
+          <h1 style={{ fontFamily: 'Source Serif 4, serif', fontWeight: 600, fontSize: 'var(--text-4xl)', color: 'var(--text-dark)' }}>
             Order Submitted
           </h1>
 
-          <p style={{ fontSize: 'var(--text-base)', color: '#5f6b7a', lineHeight: 1.6, textAlign: 'center' }}>
+          <p style={{ fontSize: 'var(--text-base)', color: 'var(--text-muted)', lineHeight: 1.6, textAlign: 'center' }}>
             Thank you, <strong>{submittedOrder.customer}</strong>. Your order reference has been generated below. Our dealership staff will confirm stock and arrange payment with you on WhatsApp.
           </p>
 
-          <div style={{ fontSize: 'var(--text-3xl)', fontWeight: 700, color: '#1b5566', background: '#eef2f7', padding: '14px 32px', borderRadius: '8px', letterSpacing: '.05em', fontFamily: 'monospace' }}>
+          <div style={{ fontSize: 'var(--text-3xl)', fontWeight: 700, color: 'var(--primary)', background: 'var(--text-on-ink)', padding: '14px 32px', borderRadius: '8px', letterSpacing: '.05em', fontFamily: 'monospace' }}>
             {submittedOrder.ref}
           </div>
 
@@ -88,10 +88,10 @@ export const CheckoutPage = () => {
     return (
       <div className="animate-fade-in" style={{ padding: '80px var(--gutter)', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
         <ShoppingBag size={48} color="var(--text-dim)" />
-        <h2 style={{ fontFamily: 'Source Serif 4, serif', fontSize: 'var(--text-3xl)', color: '#16232e' }}>
+        <h2 style={{ fontFamily: 'Source Serif 4, serif', fontSize: 'var(--text-3xl)', color: 'var(--text-dark)' }}>
           Your Cart is Empty
         </h2>
-        <p style={{ fontSize: 'var(--text-base)', color: '#5f6b7a' }}>Add spare parts or accessories to your cart before proceeding to checkout.</p>
+        <p style={{ fontSize: 'var(--text-base)', color: 'var(--text-muted)' }}>Add spare parts or accessories to your cart before proceeding to checkout.</p>
         <button onClick={() => navigateTo('parts')} className="btn-primary" style={{ padding: '12px 24px' }}>
           Browse Spare Parts
         </button>
@@ -106,11 +106,11 @@ export const CheckoutPage = () => {
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
         <button 
           onClick={() => navigateTo('parts')}
-          style={{ background: '#eef2f7', border: 'none', borderRadius: '50%', width: '36px', height: '36px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          style={{ background: 'var(--text-on-ink)', border: 'none', borderRadius: '50%', width: '36px', height: '36px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         >
-          <ArrowLeft size={16} color="#16232e" />
+          <ArrowLeft size={16} color="var(--text-dark)" />
         </button>
-        <h1 style={{ fontFamily: 'Source Serif 4, serif', fontWeight: 600, fontSize: 'var(--text-4xl)', color: '#16232e' }}>
+        <h1 style={{ fontFamily: 'Source Serif 4, serif', fontWeight: 600, fontSize: 'var(--text-4xl)', color: 'var(--text-dark)' }}>
           Checkout
         </h1>
       </div>
@@ -122,7 +122,7 @@ export const CheckoutPage = () => {
           
           {/* Contact Details */}
           <div style={{ background: '#fff', border: '1px solid rgba(27,36,48,.1)', borderRadius: '10px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <h3 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: '#16232e' }}>
+            <h3 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text-dark)' }}>
               Contact Information
             </h3>
 
@@ -169,7 +169,7 @@ export const CheckoutPage = () => {
 
           {/* Delivery Method */}
           <div style={{ background: '#fff', border: '1px solid rgba(27,36,48,.1)', borderRadius: '10px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <h3 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: '#16232e' }}>
+            <h3 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text-dark)' }}>
               Delivery Method
             </h3>
 
@@ -177,14 +177,14 @@ export const CheckoutPage = () => {
               <div 
                 onClick={() => setDelivery('Delivery')}
                 style={{ 
-                  background: delivery === 'Delivery' ? '#e6eff2' : '#fff', 
-                  border: delivery === 'Delivery' ? '1.5px solid #1b5566' : '1px solid rgba(27,36,48,.16)', 
+                  background: delivery === 'Delivery' ? 'var(--primary-light)' : '#fff', 
+                  border: delivery === 'Delivery' ? '1.5px solid var(--primary)' : '1px solid rgba(27,36,48,.16)', 
                   borderRadius: '8px', 
                   padding: '14px', 
                   textAlign: 'center', 
                   fontSize: 'var(--text-sm)', 
                   fontWeight: 600, 
-                  color: delivery === 'Delivery' ? '#1b5566' : '#333d49', 
+                  color: delivery === 'Delivery' ? 'var(--primary)' : 'var(--text-body)', 
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
@@ -198,14 +198,14 @@ export const CheckoutPage = () => {
               <div 
                 onClick={() => setDelivery('Collection')}
                 style={{ 
-                  background: delivery === 'Collection' ? '#e6eff2' : '#fff', 
-                  border: delivery === 'Collection' ? '1.5px solid #1b5566' : '1px solid rgba(27,36,48,.16)', 
+                  background: delivery === 'Collection' ? 'var(--primary-light)' : '#fff', 
+                  border: delivery === 'Collection' ? '1.5px solid var(--primary)' : '1px solid rgba(27,36,48,.16)', 
                   borderRadius: '8px', 
                   padding: '14px', 
                   textAlign: 'center', 
                   fontSize: 'var(--text-sm)', 
                   fontWeight: 600, 
-                  color: delivery === 'Collection' ? '#1b5566' : '#333d49', 
+                  color: delivery === 'Collection' ? 'var(--primary)' : 'var(--text-body)', 
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
@@ -231,7 +231,7 @@ export const CheckoutPage = () => {
                 />
               </div>
             ) : (
-              <div style={{ fontSize: 'var(--text-sm)', color: '#5f6b7a', background: '#eef2f7', padding: '12px 14px', borderRadius: '6px' }}>
+              <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)', background: 'var(--text-on-ink)', padding: '12px 14px', borderRadius: '6px' }}>
                 Collection point: <strong>{contact.location}</strong>{contact.hours ? `. Open ${contact.hours}.` : '.'}
               </div>
             )}
@@ -241,27 +241,27 @@ export const CheckoutPage = () => {
 
         {/* Right: Order Summary */}
         <div style={{ background: '#fff', border: '1px solid rgba(27,36,48,.1)', borderRadius: '10px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px', boxShadow: 'var(--shadow-sm)' }}>
-          <h3 style={{ fontSize: 'var(--text-lg)', fontWeight: 600, color: '#16232e' }}>
+          <h3 style={{ fontSize: 'var(--text-lg)', fontWeight: 600, color: 'var(--text-dark)' }}>
             Order Summary
           </h3>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', borderBottom: '1px solid rgba(27,36,48,.1)', paddingBottom: '14px' }}>
             {cart.map(item => (
-              <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-sm)', color: '#333d49' }}>
+              <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-sm)', color: 'var(--text-body)' }}>
                 <span>{item.name} × {item.qty}</span>
-                <span style={{ fontWeight: 600, color: '#16232e' }}>{formatKES(item.price * item.qty)}</span>
+                <span style={{ fontWeight: 600, color: 'var(--text-dark)' }}>{formatKES(item.price * item.qty)}</span>
               </div>
             ))}
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-sm)', color: '#5f6b7a' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-sm)', color: 'var(--text-muted)' }}>
             <span>Delivery Fee</span>
             <span style={{ fontStyle: 'italic' }}>Confirmed by dealership</span>
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xl)', fontWeight: 700, color: '#16232e', borderTop: '1px solid rgba(27,36,48,.1)', paddingTop: '12px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xl)', fontWeight: 700, color: 'var(--text-dark)', borderTop: '1px solid rgba(27,36,48,.1)', paddingTop: '12px' }}>
             <span>Total Payable</span>
-            <span style={{ color: '#1b5566' }}>{formatKES(cartSubtotal)}</span>
+            <span style={{ color: 'var(--primary)' }}>{formatKES(cartSubtotal)}</span>
           </div>
 
           <button

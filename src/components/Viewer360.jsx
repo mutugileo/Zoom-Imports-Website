@@ -177,7 +177,7 @@ export const Viewer360 = ({ slug, fallbackImg, gallery = [], vehicle = null, alt
     height: isFullScreen ? '100vh' : `${height}px`,
     borderRadius: isFullScreen ? 0 : '14px',
     overflow: 'hidden',
-    background: 'radial-gradient(120% 90% at 50% 15%, #1e3449 0%, #16283a 70%)',
+    background: 'radial-gradient(120% 90% at 50% 15%, var(--ink-raised) 0%, var(--ink) 70%)',
     border: isFullScreen ? 'none' : '1px solid rgba(255,255,255,0.1)',
     touchAction: 'none',
     userSelect: 'none',
@@ -220,7 +220,7 @@ export const Viewer360 = ({ slug, fallbackImg, gallery = [], vehicle = null, alt
             style={{
               position: 'absolute', right: '14px', bottom: '14px',
               display: 'flex', gap: '6px', padding: '7px 9px', borderRadius: '999px',
-              background: 'rgba(22,40,58,0.72)', backdropFilter: 'blur(10px)',
+              background: 'rgba(20,23,28,0.72)', backdropFilter: 'blur(10px)',
               border: '1px solid rgba(255,255,255,0.14)',
             }}
           >
@@ -246,7 +246,7 @@ export const Viewer360 = ({ slug, fallbackImg, gallery = [], vehicle = null, alt
             position: 'absolute', left: '14px', bottom: '14px',
             display: 'flex', alignItems: 'center', gap: '8px',
             padding: '7px 12px', borderRadius: '999px',
-            background: 'rgba(22,40,58,0.72)', backdropFilter: 'blur(10px)',
+            background: 'rgba(20,23,28,0.72)', backdropFilter: 'blur(10px)',
             border: '1px solid rgba(255,255,255,0.14)',
             font: '500 11px/1 var(--font-mono)', letterSpacing: '0.06em',
             color: 'rgba(238,242,247,0.82)', textTransform: 'uppercase',
@@ -364,7 +364,7 @@ export const Viewer360 = ({ slug, fallbackImg, gallery = [], vehicle = null, alt
           style={{
             display: 'flex', alignItems: 'center', gap: '6px',
             padding: '7px 12px', borderRadius: '8px',
-            background: 'rgba(22,40,58,0.85)', backdropFilter: 'blur(10px)',
+            background: 'rgba(20,23,28,0.85)', backdropFilter: 'blur(10px)',
             border: '1px solid rgba(255,255,255,0.18)',
             color: '#fff', fontSize: '12px', fontWeight: 500, cursor: 'pointer',
           }}
@@ -380,7 +380,7 @@ export const Viewer360 = ({ slug, fallbackImg, gallery = [], vehicle = null, alt
         style={{
           position: 'absolute', right: '14px', bottom: '14px',
           padding: '7px 12px', borderRadius: '8px',
-          background: 'rgba(22,40,58,0.75)', backdropFilter: 'blur(10px)',
+          background: 'rgba(20,23,28,0.75)', backdropFilter: 'blur(10px)',
           border: '1px solid rgba(255,255,255,0.14)',
           font: '500 12px/1 var(--font-mono)', letterSpacing: '0.08em',
           color: '#f2e3c6', zIndex: 30,
@@ -395,7 +395,7 @@ export const Viewer360 = ({ slug, fallbackImg, gallery = [], vehicle = null, alt
           position: 'absolute', left: '14px', bottom: '14px',
           display: 'flex', alignItems: 'center', gap: '8px',
           padding: '7px 12px', borderRadius: '999px',
-          background: 'rgba(22,40,58,0.72)', backdropFilter: 'blur(10px)',
+          background: 'rgba(20,23,28,0.72)', backdropFilter: 'blur(10px)',
           border: '1px solid rgba(255,255,255,0.14)',
           font: '500 11px/1 var(--font-mono)', letterSpacing: '0.06em',
           color: 'rgba(238,242,247,0.82)', textTransform: 'uppercase',
@@ -413,7 +413,7 @@ export const Viewer360 = ({ slug, fallbackImg, gallery = [], vehicle = null, alt
           style={{
             position: 'absolute', top: 0, left: 0, height: '2px',
             width: `${(loaded / FRAME_COUNT) * 100}%`,
-            background: 'linear-gradient(90deg, transparent, #f2a565)',
+            background: 'linear-gradient(90deg, transparent, var(--accent-light))',
             transition: 'width 240ms ease',
             zIndex: 35,
           }}

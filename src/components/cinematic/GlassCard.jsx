@@ -14,15 +14,15 @@ export const GlassCard = ({ children, style, tone = 'dark', className = '', ...r
       // bright photo. 0.74 clears AA and still reads as frosted glass.
       // rgb(30,52,73) is --ink-raised; it was still the retired green-black
       // rgb(18,32,27), which is why the dossier read warm against the navy hero.
-      background: 'rgba(30, 52, 73, 0.74)',
+      background: 'rgba(32, 36, 43, 0.74)',
       border: '1px solid rgba(255, 255, 255, 0.16)',
-      color: '#eef2f7',
+      color: 'var(--text-on-ink)',
       boxShadow: '0 20px 50px -24px rgba(0,0,0,0.6)',
     },
     light: {
       background: 'rgba(251, 250, 248, 0.72)',
       border: '1px solid rgba(255, 255, 255, 0.6)',
-      color: '#16232e',
+      color: 'var(--text-dark)',
       boxShadow: '0 20px 50px -28px rgba(16,28,42,0.4)',
     },
   };
