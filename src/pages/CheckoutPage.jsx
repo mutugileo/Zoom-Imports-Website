@@ -177,7 +177,7 @@ export const CheckoutPage = () => {
               <div 
                 onClick={() => setDelivery('Delivery')}
                 style={{ 
-                  background: delivery === 'Delivery' ? 'var(--primary-light)' : '#fff', 
+                  background: delivery === 'Delivery' ? 'var(--primary-light)' : 'var(--bg-card)', 
                   border: delivery === 'Delivery' ? '1.5px solid var(--primary)' : '1px solid var(--border-medium)', 
                   borderRadius: '8px', 
                   padding: '14px', 
@@ -198,7 +198,7 @@ export const CheckoutPage = () => {
               <div 
                 onClick={() => setDelivery('Collection')}
                 style={{ 
-                  background: delivery === 'Collection' ? 'var(--primary-light)' : '#fff', 
+                  background: delivery === 'Collection' ? 'var(--primary-light)' : 'var(--bg-card)', 
                   border: delivery === 'Collection' ? '1.5px solid var(--primary)' : '1px solid var(--border-medium)', 
                   borderRadius: '8px', 
                   padding: '14px', 

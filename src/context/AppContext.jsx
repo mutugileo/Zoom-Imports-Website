@@ -78,7 +78,7 @@ export const AppProvider = ({ children }) => {
     } catch { /* ignore */ }
     const metaTheme = document.querySelector('meta[name="theme-color"]');
     if (metaTheme) {
-      metaTheme.setAttribute('content', theme === 'dark' ? '#14171c' : '#ffffff');
+      metaTheme.setAttribute('content', theme === 'dark' ? '#14171c' : 'var(--bg-card)');
     }
   }, [theme]);
 
