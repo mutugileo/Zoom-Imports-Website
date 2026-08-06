@@ -18,12 +18,15 @@ export const Img = ({
   style,
   className = '',
   loading = 'lazy',
+  fetchPriority,
+  fetchpriority,
   ...rest
 }) => {
   const [loaded, setLoaded] = useState(false);
   const [broken, setBroken] = useState(false);
   const imgRef = useRef(null);
   const entry = src && !broken ? manifest[src.split('?')[0]] : null;
+  const priority = fetchPriority || fetchpriority;
 
   /**
    * A cached image is already decoded before React attaches onLoad, so the
@@ -49,6 +52,7 @@ export const Img = ({
     alt,
     className,
     loading,
+    ...(priority ? { fetchPriority: priority, fetchpriority: priority } : {}),
     decoding: 'async',
     onLoad: () => setLoaded(true),
     // A dead remote URL shows a designed placeholder, never a broken-image icon.
@@ -76,13 +80,16 @@ export const Img = ({
 
   return (
     <span
+      className={!loaded && !entry.blur ? 'hero-shimmer' : ''}
       style={{
         display: 'block',
         position: 'relative',
         width: '100%',
         height: '100%',
         overflow: 'hidden',
-        backgroundImage: entry.blur ? `url(${entry.blur})` : undefined,
+        background: entry.blur
+          ? `url(${entry.blur}) center/cover`
+          : 'linear-gradient(135deg, #0a0e14 0%, #171f2c 50%, #0a0e14 100%)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}

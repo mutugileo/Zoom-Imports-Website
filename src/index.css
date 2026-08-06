@@ -1953,6 +1953,52 @@ input:focus-visible {
   }
 }
 
+/* Hero Dark Luxury Shimmer & Skeleton */
+@keyframes hero-shimmer-pass {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.hero-shimmer, .skeleton-dark {
+  background: linear-gradient(90deg, #0a0e14 0%, #171f2c 35%, #212c3d 50%, #171f2c 65%, #0a0e14 100%);
+  background-size: 250% 100%;
+  animation: hero-shimmer-pass 2.4s infinite ease-in-out;
+}
+
+.hero-skeleton-pill {
+  height: 24px;
+  width: 220px;
+  border-radius: 999px;
+  margin-bottom: 18px;
+}
+
+.hero-skeleton-title {
+  height: 48px;
+  width: 80%;
+  max-width: 480px;
+  border-radius: 6px;
+  margin-bottom: 18px;
+}
+
+.hero-skeleton-subtitle {
+  height: 20px;
+  width: 60%;
+  max-width: 360px;
+  border-radius: 4px;
+  margin-bottom: 28px;
+}
+
+.hero-skeleton-card {
+  height: 260px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+
 /* ───────────────────────── Item Detail Transitions (Vehicles & Spare Parts) ───────────────────────── */
 
 /* 1. Item Detail Page Reveal Animation (Revealing & emerging from background depth) */

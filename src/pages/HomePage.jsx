@@ -119,27 +119,32 @@ export const HomePage = () => {
       >
         {/* Background carousel slides with smooth fade transition */}
         <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }} className="hero-anim-img">
-          {heroItems.map((item, idx) => (
-            <div
-              key={item.id}
-              style={{
-                position: 'absolute',
-                inset: 0,
-                opacity: idx === heroIndex ? 1 : 0,
-                transform: idx === heroIndex ? 'scale(1)' : 'scale(1.04)',
-                transition: 'opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1)',
-                pointerEvents: idx === heroIndex ? 'auto' : 'none',
-              }}
-            >
-              <Img
-                src={item.img}
-                alt={`${item.name} ${item.year} on the Zoom Imports lot`}
-                loading={idx === 0 ? 'eager' : 'lazy'}
-                sizes="100vw"
-                style={{ objectPosition: 'center 45%', width: '100%', height: '100%', objectFit: 'cover' }}
-              />
-            </div>
-          ))}
+          {heroItems.length === 0 ? (
+            <div className="hero-shimmer" style={{ position: 'absolute', inset: 0 }} />
+          ) : (
+            heroItems.map((item, idx) => (
+              <div
+                key={item.id}
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  opacity: idx === heroIndex ? 1 : 0,
+                  transform: idx === heroIndex ? 'scale(1)' : 'scale(1.04)',
+                  transition: 'opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                  pointerEvents: idx === heroIndex ? 'auto' : 'none',
+                }}
+              >
+                <Img
+                  src={item.img}
+                  alt={`${item.name} ${item.year} on the Zoom Imports lot`}
+                  loading={idx === 0 ? 'eager' : 'lazy'}
+                  fetchPriority={idx === 0 ? 'high' : 'auto'}
+                  sizes="100vw"
+                  style={{ objectPosition: 'center 45%', width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              </div>
+            ))
+          )}
           <div className="hero-scrim-v" aria-hidden="true" />
           <div className="hero-scrim-h" aria-hidden="true" />
         </div>
@@ -225,7 +230,7 @@ export const HomePage = () => {
           </div>
 
           {/* Dossier card corresponding to active carousel slide */}
-          {hero && (
+          {hero ? (
             <GlassCard className="hero-dossier hero-anim-dossier" style={{ padding: '22px 24px' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
                 <div className="mono" style={{ color: 'var(--accent-light)', fontSize: 'var(--text-xs)', letterSpacing: '0.08em' }}>
@@ -281,6 +286,13 @@ export const HomePage = () => {
               >
                 Open full dossier <ArrowUpRight size={15} />
               </button>
+            </GlassCard>
+          ) : (
+            <GlassCard className="hero-dossier hero-anim-dossier hero-shimmer" style={{ padding: '22px 24px', minHeight: '220px' }}>
+              <div className="hero-skeleton-pill hero-shimmer" style={{ width: '140px', height: '14px', marginBottom: '14px' }} />
+              <div className="hero-skeleton-title hero-shimmer" style={{ width: '80%', height: '32px', marginBottom: '10px' }} />
+              <div className="hero-skeleton-subtitle hero-shimmer" style={{ width: '60%', height: '16px', marginBottom: '20px' }} />
+              <div className="hero-skeleton-title hero-shimmer" style={{ width: '100%', height: '40px', marginTop: '12px' }} />
             </GlassCard>
           )}
 

@@ -68,9 +68,9 @@ export const AppProvider = ({ children }) => {
    * `catalogueError` is kept separate from "no rows" on purpose: a failed fetch
    * and a yard with nothing in it must not read the same to a customer.
    */
-  const [vehicles, setVehicles] = useState([]);
-  const [parts, setParts] = useState([]);
-  const [compatibility, setCompatibility] = useState([]);
+  const [vehicles, setVehicles] = useState(() => read(KEYS.vehicles, []));
+  const [parts, setParts] = useState(() => read(KEYS.parts, []));
+  const [compatibility, setCompatibility] = useState(() => read(KEYS.compatibility, []));
   const [catalogueLoading, setCatalogueLoading] = useState(true);
   const [catalogueError, setCatalogueError] = useState(null);
 
@@ -98,7 +98,7 @@ export const AppProvider = ({ children }) => {
    * trade is to show the last copy immediately and correct it silently when
    * the real row arrives. */
   const [contact, setContact] = useState(() => ({ ...EMPTY_CONTACT, ...read(KEYS.siteContact, {}) }));
-  const [banners, setBanners] = useState([]);
+  const [banners, setBanners] = useState(() => read(KEYS.banners, []));
   const [faqs, setFaqs] = useState([]);
   // Defaults on: a flag that fails to load must not silently close the door.
   const [settings, setSettings] = useState({ seller_listings: true });
@@ -136,15 +136,28 @@ export const AppProvider = ({ children }) => {
       return;
     }
 
-    setVehicles((vehRes.data ?? []).map(vehicleFromRow));
-    setParts((partRes.data ?? []).map(partFromRow));
-    if (!compatRes.error) setCompatibility((compatRes.data ?? []).map(compatFromRow));
+    const vehData = (vehRes.data ?? []).map(vehicleFromRow);
+    const partData = (partRes.data ?? []).map(partFromRow);
+    setVehicles(vehData);
+    setParts(partData);
+    write(KEYS.vehicles, vehData);
+    write(KEYS.parts, partData);
+
+    if (!compatRes.error) {
+      const compatData = (compatRes.data ?? []).map(compatFromRow);
+      setCompatibility(compatData);
+      write(KEYS.compatibility, compatData);
+    }
     if (!contactRes.error && contactRes.data) {
       const next = { ...EMPTY_CONTACT, ...contactRes.data };
       setContact(next);
       write(KEYS.siteContact, next);   // seeds the next visit's first paint
     }
-    if (!bannerRes.error) setBanners(bannerRes.data ?? []);
+    if (!bannerRes.error) {
+      const bannerData = bannerRes.data ?? [];
+      setBanners(bannerData);
+      write(KEYS.banners, bannerData);
+    }
     if (!faqRes.error) setFaqs(faqRes.data ?? []);
     // RLS already filters to Published; the guard is here too so a policy
     // change can never quietly put an unapproved review on the homepage.
