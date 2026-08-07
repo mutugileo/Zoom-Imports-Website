@@ -2387,3 +2387,33 @@ html[data-theme="dark"] select option {
   background-color: var(--bg-card);
   color: var(--text-dark);
 }
+
+/* Status chips that sit ON a photograph.
+ *
+ * .badge-available / -reserved / -sold are 16% translucent tints, which works
+ * on a card surface and fails completely over an image — "SOLD" was mid-grey
+ * text on a barely-there wash over foliage. A photo is neither light nor dark,
+ * so these carry their own ground rather than borrowing the theme's.
+ *
+ * 0.86 is not arbitrary: against the worst case, a blown-white pixel under the
+ * chip, it composites to 4.95:1 for the label. At 0.80 it measures 3.78 and
+ * misses AA. Status is the one thing on a card that must never be a guess —
+ * "is this still for sale?" is the question the card exists to answer.
+ *
+ * The label stays near-white on all three and the STATE is carried by the
+ * border, which is non-text and only needs 3:1. Tinting the label instead
+ * would drop the amber and green under AA at this size.
+ */
+.vcard-status.badge-available,
+.vcard-status.badge-reserved,
+.vcard-status.badge-sold {
+  background: rgba(12, 15, 20, 0.86);
+  color: #f2f5f9;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+.vcard-status.badge-available { border-color: rgba(65, 184, 131, 0.75); }
+.vcard-status.badge-reserved  { border-color: rgba(217, 164, 65, 0.8); }
+.vcard-status.badge-sold      { border-color: rgba(242, 245, 249, 0.35); }
+
+/* Sold stock reads as past tense rather than as another option. */
+.vcard-status.badge-sold { letter-spacing: 0.1em; }
