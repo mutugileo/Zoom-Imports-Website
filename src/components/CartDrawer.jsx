@@ -121,7 +121,7 @@ export const CartDrawer = () => {
                     <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-dark)', lineHeight: 1.3 }}>
                       {item.name}
                     </div>
-                    <div style={{ fontSize: 'var(--text-sm)', fontWeight: 700, color: 'var(--primary)', marginTop: '3px' }}>
+                    <div style={{ fontSize: 'var(--text-sm)', fontWeight: 700, color: 'var(--primary-ink)', marginTop: '3px' }}>
                       {formatKES(item.price)}
                     </div>
                   </div>
@@ -174,7 +174,7 @@ export const CartDrawer = () => {
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '16px' }}>
               <span style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text-dark)' }}>Subtotal</span>
-              <span style={{ fontSize: 'var(--text-2xl)', fontWeight: 700, color: 'var(--primary)' }}>
+              <span style={{ fontSize: 'var(--text-2xl)', fontWeight: 700, color: 'var(--primary-ink)' }}>
                 {formatKES(cartSubtotal)}
               </span>
             </div>

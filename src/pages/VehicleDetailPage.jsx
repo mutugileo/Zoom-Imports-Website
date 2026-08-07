@@ -285,7 +285,7 @@ export const VehicleDetailPage = () => {
                       }}
                     >
                       <span className="mono" style={{ color: 'var(--text-muted)', fontSize: 'var(--text-xs)' }}>{label}</span>
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-sm)', color: 'var(--primary)', fontWeight: 600, textAlign: 'right' }}>
+                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-sm)', color: 'var(--primary-ink)', fontWeight: 600, textAlign: 'right' }}>
                         {value}
                       </span>
                     </div>

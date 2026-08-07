@@ -79,9 +79,9 @@ export const AboutPage = () => {
               className="about-stats-grid"
             >
               {[
-                { figure: '500+', tone: 'var(--primary)', label: 'Vehicles handed over', sub: 'Verified Japan auction grades' },
+                { figure: '500+', tone: 'var(--primary-ink)', label: 'Vehicles handed over', sub: 'Verified Japan auction grades' },
                 { figure: '100%', tone: 'var(--accent)', label: 'Genuine spare parts', sub: '12-month warranty cover' },
-                { figure: '24 hrs', tone: 'var(--primary)', label: 'Nairobi delivery', sub: 'Fast dispatch to your location' },
+                { figure: '24 hrs', tone: 'var(--primary-ink)', label: 'Nairobi delivery', sub: 'Fast dispatch to your location' },
               ].map((s) => (
                 <div
                   key={s.label}
@@ -307,7 +307,7 @@ export const ContactPage = () => {
           <h3 style={{ fontSize: 'var(--text-lg)', fontWeight: 600, color: 'var(--text-dark)', marginBottom: '16px' }}>Send Us a Message</h3>
 
           {sent ? (
-            <div style={{ padding: '20px', background: 'var(--primary-light)', color: 'var(--primary)', borderRadius: '8px', textAlign: 'center', fontWeight: 600 }}>
+            <div style={{ padding: '20px', background: 'var(--primary-light)', color: 'var(--primary-ink)', borderRadius: '8px', textAlign: 'center', fontWeight: 600 }}>
               Message received! We will reach out to you via phone/WhatsApp shortly.
             </div>
           ) : (

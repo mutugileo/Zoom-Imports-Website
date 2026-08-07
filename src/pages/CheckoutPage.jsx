@@ -55,7 +55,7 @@ export const CheckoutPage = () => {
             Thank you, <strong>{submittedOrder.customer}</strong>. Your order reference has been generated below. Our dealership staff will confirm stock and arrange payment with you on WhatsApp.
           </p>
 
-          <div style={{ fontSize: 'var(--text-3xl)', fontWeight: 700, color: 'var(--primary)', background: 'var(--bg-app)', padding: '14px 32px', borderRadius: '8px', letterSpacing: '.05em', fontFamily: 'monospace' }}>
+          <div style={{ fontSize: 'var(--text-3xl)', fontWeight: 700, color: 'var(--primary-ink)', background: 'var(--bg-app)', padding: '14px 32px', borderRadius: '8px', letterSpacing: '.05em', fontFamily: 'monospace' }}>
             {submittedOrder.ref}
           </div>
 
@@ -261,7 +261,7 @@ export const CheckoutPage = () => {
 
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xl)', fontWeight: 700, color: 'var(--text-dark)', borderTop: '1px solid var(--border-light)', paddingTop: '12px' }}>
             <span>Total Payable</span>
-            <span style={{ color: 'var(--primary)' }}>{formatKES(cartSubtotal)}</span>
+            <span style={{ color: 'var(--primary-ink)' }}>{formatKES(cartSubtotal)}</span>
           </div>
 
           <button

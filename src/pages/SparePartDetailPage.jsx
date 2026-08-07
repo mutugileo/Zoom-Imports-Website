@@ -117,7 +117,7 @@ export const SparePartDetailPage = () => {
               ) : (
                 matchingRules.map(rule => (
                   <div key={rule.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid #f0f0f0', fontSize: 'var(--text-sm)' }}>
-                    <span style={{ fontWeight: 600, color: 'var(--primary)' }}>{rule.make} {rule.model}</span>
+                    <span style={{ fontWeight: 600, color: 'var(--primary-ink)' }}>{rule.make} {rule.model}</span>
                     <span style={{ color: 'var(--text-muted)' }}>Years: {rule.years}</span>
                   </div>
                 ))
@@ -143,7 +143,7 @@ export const SparePartDetailPage = () => {
             </h1>
 
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px', marginTop: '12px' }}>
-              <span style={{ fontSize: 'var(--text-4xl)', fontWeight: 700, fontFamily: 'Source Serif 4, serif', color: 'var(--primary)' }}>
+              <span style={{ fontSize: 'var(--text-4xl)', fontWeight: 700, fontFamily: 'Source Serif 4, serif', color: 'var(--primary-ink)' }}>
                 {formatKES(part.promo || part.price)}
               </span>
               {part.promo && (

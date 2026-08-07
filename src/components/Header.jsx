@@ -460,7 +460,7 @@ export const Header = () => {
                               <span style={{ display: 'block', fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-dark)' }}>{v.name}</span>
                               <span className="mono" style={{ fontSize: 'var(--text-xs)', color: 'var(--text-dim)' }}>{v.year} · {v.mileage}</span>
                             </span>
-                            <span className="mono" style={{ fontSize: 'var(--text-xs)', color: 'var(--primary)' }}>{formatKES(v.price)}</span>
+                            <span className="mono" style={{ fontSize: 'var(--text-xs)', color: 'var(--primary-ink)' }}>{formatKES(v.price)}</span>
                           </button>
                         ))}
                       </div>
@@ -481,7 +481,7 @@ export const Header = () => {
                               <span style={{ display: 'block', fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-dark)' }}>{p.name}</span>
                               <span className="mono" style={{ fontSize: 'var(--text-xs)', color: 'var(--text-dim)' }}>{p.brand}</span>
                             </span>
-                            <span className="mono" style={{ fontSize: 'var(--text-xs)', color: 'var(--primary)' }}>{formatKES(p.promo || p.price)}</span>
+                            <span className="mono" style={{ fontSize: 'var(--text-xs)', color: 'var(--primary-ink)' }}>{formatKES(p.promo || p.price)}</span>
                           </button>
                         ))}
                       </div>

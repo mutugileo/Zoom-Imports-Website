@@ -393,7 +393,7 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
   border: 1px solid rgba(43, 48, 55, 0.16);
   border-radius: 13px;
   background: var(--primary-light);
-  color: var(--primary);
+  color: var(--primary-ink);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78);
 }
 
@@ -403,7 +403,7 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
   border: 1px solid var(--band-line);
   border-radius: 9px;
   background: var(--bg-cream);
-  color: var(--primary);
+  color: var(--primary-ink);
 }
 .site-spec-item {
   min-width: 0;
@@ -419,7 +419,7 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
   border: 1px solid rgba(43, 48, 55, 0.16);
   border-radius: 13px;
   background: var(--primary-light);
-  color: var(--primary);
+  color: var(--primary-ink);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.76);
 }
 
@@ -429,7 +429,7 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
   border: 1px solid var(--border-light);
   border-radius: 11px;
   background: var(--bg-card);
-  color: var(--primary);
+  color: var(--primary-ink);
 }
 
 .site-icon-dark {
@@ -514,7 +514,7 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
   gap: 5px;
   white-space: nowrap;
 }
-.badge-available { background: var(--primary-light); color: var(--primary); }
+.badge-available { background: var(--primary-light); color: var(--primary-ink); }
 .badge-reserved { background: color-mix(in srgb, #d9a441 16%, transparent); color: #d9a441; }
 .badge-sold { background: color-mix(in srgb, var(--text-muted) 16%, transparent); color: var(--text-muted); }
 .badge-sale { background: var(--accent-fill); color: var(--on-accent); }
@@ -1025,7 +1025,7 @@ h1, h2, h3, h4, .font-serif { font-family: var(--font-serif); }
     gap: 7px;
     margin-top: auto;
     padding-top: 11px;
-    color: var(--primary);
+    color: var(--primary-ink);
   }
   .vcard-mobile-price-row > span {
     min-width: 0;
@@ -1334,14 +1334,14 @@ details > summary svg { transition: transform 200ms ease; }
 .chip:hover {
   border-color: var(--primary);
   background: var(--primary-light);
-  color: var(--primary);
+  color: var(--primary-ink);
 }
 .chip:active { transform: scale(0.97); }
 .chip.is-active {
   font-weight: 600;
   border-color: var(--primary);
   background: var(--primary-light);
-  color: var(--primary);
+  color: var(--primary-ink);
 }
 /* Hovering the chip that is already on should read as "still on", not as a
    second, different state. */
@@ -1362,7 +1362,7 @@ details > summary svg { transition: transform 200ms ease; }
 }
 .chip-solid:hover {
   border-color: var(--primary);
-  color: var(--primary);
+  color: var(--primary-ink);
   background: var(--primary-light);
 }
 .chip-solid:active { transform: scale(0.97); }
@@ -1394,7 +1394,7 @@ details > summary svg { transition: transform 200ms ease; }
   gap: 10px;
   width: 100%;
 }
-.cat-btn:hover { background: var(--bg-cream); color: var(--primary); }
+.cat-btn:hover { background: var(--bg-cream); color: var(--primary-ink); }
 
 /* Stock count. Quiet — it is a hint about where to look, not a data point. */
 .cat-count {
@@ -1403,7 +1403,7 @@ details > summary svg { transition: transform 200ms ease; }
   color: var(--text-dim);
   flex-shrink: 0;
 }
-.cat-btn.is-active .cat-count { color: var(--primary); }
+.cat-btn.is-active .cat-count { color: var(--primary-ink); }
 /* Nothing listed under it today. Still reachable — the empty state invites a
    part number, which is a lead. */
 .cat-btn.is-empty { color: var(--text-muted); }
@@ -1419,7 +1419,7 @@ details > summary svg { transition: transform 200ms ease; }
 .cat-btn.is-active {
   font-weight: 600;
   background: var(--primary-light);
-  color: var(--primary);
+  color: var(--primary-ink);
 }
 .cat-btn.is-active:hover { background: color-mix(in srgb, var(--primary) 22%, transparent); }
 
@@ -1433,7 +1433,7 @@ details > summary svg { transition: transform 200ms ease; }
   color: var(--text-body);
   transition: color 0.2s ease;
 }
-.filter-check:hover { color: var(--primary); }
+.filter-check:hover { color: var(--primary-ink); }
 .filter-check input { accent-color: var(--primary); width: 15px; height: 15px; cursor: pointer; }
 
 /* ---------- Pagination ---------- */
@@ -1469,7 +1469,7 @@ details > summary svg { transition: transform 200ms ease; }
 .pager-btn:hover:not(:disabled) {
   border-color: var(--primary);
   background: var(--primary-light);
-  color: var(--primary);
+  color: var(--primary-ink);
 }
 .pager-btn:active:not(:disabled) { transform: scale(0.96); }
 .pager-btn[aria-current='page'] {
@@ -1668,7 +1668,7 @@ details > summary svg { transition: transform 200ms ease; }
 .mobile-search-results small { display: block; }
 .mobile-search-results strong { font-size: var(--text-sm); }
 .mobile-search-results small { margin-top: 2px; color: var(--text-muted); font-size: var(--text-xs); }
-.mobile-search-results .mono { flex: 0 0 auto; color: var(--primary); font-size: var(--text-xs); }
+.mobile-search-results .mono { flex: 0 0 auto; color: var(--primary-ink); font-size: var(--text-xs); }
 
 .mobile-nav-groups {
   display: grid;
@@ -1689,7 +1689,7 @@ details > summary svg { transition: transform 200ms ease; }
   transition: color 180ms ease, padding-left 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 .mobile-nav-group > a:hover,
-.mobile-nav-group > a.is-active { color: var(--primary); padding-left: 8px; }
+.mobile-nav-group > a.is-active { color: var(--primary-ink); padding-left: 8px; }
 .mobile-nav-group > a strong,
 .mobile-nav-group > a small { display: block; }
 .mobile-nav-group > a strong { font-size: var(--text-base); font-weight: 700; }
@@ -1945,7 +1945,7 @@ input[type='email'] {
 
 .badge-universal {
   background: color-mix(in srgb, var(--primary) 14%, transparent);
-  color: var(--primary);
+  color: var(--primary-ink);
   border: 1px solid color-mix(in srgb, var(--primary) 34%, transparent);
 }
 
