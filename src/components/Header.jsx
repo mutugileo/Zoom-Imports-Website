@@ -541,7 +541,9 @@ export const Header = () => {
             }}
           >
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-              <ShoppingCart size={17} color="#fff" />
+              {/* The pill is --primary. White on that blue measures 2.43:1;
+                  --on-primary is the label colour it can actually carry. */}
+              <ShoppingCart size={17} color="var(--on-primary)" />
               {cartItemCount > 0 && (
                 <span
                   className="mono"
@@ -550,7 +552,7 @@ export const Header = () => {
                     background: 'var(--accent-fill)', color: 'var(--on-accent)', fontSize: '10px', fontWeight: 700,
                     minWidth: '16px', height: '16px', borderRadius: '999px',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    padding: '0 4px', border: '1.5px solid #fff',
+                    padding: '0 4px', border: '1.5px solid var(--primary)',
                     animation: 'pulse-ring 2s infinite',
                   }}
                 >
@@ -559,7 +561,7 @@ export const Header = () => {
               )}
             </div>
             {cartItemCount > 0 && (
-              <span className="mono" style={{ fontSize: '12px', fontWeight: 600, color: '#fff', letterSpacing: '0.02em' }}>
+              <span className="mono" style={{ fontSize: '12px', fontWeight: 600, color: 'var(--on-primary)', letterSpacing: '0.02em' }}>
                 {formatKES(cartSubtotal)}
               </span>
             )}
