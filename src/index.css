@@ -65,9 +65,20 @@
    * the thing you look at. Dropping the primary to a warm-neutral graphite
    * leaves red carrying the brand alone and the green meaning one specific
    * thing. It reads as structure rather than as a third opinion. */
-  --primary: #2b3037;
-  --primary-hover: #3a4049;
-  --primary-light: #eceef1;
+  /* These must agree with the theme blocks below.
+   *
+   * data-theme is set from a useEffect, so the FIRST paint uses these base
+   * values. While they still held the retired graphite, anything painted in
+   * that frame kept it — the footer's WhatsApp button rendered #2b3037 under a
+   * dark --on-primary label at 1.41:1 and never repainted when the theme
+   * landed. Everything mounted later picked up the real colour, which is why
+   * one button was wrong and its siblings were fine.
+   *
+   * A base value that disagrees with every theme is a flash of the wrong
+   * colour at best and a stuck one at worst. */
+  --primary: #38b0f0;
+  --primary-hover: #1ea3ec;
+  --primary-light: #e4f3fd;
 
   /* Red, from the sign — but NOT the sign's own red.
    *
