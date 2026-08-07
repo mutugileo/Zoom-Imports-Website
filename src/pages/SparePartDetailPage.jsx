@@ -9,9 +9,21 @@ import { ShoppingCart, MessageSquare, Check, ShieldCheck, Plus, Minus, Truck, Ar
 import { SiteIcon } from '../components/SiteIcon';
 
 export const SparePartDetailPage = () => {
+  const [shot, setShot] = React.useState(0);
   const { selectedPartId, parts, compatibility, navigateTo, navigateBackFromDetail, formatKES, addToCart, waNumber } = useApp();
 
   const part = parts.find(p => String(p.id) === String(selectedPartId)) || parts[0];
+
+  /* Cover first, then the rest. Falls back to the single `img` for parts saved
+     before the gallery existed, and de-duplicates so a cover that also sits in
+     the array is not shown twice. */
+  const gallery = React.useMemo(() => {
+    const list = (part?.images?.length ? part.images : [part?.img]).filter(Boolean);
+    return [...new Set(list)];
+  }, [part]);
+
+  /* A different part must not inherit the previous one's selected thumbnail. */
+  React.useEffect(() => { setShot(0); }, [part?.id]);
   const [qty, setQty] = useState(1);
   const [fitRef, fitShown] = useReveal();
   const [added, confirm] = useAddedFlash();
@@ -66,9 +78,34 @@ export const SparePartDetailPage = () => {
         
         {/* Left: Image & Specs */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {/* Gallery. Parts carried a single photo until now, which was fine
+              for a boxed new part and useless for a used one — condition is the
+              whole question there. The thumbnail strip only appears when there
+              is more than one, so a single-photo part looks exactly as before. */}
           <div style={{ width: '100%', height: '380px', borderRadius: '10px', overflow: 'hidden', border: '1px solid var(--border-light)', background: 'var(--bg-card)' }}>
-            <Img src={part.img} alt={part.name} sizes="(max-width: 860px) 100vw, 46vw" loading="eager" />
+            <Img src={gallery[shot] ?? part.img} alt={part.name} sizes="(max-width: 860px) 100vw, 46vw" loading="eager" />
           </div>
+
+          {gallery.length > 1 && (
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              {gallery.map((src, i) => (
+                <button
+                  key={src}
+                  type="button"
+                  onClick={() => setShot(i)}
+                  aria-label={`Show photo ${i + 1} of ${gallery.length}`}
+                  aria-current={i === shot ? 'true' : undefined}
+                  style={{
+                    width: '72px', height: '56px', padding: 0, borderRadius: '8px', overflow: 'hidden',
+                    cursor: 'pointer', background: 'var(--bg-card)',
+                    border: i === shot ? '2px solid var(--accent)' : '1px solid var(--border-light)',
+                  }}
+                >
+                  <img src={src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                </button>
+              ))}
+            </div>
+          )}
 
           <div ref={fitRef} style={revealStyle(fitShown)}>
             <h3 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text-dark)', marginBottom: '10px' }}>

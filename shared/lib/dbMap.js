@@ -60,6 +60,7 @@ export const partFromRow = (r) => ({
   compat: r.compat,
   stock: r.stock,
   img: r.img,
+  images: r.images || [],
   description: r.description,
   sku: r.sku,
   partNumber: r.part_number || '',
