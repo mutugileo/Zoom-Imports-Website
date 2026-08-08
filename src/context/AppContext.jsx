@@ -359,12 +359,54 @@ export const AppProvider = ({ children }) => {
    * one-off announcement for screen readers, which otherwise get nothing at all
    * now that no dialog appears.
    */
+  /**
+   * What the shelf can actually supply right now.
+   *
+   * Read live from the catalogue rather than snapshotted onto the cart line.
+   * A basket can sit in localStorage for days, and if the yard sells the last
+   * unit in the meantime the cart has to follow — the opposite of the
+   * copy-not-join rule that governs invoices, because there the point is a
+   * document that must not change, and here the point is availability that
+   * must.
+   */
+  const stockFor = useCallback(
+    (partId) => {
+      const part = parts.find((p) => String(p.id) === String(partId));
+      return part ? Math.max(0, Number(part.stock) || 0) : 0;
+    },
+    [parts]
+  );
+
+  /**
+   * Adds to the basket, never past what is on the shelf.
+   *
+   * Nothing capped this before: `qty` was added to whatever was already there,
+   * so twenty units in stock could be ordered five hundred times over and the
+   * yard found out at picking. The cap is applied here rather than only in the
+   * stepper because every route in — the card's quick-add, the detail page,
+   * the drawer — has to obey it.
+   */
   const addToCart = useCallback((partItem, qty = 1) => {
+    const available = stockFor(partItem.id);
     setCart((prev) => {
       const existing = prev.find((item) => item.id === partItem.id);
+      const already = existing ? existing.qty : 0;
+      const room = Math.max(0, available - already);
+      const granted = Math.min(qty, room);
+
+      if (granted <= 0) {
+        setCartNotice({
+          text: available === 0
+            ? `${partItem.name} is out of stock`
+            : `Only ${available} of ${partItem.name} in stock — already in your cart`,
+          at: Date.now(),
+        });
+        return prev;
+      }
+
       if (existing) {
         return prev.map((item) =>
-          item.id === partItem.id ? { ...item, qty: item.qty + qty } : item
+          item.id === partItem.id ? { ...item, qty: item.qty + granted } : item
         );
       }
       return [
@@ -373,30 +415,41 @@ export const AppProvider = ({ children }) => {
           id: partItem.id,
           name: partItem.name,
           price: partItem.promo || partItem.price,
-          qty,
+          qty: granted,
           img: partItem.img,
           brand: partItem.brand,
         },
       ];
     });
-    // Re-adding the same part must re-announce, so the message carries a nonce.
-    setCartNotice({
-      text: `${qty} × ${partItem.name} added to your cart`,
-      at: Date.now(),
-    });
-  }, []);
+
+    /* Re-adding the same part must re-announce, so the message carries a
+       nonce. When the request was trimmed, say so rather than silently
+       delivering less than was asked for. */
+    const already = cart.find((i) => i.id === partItem.id)?.qty ?? 0;
+    const granted = Math.min(qty, Math.max(0, available - already));
+    if (granted > 0) {
+      setCartNotice({
+        text: granted < qty
+          ? `Only ${granted} more of ${partItem.name} available — added ${granted}`
+          : `${granted} × ${partItem.name} added to your cart`,
+        at: Date.now(),
+      });
+    }
+  }, [stockFor, cart]);
 
   const updateCartQty = useCallback((id, delta) => {
+    const available = stockFor(id);
     setCart((prev) =>
       prev
         .map((item) => {
           if (item.id !== id) return item;
-          const newQty = item.qty + delta;
+          // Clamped at both ends: zero removes the line, stock caps the top.
+          const newQty = Math.min(item.qty + delta, available);
           return newQty > 0 ? { ...item, qty: newQty } : null;
         })
         .filter(Boolean)
     );
-  }, []);
+  }, [stockFor]);
 
   const removeFromCart = useCallback((id) => {
     setCart((prev) => prev.filter((item) => item.id !== id));
@@ -582,6 +635,7 @@ export const AppProvider = ({ children }) => {
       catalogueLoading,
 
       cart,
+      stockFor,
       addToCart,
       updateCartQty,
       removeFromCart,
@@ -620,7 +674,7 @@ export const AppProvider = ({ children }) => {
       currentView, navigateTo, navigateBackFromDetail, pageTransition, returningVehicleId, returningPartId,
       selectedVehicleId, selectedPartId, searchQuery,
       vehicles, parts, compatibility, catalogueLoading,
-      cart, addToCart, updateCartQty, removeFromCart, clearCart,
+      cart, stockFor, addToCart, updateCartQty, removeFromCart, clearCart,
       cartSubtotal, cartItemCount, isCartOpen, cartNotice,
       isTestDriveOpen, testDriveTargetVehicle,
       reviews, publishedReviews, submitReview, isReviewOpen,

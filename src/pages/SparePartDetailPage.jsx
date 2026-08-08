@@ -25,6 +25,11 @@ export const SparePartDetailPage = () => {
   /* A different part must not inherit the previous one's selected thumbnail. */
   React.useEffect(() => { setShot(0); }, [part?.id]);
   const [qty, setQty] = useState(1);
+  /* A different part must not inherit the previous one's quantity, and a part
+     with fewer units than the box currently shows must pull it down. */
+  React.useEffect(() => {
+    setQty((q) => Math.min(Math.max(1, q), Math.max(1, part?.stock || 1)));
+  }, [part?.id, part?.stock]);
   const [fitRef, fitShown] = useReveal();
   const [added, confirm] = useAddedFlash();
 
@@ -189,7 +194,8 @@ export const SparePartDetailPage = () => {
               </button>
               <span style={{ fontSize: 'var(--text-base)', fontWeight: 600, minWidth: '20px', textAlign: 'center' }}>{qty}</span>
               <button 
-                onClick={() => setQty(qty + 1)}
+                onClick={() => setQty(Math.min(qty + 1, Math.max(1, part.stock || 0)))}
+                disabled={qty >= (part.stock || 0)}
                 style={{ border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
               >
                 <Plus size={14} color="var(--text-muted)" />

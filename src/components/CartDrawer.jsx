@@ -7,7 +7,7 @@ import { X, ShoppingBag, Plus, Minus, Trash2, ArrowRight } from 'lucide-react';
 
 export const CartDrawer = () => {
   const {
-    isCartOpen, setIsCartOpen, cart, updateCartQty,
+    isCartOpen, setIsCartOpen, cart, updateCartQty, stockFor,
     removeFromCart, cartSubtotal, formatKES, navigateTo,
   } = useApp();
 
@@ -145,6 +145,8 @@ export const CartDrawer = () => {
                       </span>
                       <button
                         onClick={() => updateCartQty(item.id, 1)}
+                        disabled={item.qty >= stockFor(item.id)}
+                        title={item.qty >= stockFor(item.id) ? `Only ${stockFor(item.id)} in stock` : undefined}
                         aria-label={`Increase ${item.name} quantity`}
                         style={iconBtn}
                       >
